@@ -67,7 +67,7 @@ function rig(item: ItemDefinition): BenchRig {
   const kit = new Assembly();
   const { keep, own, mesh } = kit;
   kit.group.position.copy(originOf(item));
-  const gasMaterial = own(
+  const gasMaterial = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#8a3a10',
       ...LOOKS.matte,
@@ -76,7 +76,7 @@ function rig(item: ItemDefinition): BenchRig {
       opacity: 0.3,
     }),
   );
-  const waterMaterial = own(
+  const waterMaterial = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#cfe7f0',
       ...LOOKS.glass,

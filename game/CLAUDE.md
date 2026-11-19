@@ -1,10 +1,5 @@
 # CLAUDE.md — SIMLAB 3D
 
-> **Inside the SimLab repository** (since 13/11/2026, user decision): the root `CLAUDE.md` wins over
-> this file wherever they differ. Claude never merges or pushes to `main` (the user merges every PR),
-> never runs `npm run dev:lan` / `preview:lan` (they open the game to the network), and rebuilds what
-> SimLab ships only with `npm run build:game` at the repository root (`docs/GAME.md`).
-
 Stable rules for AI coding sessions. Status and history: `docs/phase-1-report.md` (one report
 per phase in `docs/`). Architecture: `docs/architecture.md`.
 
@@ -117,11 +112,28 @@ once, roles, file ownership, branches and the one-e2e-at-a-time rule are in `doc
 - `npm run test:e2e` — Playwright on the real app in Microsoft Edge (software WebGL)
 - `npm run bench` — frame times per lab (Physics, Chemistry, Biology, hub), production build, real GPU
   (visible window)
-- `scripts/desktop-app.ps1` — the "SimLab 3D" desktop app for manual testing (`-Install` makes the
-  Desktop shortcut): a vite build in `dist-app/` (rebuilt when sources changed) served on port
-  5190, in its own Edge app window and profile; closing the window stops the server
+- `npm run app` — the "SimLab 3D" desktop app (Electron, `electron/main.mjs`) from this folder,
+  never a copy: a vite build in `dist-app/` (rebuilt when sources changed) served on port 5190
+  (`--host`: LAN rooms), its own window and profile; closing the window stops the server.
+  `npm run app:dev`: the dev server instead (live code, port 5191). `scripts/desktop-app.ps1
+-Install` makes the Desktop shortcut to it
+- `npm run test:app` — specs `e2e/*.app.ts` launch the desktop app (`e2e/app.ts` `launchApp`: a
+  fresh profile, dev mode on port 5195) on the real GPU, in a visible window; one at a time, like
+  e2e. Probes on the real GPU use it
 
 ## End of a task
 
 Run the relevant commands, write the real results, known limitations and next step into the
 phase report, and commit in logical commits. Do not push unless asked.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+
+- When graphify-out/graph.json exists, run `graphify query "<question>"` before your first grep, search or source-file read for a codebase question, and put this rule in every subagent prompt that explores code. Read raw files only for lines the graph or an earlier read already located. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. When the answer is under a Markdown heading, `graphify section "<heading>"` prints that section's text, so the .md need not be opened. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- A committed graphify-out/graph.json is rewritten whole on every build, so a large diff to it in a pull request is expected. Do not flag it as churn or suggest skipping the graph rebuild or its hooks.

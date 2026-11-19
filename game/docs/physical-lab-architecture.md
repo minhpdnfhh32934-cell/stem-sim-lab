@@ -65,17 +65,17 @@ velocity drive, sweep against statics, CCD and occlusion. Three things are missi
 
 ### 1.2 Pour, stir, heat, measure
 
-| Capability                                      | State                               | Evidence                                                                                                                                                                                                                                                                                                                         |
-| ----------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Container state (volume, contents, temperature) | **None in gameplay**                | `item.ts` has no container field. Liquids exist only as **drawings of model variables** inside bench rigs (`src/platform/labVisuals/chemistry.ts:120` `levelIn`, `:314` `flaskLevel`, `:348` `FLASKS`; `render/bench/dilution-station.ts`, `titration-stand.ts:93`). These pure level mappings (profile to height) are reusable. |
-| Pour (source tilt, receiver, transfer)          | **None**                            | No tilt (above). `LineOfSight.castRay` (`hold.ts:50-52`, `PhysicsSystem.ts:624-647`) already skips the player and the held body, and returns the entity hit. It is the right query for "what is under the spout", but it returns no surface normal.                                                                              |
-| Discrete transfer (pipette, dropper)            | **2D only**                         | The workspace setup steps `place X onto Y` (`src/simulation/experiment.ts:284-300`) are marked done by UI clicks through `ExperimentCommand {command:'setup'}` (`GameEvents.ts:101-108`, `StationSystem.ts:686-688, 798-802`).                                                                                                   |
-| Stir / mix                                      | **None**                            | No model uses mixing (spec map §7.2, §8.3, re-checked: `dilution.ts` says it is "taken as mixed at every moment").                                                                                                                                                                                                               |
-| Heat                                            | **Model only**                      | `heating.ts` takes net `power` as an input. No placement or thermal coupling. No cooling (spec map D2).                                                                                                                                                                                                                          |
-| Measure                                         | **Works, from completed runs**      | `src/simulation/measurement.ts` (reading = nearest multiple of d, u = d/√12); after-run setup steps reveal readings (`experiment.ts:284-300`, `phase: 'after-run'`).                                                                                                                                                             |
-| Model inputs from the apparatus                 | **Hook exists, unused for benches** | `ExperimentSession.inputs(apparatus)` merges apparatus numbers over parameters (`ExperimentSession.ts:194-196`); `start(apparatus)` (`:230-246`); `StationSystem.apparatus()` returns `{}` for benches (`StationSystem.ts:1105-1111`).                                                                                           |
-| Materials setting parameters                    | **Exists as data**                  | `MaterialSchema.sets: {parameter, value}` (`experiment.ts:269-282`). Choosing a material sets a parameter to one of its presets. `setBlock` accepts only presets or grid values (`StationSystem.ts:932-956`); `locks` freeze a parameter after a step (`:958-964`).                                                              |
-| Setup ordering and refusal text                 | **Exists, pure**                    | `setupGate.ts:18` `pendingBeforeRun`, `:26` `setupRefusal`, `:52` `stepApplies`. Refusal text comes from data (`SetupStep.refusal`, localized).                                                                                                                                                                                  |
+| Capability                                      | State                               | Evidence                                                                                                                                                                                                                                                                                     |
+| ----------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Container state (volume, contents, temperature) | **None in gameplay**                | `item.ts` has no container field. Liquids exist only as **drawings of model variables** inside bench rigs (`src/platform/labVisuals/chemistry.ts:120` `levelIn`, `:314` `flaskLevel`, `:348` `FLASKS`; `titration-stand.ts:93`). These pure level mappings (profile to height) are reusable. |
+| Pour (source tilt, receiver, transfer)          | **None**                            | No tilt (above). `LineOfSight.castRay` (`hold.ts:50-52`, `PhysicsSystem.ts:624-647`) already skips the player and the held body, and returns the entity hit. It is the right query for "what is under the spout", but it returns no surface normal.                                          |
+| Discrete transfer (pipette, dropper)            | **2D only**                         | The workspace setup steps `place X onto Y` (`src/simulation/experiment.ts:284-300`) are marked done by UI clicks through `ExperimentCommand {command:'setup'}` (`GameEvents.ts:101-108`, `StationSystem.ts:686-688, 798-802`).                                                               |
+| Stir / mix                                      | **None**                            | No model uses mixing (spec map §7.2, §8.3, re-checked: `dilution.ts` says it is "taken as mixed at every moment").                                                                                                                                                                           |
+| Heat                                            | **Model only**                      | `heating.ts` takes net `power` as an input. No placement or thermal coupling. No cooling (spec map D2).                                                                                                                                                                                      |
+| Measure                                         | **Works, from completed runs**      | `src/simulation/measurement.ts` (reading = nearest multiple of d, u = d/√12); after-run setup steps reveal readings (`experiment.ts:284-300`, `phase: 'after-run'`).                                                                                                                         |
+| Model inputs from the apparatus                 | **Hook exists, unused for benches** | `ExperimentSession.inputs(apparatus)` merges apparatus numbers over parameters (`ExperimentSession.ts:194-196`); `start(apparatus)` (`:230-246`); `StationSystem.apparatus()` returns `{}` for benches (`StationSystem.ts:1105-1111`).                                                       |
+| Materials setting parameters                    | **Exists as data**                  | `MaterialSchema.sets: {parameter, value}` (`experiment.ts:269-282`). Choosing a material sets a parameter to one of its presets. `setBlock` accepts only presets or grid values (`StationSystem.ts:932-956`); `locks` freeze a parameter after a step (`:958-964`).                          |
+| Setup ordering and refusal text                 | **Exists, pure**                    | `setupGate.ts:18` `pendingBeforeRun`, `:26` `setupRefusal`, `:52` `stepApplies`. Refusal text comes from data (`SetupStep.refusal`, localized).                                                                                                                                              |
 
 ### 1.3 Save
 
@@ -109,9 +109,8 @@ velocity drive, sweep against statics, CCD and occlusion. Three things are missi
 
 - **Not shipped:** `dilution`, `ph-measurement`, `solubility`, `precipitation`, `separation`,
   `transpiration` and `genetics` are drafted only. Their models exist in `src/simulation/models/`
-  but are not in `BUILT_IN_MODELS` (`models/index.ts`). The `dilution-station` bench rig exists
-  (`render/bench/dilution-station.ts`) but is not registered in `BENCH_MODELS`
-  (`registry.ts:69-...`).
+  but are not in `BUILT_IN_MODELS` (`models/index.ts`). The `dilution-station` bench rig, never registered in
+  `BENCH_MODELS`, was deleted on 2026-11-13 (unused code removed at Phú's request).
 - **Periodic table piece:** a contextual periodic table exists only as a 2D piece
   (`src/platform/ui/workspace/pieces/chem-elements.ts`). It is a lens, "no action that adds or
   combines an element". There are no element samples anywhere (spec map G1).
@@ -1108,8 +1107,7 @@ Each case below is its own test. The first column gives a test name.
 
 **Cross-cutting risks.**
 
-- **Two presentations of one rig.** Bench rigs that draw glassware from parameters (`dilution-station`,
-  `titration-stand`) must not also be physical entities. Each migration splits the rig.
+- **Two presentations of one rig.** Bench rigs that draw glassware from parameters (`titration-stand`) must not also be physical entities. Each migration splits the rig.
 - **Prompt load.** More small grabbable items in the chemistry lab make aiming harder. Keep reach
   2.2 m and rely on the ray-box picking of the nearest item.
 - **RMB under pointer lock.** `Mouse2` maps through `BrowserInput.ts:78-86` (NOT RUN); KeyR is
@@ -1194,7 +1192,7 @@ Each case below is its own test. The first column gives a test name.
     seat on real `colliders` + colorimeter with a receiver-only cuvette, built from
     `colorimeter.ts`), with the glassware as separate dynamic entities. `dilution-station`'s
     desk-and-dials rig is not registered for the physical version. Keep it or delete it as the
-    Lead prefers.
+    Lead prefers. Deleted 2026-11-13 (Phú: unused code out).
 18. **Spec map D4, D5 and D6** (plant and animal structures, onion "no stain") must be decided
     before microscope migration B1. They do not block the chemistry slice.
 19. **reaction-rate (G15) and separation (D3)** stay 2D until their definitions are settled.

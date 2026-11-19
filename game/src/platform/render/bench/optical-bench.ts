@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from '../nodeLooks';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { BenchPose } from '../../../gameplay/experiment/StationSystem';
 import type { ItemDefinition } from '../../../gameplay/item';
@@ -314,6 +315,17 @@ function rig(item: ItemDefinition): BenchRig {
       polygonOffsetUnits: -2,
     }),
   );
+  setNodeLook(image, {
+    kind: 'lens-image',
+    m: uniforms.uM,
+    blur: uniforms.uBlur,
+    glow: uniforms.uGlow,
+    height: uniforms.uHeight,
+    color: uniforms.uColor.value,
+    shaft: OBJECT.shaft,
+    head: OBJECT.head,
+    headWidth: OBJECT.headWidth,
+  });
 
   // The object slide in its lips at the 0 mark: the mask, its arrow window from the axis up.
   const slide = mesh(

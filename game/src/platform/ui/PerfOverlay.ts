@@ -36,12 +36,20 @@ export class PerfOverlay implements GameSystem {
     if (this.game.input.wasPressed('toggleDebug')) this.root.classList.toggle('hidden');
     if (!this.meter.sample(performance.now(), REFRESH_S)) return;
     if (this.root.classList.contains('hidden')) return;
-    this.text.textContent = frameLines(
-      this.meter.reading,
-      this.game.frameCap,
-      this.game.graphicsQuality,
-      this.game.gpuName,
-    ).join('\n');
+    const lines = [
+      ...frameLines(
+        this.meter.reading,
+        this.game.frameCap,
+        this.game.graphicsQuality,
+        this.game.gpuName,
+      ),
+    ];
+    // In a LAN room: the room server's round trip, what the others' moves take to arrive.
+    const { peers } = this.game;
+    if (peers.room) {
+      lines.push(`LAN: ${Math.round(peers.rtt)} ms (max ${Math.round(peers.rttMax)} ms)`);
+    }
+    this.text.textContent = lines.join('\n');
   }
 
   dispose(): void {

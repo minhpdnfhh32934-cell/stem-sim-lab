@@ -103,7 +103,7 @@ test('walk from the Preparation Room through the doorway into the cleanroom corr
   for (let i = 0; i < 2; i++) {
     await jump('simlab-hub');
     // + the teacher (Phase Y), then one more since the hub's board and laptop (2026-11-10).
-    await expectDebug(page, 'Physics', 'ready · bodies 42 · colliders 55');
+    await expectDebug(page, 'Physics', 'ready · bodies 41 · colliders 54');
     await jump('preparation-room');
     await expectDebug(page, 'Physics', 'ready · bodies 17 · colliders 39');
   }

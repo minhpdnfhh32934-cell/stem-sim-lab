@@ -16,6 +16,30 @@ export interface ScreenRect {
   readonly h: number;
 }
 
+/** A camera a reflection is taken for, and its part of the view (see Mirrors.cropped). */
+export interface GlassView {
+  readonly camera: THREE.Camera;
+  /** [x, y, w, h] of the view from its top left, in fractions of it, mirrored left to right. */
+  readonly part: readonly [number, number, number, number];
+}
+
+/** What a mirror's glass made by another device needs from Mirrors. */
+export interface GlassSpec {
+  /** Its target's size, in fractions of the drawing buffer. */
+  readonly scale: number;
+  readonly tint: number;
+  /** The camera the reflection is taken for when `camera` draws (its layers too). */
+  view(camera: THREE.Camera): GlassView;
+  /** What a reflection must not show (the first-person hands, the mirrors) hidden or shown. */
+  hide(hidden: boolean): void;
+}
+
+/** A mirror's glass, freed by `dispose`. */
+export type Glass = THREE.Mesh & { dispose(): void };
+
+/** Makes a mirror's glass for a device other than WebGL (Ultra's WebGPU: gpu/mirror.ts). */
+export type MirrorGlass = (geometry: THREE.PlaneGeometry, spec: GlassSpec) => Glass;
+
 const clip = new THREE.Vector4();
 
 /**
@@ -76,7 +100,9 @@ export function reflectedOffset(rect: ScreenRect, width: number): [number, numbe
 export class Mirrors {
   readonly group = new THREE.Group();
   private readonly entities = new Map<string, WorldEntity>();
-  private readonly reflectors = new Map<string, Reflector>();
+  private readonly reflectors = new Map<string, Glass>();
+  /** The glass's maker under WebGPU; null: three's Reflector (WebGL). */
+  private glass: MirrorGlass | null = null;
   private scale = 0;
   private width = 1;
   private height = 1;
@@ -85,9 +111,22 @@ export class Mirrors {
   private readonly crop = new THREE.PerspectiveCamera();
   private readonly viewProjection = new THREE.Matrix4();
   private readonly corners = [0, 1, 2, 3].map(() => new THREE.Vector3());
+  /** cropped's answer, reused (no allocation a frame). */
+  private readonly seen: { camera: THREE.Camera; part: [number, number, number, number] } = {
+    camera: this.crop,
+    part: [0, 0, 1, 1],
+  };
 
   /** `hidden`: what the reflection must not show (the first-person hands). */
   constructor(private readonly hidden: THREE.Object3D) {}
+
+  /** The device's glass (null: WebGL's Reflector): every mirror made again with it. */
+  useGlass(make: MirrorGlass | null): void {
+    if (make === this.glass) return;
+    for (const id of [...this.reflectors.keys()]) this.drop(id);
+    this.glass = make;
+    for (const entity of this.entities.values()) this.build(entity);
+  }
 
   /** A spawned entity: a mirror if its prop is one. */
   add(entity: WorldEntity): void {
@@ -115,7 +154,9 @@ export class Mirrors {
       return;
     }
     for (const reflector of this.reflectors.values()) {
-      reflector.getRenderTarget().setSize(size(width), size(height));
+      // (WebGPU's reflector sizes its target by the drawing buffer itself.)
+      if (reflector instanceof Reflector)
+        reflector.getRenderTarget().setSize(size(width), size(height));
     }
   }
 
@@ -131,25 +172,54 @@ export class Mirrors {
     this.entities.clear();
   }
 
-  /** The player's camera cropped to a mirror's glass on the view (itself if that cannot be). */
+  /**
+   * The player's camera cropped to a mirror's glass on the view, seeing what a reflection sees,
+   * and that crop's part of the view; uncropped (the whole view) where the glass's rectangle
+   * cannot be had, the camera itself if it is not a plain perspective one.
+   */
   private cropped(
-    reflector: Reflector,
+    glass: THREE.Object3D,
     camera: THREE.Camera,
     half: readonly [number, number],
-  ): THREE.Camera {
-    if (!(camera instanceof THREE.PerspectiveCamera) || camera.view) return camera;
+  ): GlassView {
+    const { seen } = this;
+    seen.part[0] = 0;
+    seen.part[1] = 0;
+    seen.part[2] = 1;
+    seen.part[3] = 1;
+    seen.camera = camera;
+    // A camera with a view offset (WebGPU's TRAA jitter) is cropped too, its jitter dropped: given
+    // back as it was, its reflection lost the body's head (SELF_LAYER), Phú 2026-11-17.
+    if (!(camera instanceof THREE.PerspectiveCamera)) return seen;
     this.corners.forEach((p, i) =>
       p
         .set(i % 2 === 0 ? -half[0] : half[0], i < 2 ? -half[1] : half[1], 0)
-        .applyMatrix4(reflector.matrixWorld),
+        .applyMatrix4(glass.matrixWorld),
     );
     this.viewProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     const rect = screenRect(this.corners, this.viewProjection, this.width, this.height);
-    if (!rect) return camera;
     this.crop.copy(camera, false); // never its children (the first-person hands)
+    // The whole body and neither the hands drawn over the view nor a mirror (WebGPU's reflection
+    // takes this camera's layers; WebGL's Reflector sets its own, in build).
+    this.crop.layers.set(0);
+    this.crop.layers.enable(SELF_LAYER);
+    seen.camera = this.crop;
+    if (!rect) {
+      this.crop.clearViewOffset();
+      return seen;
+    }
     const [x, y] = reflectedOffset(rect, this.width);
     this.crop.setViewOffset(this.width, this.height, x, y, rect.w, rect.h);
-    return this.crop;
+    seen.part[0] = x / this.width;
+    seen.part[1] = y / this.height;
+    seen.part[2] = rect.w / this.width;
+    seen.part[3] = rect.h / this.height;
+    return seen;
+  }
+
+  private hide(hidden: boolean): void {
+    this.hidden.visible = !hidden;
+    this.group.visible = !hidden;
   }
 
   private build(entity: WorldEntity): void {
@@ -158,17 +228,34 @@ export class Mirrors {
     // The glass inside the prop's frame (props/washroom.ts `mirror`), 0.5 mm in front of it.
     const frame = Math.min(0.015, w / 10, h / 10);
     const front = d / 2 - Math.min(0.004, d / 5) + 0.0005;
-    const reflector = new Reflector(new THREE.PlaneGeometry(w - 2 * frame, h - 2 * frame), {
+    const plane = new THREE.PlaneGeometry(w - 2 * frame, h - 2 * frame);
+    const half = [(w - 2 * frame) / 2, (h - 2 * frame) / 2] as const;
+    let reflector: Glass;
+    if (this.glass) {
+      reflector = this.glass(plane, {
+        scale: this.scale,
+        tint: TINT,
+        view: (camera) => this.cropped(reflector, camera, half), // when drawn: made by then
+        hide: (hidden) => this.hide(hidden),
+      });
+    } else reflector = this.reflector(plane, half);
+    reflector.name = `mirror ${entity.id}`;
+    reflector.position.fromArray(entity.pose.position);
+    reflector.quaternion.fromArray(entity.pose.rotation);
+    reflector.translateZ(front);
+    this.group.add(reflector);
+    this.reflectors.set(entity.id, reflector);
+  }
+
+  /** WebGL's glass: three's Reflector, drawn for the crop (cropped) with what it must not show hidden. */
+  private reflector(plane: THREE.PlaneGeometry, half: readonly [number, number]): Reflector {
+    const reflector = new Reflector(plane, {
       textureWidth: Math.max(1, Math.round(this.width * this.scale)),
       textureHeight: Math.max(1, Math.round(this.height * this.scale)),
       color: TINT,
       clipBias: 0.003,
       multisample: this.scale >= 1 ? 4 : 0,
     });
-    reflector.name = `mirror ${entity.id}`;
-    reflector.position.fromArray(entity.pose.position);
-    reflector.quaternion.fromArray(entity.pose.rotation);
-    reflector.translateZ(front);
     // The reflection sees the whole body, and neither the hands drawn over the view nor a mirror.
     const camera = reflector.getReflectionCamera.bind(reflector);
     reflector.getReflectionCamera = (from: THREE.Camera) => {
@@ -178,19 +265,15 @@ export class Mirrors {
       return reflection;
     };
     const render = reflector.onBeforeRender.bind(reflector);
-    const half = [(w - 2 * frame) / 2, (h - 2 * frame) / 2] as const;
     reflector.onBeforeRender = (renderer, scene, camera, ...rest) => {
-      this.hidden.visible = false;
-      this.group.visible = false;
+      this.hide(true);
       try {
-        render(renderer, scene, this.cropped(reflector, camera, half), ...rest);
+        render(renderer, scene, this.cropped(reflector, camera, half).camera, ...rest);
       } finally {
-        this.group.visible = true;
-        this.hidden.visible = true;
+        this.hide(false);
       }
     };
-    this.group.add(reflector);
-    this.reflectors.set(entity.id, reflector);
+    return reflector;
   }
 
   private drop(entityId: string): void {

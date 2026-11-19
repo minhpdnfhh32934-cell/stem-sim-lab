@@ -560,7 +560,7 @@ function rig(item: ItemDefinition): BenchRig {
   plate.name = 'turret';
 
   // The specimen under the coverslip: a thin disc shaped and tinted by slide and stain.
-  const tint = own(
+  const tint = kit.mine(
     new THREE.MeshStandardMaterial({ ...LOOKS.matte, transparent: true, depthWrite: false }),
   );
   const patch = mesh(keep(drum(0.006, 0.006, 0, 0.0002, 20)), tint, base);

@@ -400,7 +400,7 @@ describe('physical lab (fixture): saves (v4)', () => {
     const states = structuredClone(first.game.state.world.entityStates[COLORIMETER]);
     expect(first.game.save()?.ok).toBe(true);
     const saved = JSON.parse(storage.read('simlab.save.slot-1') ?? '{}') as SavedJson;
-    expect(saved.version).toBe(11); // v11 keeps v4's containers and poses (and v7's tasks)
+    expect(saved.version).toBe(12); // v12 keeps v4's containers and poses (and v7's tasks)
     expect(saved.world.containers[FLASK]?.contents['stock-20']).toBe(5000);
     expect(Object.keys(saved.world.objects).sort()).toEqual([FLASK, PIPETTE, STOCK, WASH].sort());
     expect(JSON.stringify(saved.world.containers)).not.toMatch(/concentration/i);

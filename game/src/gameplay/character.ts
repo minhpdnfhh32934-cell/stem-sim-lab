@@ -197,6 +197,11 @@ export const CharacterDefinitionSchema = z.object({
       coat: z.boolean(),
     })
     .default({ pose: 'wave', seat: 0, coat: true }),
+  /**
+   * Under Max, the real person drawn in the drawn body's stead (Phase Max, Phú 2026-11-18): the
+   * id of its files in public/max/people/. Left out, the drawn body at every level.
+   */
+  realBody: IdSchema.optional(),
   metadata: z.record(z.string(), z.string()).default({}),
   ...localized('displayName', 'role', 'trait'),
 });

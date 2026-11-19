@@ -8,8 +8,9 @@ import { LIGHTS_OFF, ROOM_LIGHTS } from '../../gameplay/interaction/behaviors';
 import type { ItemDefinition } from '../../gameplay/item';
 import { inspectFov } from '../../gameplay/player/inspect';
 import { leanDirection } from '../../gameplay/player/lean';
+import { highOrMore } from '../../persistence/settings';
 import type { RoomDefinition, SceneDefinition } from '../../world/definitions';
-import { DAY_S } from '../../world/clock';
+import { DAY_S, daylight } from '../../world/clock';
 import { roomLights } from '../../world/lighting';
 import { roomSlabs, WALL_THICKNESS } from '../../world/roomGeometry';
 import type { WorldEntity } from '../../world/World';
@@ -17,6 +18,7 @@ import { benchModel, type BenchFrame } from './bench/registry';
 import { swapsOf } from './assembly';
 import { ContainerViews } from './ContainerView';
 import { Reveals } from './reveal';
+import { SharedMaterials } from './sharedMaterials';
 import { ExperimentView } from './ExperimentView';
 import { HandsView } from './HandsView';
 import { buildLauncher, type LauncherModel } from './launcherModel';
@@ -27,7 +29,9 @@ import { ASLEEP_LAYER, RoomSleep } from './roomSleep';
 import { FLOOR_SURFACES, SHELL_SURFACES, Surfaces } from './surfaces';
 import { ModelDetail } from './detail';
 import type * as PostModule from './post';
-import type { Post } from './post';
+import type { Post, PostOptions } from './post';
+import type { SeeThrough } from './effectsPass';
+import { softerShadows } from './shadowTaps';
 import { Finishes } from './finishes';
 import { FloorPath } from './floorPath';
 import { Outlines } from './outlines';
@@ -39,12 +43,16 @@ import { buildPendulumFrame, type PendulumFrame } from './pendulumModel';
 import { buildTowerFrame, type TowerFrame } from './towerModel';
 import { SHADOW_LAYER } from './body/BodyModel';
 import { BodyView } from './body/BodyView';
+import { type PrepareReal, realTextures } from './body/realBody';
 import { LOOKS } from './looks';
 import { CardReaders } from './cardReaders';
+import { mergeStill } from './mergeStill';
 import { Mirrors } from './mirrors';
 import { BoardWriting } from './boardWriting';
 import { NpcActors } from './npcActors';
+import { EmergencyView } from './emergency/EmergencyView';
 import { RemotePlayers } from './remotePlayers';
+import { PeriodicBoard } from './periodicBoard';
 import { ProgressBoard } from './progressBoard';
 import { CircuitView } from './circuitView';
 import { FireView } from './fireView';
@@ -57,10 +65,12 @@ import { drawFormula } from './formulaCanvas';
 import { decimalComma, layoutFormula } from '../../core/formula';
 import { INTEGRATED_GPU, lowerQuality, QualityWatch, SLOW_FPS, WINDOW_S } from './qualityWatch';
 import { type ExplainAnchor, ExplainFraming } from './explainFraming';
-import { dressRoom } from './dress';
+import { type DressPart, dressRoom } from './dress';
 import { fittings } from './dress/fittings';
 import { paintSky } from './sky';
 import type * as CityModule from './city/CityView';
+import type * as GpuModule from './gpu/GpuDevice';
+import type { GpuDevice } from './gpu/GpuDevice';
 import { around, glassGrid, glassPane, type Rect } from './glassFloor';
 import { baseboards, tileImage, tiles } from './roomShell';
 import { WaterStreams } from './water';
@@ -112,8 +122,18 @@ interface EntityView {
   readonly tower: TowerFrame | null;
   /** A bench apparatus' frame, by its registered model (freed with the view). */
   readonly bench: BenchFrame | null;
+  /** Its frames' fixed parts, merged (mergeStill.ts): freed with the view. */
+  readonly merged: readonly THREE.BufferGeometry[];
+  /** Its body's batch (addEntity), or null: its own mesh always draws it. */
+  readonly bodyKey: string | null;
   /** Glow it has of its own (light panels); focus adds to it, `active` replaces it. */
   readonly baseEmissive: THREE.Color;
+  /**
+   * Its look's material, shared with every entity of that look and colour (`mesh.material` is a
+   * copy of its own while it is focused, active or charred); null: its own for good (glass, a
+   * light, a reveal: changed in place).
+   */
+  readonly shared: THREE.MeshStandardMaterial | null;
   /** A free-standing glass vessel: a contact shadow under it (contactShadows.ts). */
   readonly grounded: boolean;
 }
@@ -149,6 +169,17 @@ const WARM_TAIL = 3;
 const WARM_SLOW = 1.5;
 const WARM_SLACK_S = 0.002;
 const WARM_FAST = 1.2;
+/**
+ * Slow frames shrink the batch only this long (s): where frames are slow anyway, not from the
+ * warm-up, one a frame kept a door preparing for seconds (SwiftShader: 121 at ~9 FPS, 13 s).
+ */
+const WARM_MAX_S = 1;
+/**
+ * New texture data a warm-up batch may upload (bytes; at least one object a frame): a batch of the
+ * hub's boards and signs uploaded 61 MB of canvases in one frame, the Physics Lab's 50 MB, and the
+ * page waited 100–130 ms on the GPU process (RTX 5070, High; 2026-11-14).
+ */
+const WARM_BYTES = 8e6;
 /**
  * Enhanced scenes: the ceiling's own soft glow (emissive, its colour × this). No light here reaches
  * a downward face but the hemisphere's ground, so the whitest paint rendered darker than the walls
@@ -229,10 +260,22 @@ const CITY_LINGER = 2;
  * times a second, not at the display's rate — a settings change still shows within 50 ms.
  */
 const IDLE_HZ = 20;
+/** Ultra: rooms this near (m) the player have their reflections captured ahead of a visit. */
+const CAPTURE_AHEAD_M = 3;
 
 export class WorldRenderer implements GameSystem {
   readonly id = 'renderer';
+  /** The WebGL device (every preset but Ultra on WebGPU); null while `gpu` draws. */
   private renderer: THREE.WebGLRenderer | null = null;
+  /** Ultra's WebGPU device (gpu/GpuDevice.ts, its own chunk), while it draws; then no `renderer`. */
+  private gpu: GpuDevice | null = null;
+  private gpuModule: typeof GpuModule | null = null;
+  /** A change of device on its way (the WebGPU one starts asynchronously). */
+  private switching: Promise<void> | null = null;
+  /** WebGPU refused to start here: Ultra stays on WebGL this session (warned once). */
+  private gpuFailed = false;
+  private disposed = false;
+  private resizeObserver: ResizeObserver | null = null;
   private readonly scene = new THREE.Scene();
   private readonly camera: THREE.PerspectiveCamera;
   private readonly rooms = new THREE.Group();
@@ -247,6 +290,10 @@ export class WorldRenderer implements GameSystem {
   private readonly hingedViews = new Set<EntityView>();
   /** Running water (items with `visual.stream`), its shaders compiled before it is first shown. */
   private readonly water = new WaterStreams((object) => {
+    if (this.gpu) {
+      this.gpuCompile([object], 'Water shaders did not compile');
+      return;
+    }
     const renderer = this.renderer;
     if (!renderer) return;
     void renderer
@@ -261,6 +308,14 @@ export class WorldRenderer implements GameSystem {
   private readonly warmShadows = new Set<string>();
   /** The usual frame interval (s), averaged while nothing is warmed. */
   private frameDt = 1 / 60;
+  /**
+   * Rooms' dressings by room and place (dressOf): built in a door's attach frame, the Physics
+   * Lab's took ~12 ms of it (RTX 5070, 2026-11-14). Their geometry is freed with the room's shells
+   * and uploaded again; a load (a new session frame) forgets them.
+   */
+  private readonly dresses = new Map<string, DressPart[]>();
+  /** The renderer's prefilter (pmremOf), made with its first environment. */
+  private pmrem: THREE.PMREMGenerator | null = null;
   /** Work for idle time (prewarmNeighbours), and the idle callback waiting to run it. */
   private readonly idle: (() => void)[] = [];
   private idleHandle: number | null = null;
@@ -272,6 +327,8 @@ export class WorldRenderer implements GameSystem {
     tail: number;
     /** How many it draws a frame now (adapted to the frame time). */
     batch: number;
+    /** Seconds since it started (WARM_MAX_S). */
+    elapsed: number;
     done: () => void;
   } | null = null;
   private readonly canvasSize = new THREE.Vector2();
@@ -291,6 +348,8 @@ export class WorldRenderer implements GameSystem {
   private idleDrawnAt = -Infinity;
   /** Set just before the frame's own draw: the scene's first draw then checks the casters. */
   private shadowArmed = false;
+  /** GpuDevice.settled as last seen (its shadows drawn again since). */
+  private gpuSettled = 0;
   /** Label planes, one per item and language, shared by every view of the item. */
   private readonly labels = new Map<
     string,
@@ -315,7 +374,17 @@ export class WorldRenderer implements GameSystem {
   /** Props' parts, one set per prop and size, shared by entities and decor alike. */
   private readonly props = new PropCache();
   /** Decor items: per scene, one instanced mesh per part of each item instead of a view per copy. */
-  private readonly decor = new DecorBatches(this.scene, this.palette, (item) => this.partsOf(item));
+  private readonly decor = new DecorBatches(
+    this.scene,
+    this.palette,
+    (item) => this.partsOf(item),
+    (mesh) => {
+      // In the preset's finishes, whenever a batch is drawn (a scene's build, a copy added later).
+      this.finishes.adopt(mesh);
+      this.adoptUltra(mesh);
+      this.darknessDirty = true;
+    },
+  );
   /** Ultra's model detail (render/detail.ts): bevelled boxes, rounder round parts. */
   private readonly detail = new ModelDetail();
   /** The time of day the sky was last painted for (sky.ts); −∞: not yet. */
@@ -341,13 +410,25 @@ export class WorldRenderer implements GameSystem {
   private readonly cityMatrix = new THREE.Matrix4();
   /** Ultra's real surfaces (render/surfaces.ts), loaded only for it. */
   private readonly surfaces = new Surfaces(import.meta.env.BASE_URL, () =>
-    this.renderer ? this.renderer.capabilities.getMaxAnisotropy() : 1,
+    this.gpu
+      ? this.gpu.renderer.getMaxAnisotropy()
+      : this.renderer
+        ? this.renderer.capabilities.getMaxAnisotropy()
+        : 1,
   );
   /** Ultra's post-processing (render/post.ts, its own chunk), while Ultra is chosen. */
   private post: Post | null = null;
   /** The chunk's import (one for every caller), and the chunk once here. */
   private postFetch: Promise<void> | null = null;
   private postModule: typeof PostModule | null = null;
+  /** What the chain was made with (Ultra's, or Max's grade and AO samples). */
+  private postOptions: PostOptions | null = null;
+  /** The glassware and the stirred liquids Ultra's see-through pass draws (effectsPass.ts). */
+  private readonly seeThrough: SeeThrough = {
+    glass: () => this.finishes.glassMeshes(),
+    showGlass: (shown) => this.finishes.showGlass(shown),
+    stirred: () => this.containers.stirred(),
+  };
   private readonly postSize = new THREE.Vector2();
   /** Rooms out of sight left undrawn and off the GPU (world/dormancy.ts, Settings). */
   private readonly sleep = new RoomSleep({
@@ -399,6 +480,11 @@ export class WorldRenderer implements GameSystem {
   /** A dark copy of each material a lit room draws too, and the meshes wearing one (→ original). */
   private readonly darkTwins = new Map<RoomLitMaterial, RoomLitMaterial>();
   private readonly twinned = new Map<THREE.Mesh, RoomLitMaterial>();
+  /**
+   * Entity materials by look and colour: 175 entities of the Physics Lab drew with 175 materials
+   * of 21 looks, a material change (uniforms) between each two (2026-11-13, Low/Medium).
+   */
+  private readonly paints = new SharedMaterials<THREE.MeshStandardMaterial>();
   /** Something that changes which meshes are dark: applied once before the next frame. */
   private darknessDirty = false;
   /** Each built room's ceiling material (its glow goes with the room's lights). */
@@ -409,10 +495,13 @@ export class WorldRenderer implements GameSystem {
   private readonly body: BodyView;
   /** The world's people (Phase Y: the hub's teacher). */
   private readonly npcActors: NpcActors;
+  /** An emergency call answered (Phú 2026-11-13): the helicopter, the ceiling, the squad. */
+  private readonly emergency: EmergencyView;
   /** The other players in the room (Phase M). */
   private readonly remotePlayers: RemotePlayers;
   /** The hub's learning progress board, drawn from the save. */
   private readonly progressBoard: ProgressBoard;
+  private readonly periodicBoard: PeriodicBoard;
   /** The circuit bench's boards: sockets, parts, leads, readings (Phase E-1). */
   private readonly circuits: CircuitView;
   /** Fire, smoke and the extinguisher's jet (Phase E-2). */
@@ -444,7 +533,7 @@ export class WorldRenderer implements GameSystem {
   /** A room's reflections being captured, a cube face a frame (captureStep). */
   private capture: {
     readonly roomId: string;
-    readonly target: THREE.WebGLCubeRenderTarget;
+    readonly target: THREE.WebGLCubeRenderTarget | ReturnType<GpuDevice['cubeTarget']>;
     readonly cube: THREE.CubeCamera;
     face: number;
   } | null = null;
@@ -474,9 +563,13 @@ export class WorldRenderer implements GameSystem {
   constructor(
     private readonly host: HTMLElement,
     private readonly game: Game,
-    /** The page's canvas, in `host`: drawn on, never added or removed here (main.ts owns it). */
-    private readonly canvas: HTMLCanvasElement,
+    /**
+     * The page's canvas, in `host` (main.ts makes it). A change of device puts a fresh canvas in
+     * its place (useCanvas): a canvas keeps the first kind of context it gave.
+     */
+    private canvas: HTMLCanvasElement,
   ) {
+    softerShadows(); // Max's smoother penumbra: before any program is compiled (shadowTaps.ts)
     this.camera = new THREE.PerspectiveCamera(game.config.graphics.fov, 1, 0.05, 200);
     this.camera.rotation.order = 'YXZ';
     this.hands = new HandsView(game);
@@ -485,8 +578,45 @@ export class WorldRenderer implements GameSystem {
     this.npcActors = new NpcActors(this.scene, game, this.contact, (partId, out) =>
       this.explainPart(partId, out),
     );
+    this.emergency = new EmergencyView(this.scene, game, this.contact, {
+      ceilingOf: (roomId) => this.ceilingOf(roomId),
+      hide: (entityId, hidden) => {
+        const view = this.views.get(entityId);
+        if (view) this.showView(view, !hidden);
+        else this.decor.hide(entityId, hidden);
+      },
+      // Its own view's twin (sharing geometry and materials), or its decor batch's.
+      copyOf: (entityId) => this.views.get(entityId)?.group.clone() ?? this.decor.copyOf(entityId),
+      sky: () => this.palette.finish('outside-sky').color,
+      prepare: (roots) => {
+        // As a neighbour scene's parts: for the frame's target (Ultra's composer), in batches.
+        if (this.gpu) {
+          this.gpuCompile(roots, 'Emergency shaders did not compile');
+          return;
+        }
+        const renderer = this.renderer;
+        if (!renderer) return;
+        const objects: THREE.Object3D[] = [];
+        for (const root of roots) {
+          root.traverse((o) => {
+            if ((o as Partial<THREE.Mesh>).material) objects.push(o);
+          });
+        }
+        this.compileOnly(renderer, objects, COMPILE_BATCH).catch((error: unknown) =>
+          this.game.log.warn('Emergency shaders did not compile', error),
+        );
+      },
+    });
     this.remotePlayers = new RemotePlayers(this.scene, game, this.contact);
+    // Ultra's real people ready before they are shown (no stalled frame when one appears).
+    this.body.prepare = this.prepareReal;
+    this.npcActors.prepareReal = this.prepareReal;
+    this.emergency.prepareReal = this.prepareReal;
+    this.remotePlayers.prepareReal = this.prepareReal;
     this.progressBoard = new ProgressBoard(this.scene, game);
+    this.periodicBoard = new PeriodicBoard(this.scene, game, (texture) =>
+      this.device?.initTexture(texture),
+    );
     this.fire = new FireView(this.scene, game);
     this.phone = new PhoneView(this.scene, game);
     this.laptop = new LaptopView(this.scene, game);
@@ -502,24 +632,8 @@ export class WorldRenderer implements GameSystem {
   }
 
   init(): void {
-    const { config } = this.game;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas,
-        antialias: config.graphics.antialias,
-        stencil: true, // outlines draw outside their object's silhouette (outlines.ts)
-      });
-    } catch (error) {
-      throw new Error('WebGL is not available in this browser', { cause: error });
-    }
+    const renderer = this.makeWebgl(this.canvas);
     this.renderer = renderer;
-    // three checks each new program's link and compile status the first time it is used: a
-    // synchronous query that waits for the GPU process to finish every program queued before it.
-    // ANGLE/D3D11 compiles the lit materials in ~200 ms each, so a door's shaders, compiled in the
-    // background, stalled the page that long (Phase G trace: GetShaderiv waiting on the command
-    // buffer). The checks only report errors: off, as three recommends for production.
-    renderer.debug.checkShaderErrors = false;
     // Under Ultra, its chunk on its way now: by the first scene's load it is here, and the chain is
     // made and compiled for during the load, not in the lab's first frames.
     if (QUALITY[this.game.graphicsQuality].post) this.fetchPost();
@@ -538,10 +652,7 @@ export class WorldRenderer implements GameSystem {
       // what made it slow (Phú's friend, 2026-11-10).
       this.game.preferGraphicsQuality('low', `graphics built into the processor (${name})`);
     }
-    // Shadows are cast only where a scene asks for enhanced lighting (see setLighting).
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
-    renderer.localClippingEnabled = true; // a container's liquid is cut by its level plane
+    this.setUpDevice(renderer);
 
     this.scene.background = new THREE.Color('#151a20');
     this.sun.shadow.mapSize.set(1024, 1024);
@@ -563,6 +674,159 @@ export class WorldRenderer implements GameSystem {
     this.hands.attach(s);
     this.body.attach(s);
     this.experiment.attach(s);
+    void this.syncDevice(); // Ultra on WebGPU: started now, in the menu
+  }
+
+  /** The device drawing now: WebGL, or Ultra's WebGPU (null before init and after dispose). */
+  private get device(): THREE.WebGLRenderer | GpuDevice['renderer'] | null {
+    return this.gpu?.renderer ?? this.renderer;
+  }
+
+  private makeWebgl(canvas: HTMLCanvasElement): THREE.WebGLRenderer {
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: this.game.config.graphics.antialias,
+        stencil: true, // outlines draw outside their object's silhouette (outlines.ts)
+      });
+    } catch (error) {
+      throw new Error('WebGL is not available in this browser', { cause: error });
+    }
+    // three checks each new program's link and compile status the first time it is used: a
+    // synchronous query that waits for the GPU process to finish every program queued before it.
+    // ANGLE/D3D11 compiles the lit materials in ~200 ms each, so a door's shaders, compiled in the
+    // background, stalled the page that long (Phase G trace: GetShaderiv waiting on the command
+    // buffer). The checks only report errors: off, as three recommends for production.
+    renderer.debug.checkShaderErrors = false;
+    renderer.localClippingEnabled = true; // a container's liquid is cut by its level plane
+    return renderer;
+  }
+
+  /** What either device draws with. Shadows are cast only where a scene asks (setLighting). */
+  private setUpDevice(device: THREE.WebGLRenderer | GpuDevice['renderer']): void {
+    device.shadowMap.enabled = true;
+    device.shadowMap.type = THREE.PCFShadowMap;
+  }
+
+  /**
+   * Ultra on WebGPU (quality.ts `webgpu`). Until G2-1's parity is accepted, only where the
+   * browser preference `simlab.dev.ultraRenderer` is `webgpu`; never after WebGPU refused to start.
+   */
+  private wantsGpu(): boolean {
+    if (!QUALITY[this.game.graphicsQuality].webgpu || this.gpuFailed) return false;
+    try {
+      return window.localStorage.getItem('simlab.dev.ultraRenderer') === 'webgpu';
+    } catch {
+      return false; // storage blocked: the default
+    }
+  }
+
+  /**
+   * The device the preset draws with, changed in place: a fresh canvas where the old one was, the
+   * scene, its views and the game untouched. One change at a time; a preset changed again while
+   * one is on its way is followed when it ends. Never fails: WebGPU that does not start is warned
+   * of and Ultra stays on WebGL.
+   */
+  private syncDevice(): Promise<void> {
+    this.switching ??= (async () => {
+      while (!this.disposed && this.device !== null && this.wantsGpu() !== (this.gpu !== null)) {
+        if (this.gpu) this.toWebgl();
+        else await this.toGpu();
+      }
+    })()
+      .catch((error: unknown) => this.game.log.warn('The drawing device did not change', error))
+      .finally(() => {
+        this.switching = null;
+      });
+    return this.switching;
+  }
+
+  /** From WebGL to WebGPU (Ultra). */
+  private async toGpu(): Promise<void> {
+    let device: GpuDevice;
+    let module: typeof GpuModule;
+    try {
+      module = this.gpuModule ??= await import('./gpu/GpuDevice');
+      device = await module.GpuDevice.create(this.newCanvas());
+    } catch (error) {
+      this.gpuFailed = true;
+      this.game.log.warn('WebGPU did not start: Ultra stays on WebGL', error);
+      return;
+    }
+    if (this.disposed || !this.renderer || !this.wantsGpu()) {
+      device.dispose();
+      return;
+    }
+    this.dropDeviceState();
+    this.renderer.dispose();
+    this.renderer.forceContextLoss(); // the old canvas's context, at once (not when collected)
+    this.renderer = null;
+    this.gpu = device;
+    this.outlines.useStencil(false);
+    this.mirrors.useGlass(module.gpuMirror);
+    this.useCanvas(device.renderer.domElement);
+    this.setUpDevice(device.renderer);
+    this.setLighting(this.enhanced ? 'enhanced' : 'basic'); // tone mapping, environment, finishes
+    this.resize();
+    this.compileHidden(); // what is there, for the new device, before it is drawn
+    this.game.log.info('Ultra draws with WebGPU');
+  }
+
+  /** From WebGPU back to WebGL (a preset below Ultra). */
+  private toWebgl(): void {
+    const gpu = this.gpu;
+    if (!gpu) return;
+    const renderer = this.makeWebgl(this.newCanvas());
+    this.dropDeviceState();
+    gpu.dispose();
+    this.gpu = null;
+    this.renderer = renderer;
+    this.outlines.useStencil(true);
+    this.mirrors.useGlass(null);
+    this.useCanvas(renderer.domElement);
+    this.setUpDevice(renderer);
+    this.setLighting(this.enhanced ? 'enhanced' : 'basic');
+    this.resize();
+  }
+
+  /**
+   * What the old device made and holds (targets, prefiltered maps, programs): freed with it. The
+   * new one uploads textures and geometry again as it draws them.
+   */
+  private dropDeviceState(): void {
+    this.post?.dispose();
+    this.post = null;
+    this.environment?.dispose();
+    this.environment = null;
+    this.pmrem?.dispose();
+    this.pmrem = null;
+    this.dropRoomReflections(false);
+    this.warming?.done(); // a load waiting on it goes on
+    this.warming = null;
+    this.warmShadows.clear();
+    this.shadowCache?.invalidate();
+  }
+
+  /** A canvas like the page's: the next device draws on it (useCanvas puts it in place). */
+  private newCanvas(): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    canvas.className = this.canvas.className;
+    canvas.style.cssText = this.canvas.style.cssText;
+    return canvas;
+  }
+
+  /** `canvas` in the old one's place in the page, its size followed from now. */
+  private useCanvas(canvas: HTMLCanvasElement): void {
+    const old = this.canvas;
+    if (canvas === old) return;
+    old.replaceWith(canvas);
+    this.canvas = canvas;
+    const observer = this.resizeObserver;
+    if (observer) {
+      observer.unobserve(old);
+      observer.observe(canvas, { box: 'device-pixel-content-box' });
+    }
   }
 
   /** What the scene always holds, without WebGL (quality.test.ts builds the same scene). */
@@ -613,6 +877,9 @@ export class WorldRenderer implements GameSystem {
     const { session } = this.game.state;
     if (session.paused || session.phase !== 'playing' || this.warming) this.qualityWatch.reset();
     else if (this.qualityWatch.frame(dt)) this.tooSlow();
+    // Ultra's own frame rate, for the settings' experience line (kept through a pause).
+    if (!highOrMore(this.game.graphicsQuality)) this.game.ultraFps = null;
+    else if (this.qualityWatch.lastFps > 0) this.game.ultraFps = this.qualityWatch.lastFps;
     // (Not while warming: a world being prepared draws its warm-up batches every frame.)
     if ((session.paused || session.phase === 'menu') && !this.warming) {
       const now = performance.now();
@@ -627,7 +894,8 @@ export class WorldRenderer implements GameSystem {
       this.skyPaintedAt = clockS;
       paintSky(this.palette.finish('outside-sky'), clockS);
     }
-    if (!this.renderer) return;
+    const device = this.device;
+    if (!device) return;
     const p = this.game.state.player;
     const { physics } = this.game;
     // Positions physics steps are drawn blended between its last two steps (renderPlayer,
@@ -653,10 +921,12 @@ export class WorldRenderer implements GameSystem {
         z + (this.camera.position.z - z) * t,
       );
     }
-    this.renderer.getDrawingBufferSize(this.bufferSize);
+    device.getDrawingBufferSize(this.bufferSize);
     this.mirrors.setScale(this.mirrorScale, this.bufferSize.x, this.bufferSize.y);
     this.mirrors.update(this.camera.position);
     this.camera.rotation.set(p.pitch + p.glance, p.yaw, 0);
+    this.emergency.shake(this.camera); // a blast or a slap
+    this.emergency.stunned(device.domElement);
     // The close-inspection view: the field of view the player system has eased to.
     const fov = inspectFov(this.game.config.graphics.fov, this.game.player.inspectAmount);
     if (fov !== this.camera.fov) {
@@ -689,9 +959,11 @@ export class WorldRenderer implements GameSystem {
     // Resting, the body stays standing where the player was: not drawn from the seat or the bed.
     this.body.group.visible = p.rest === null;
     this.npcActors.update(dt);
+    this.emergency.update(dt, this.canvas.height || 720, this.camera.fov);
     this.remotePlayers.update(dt);
     this.boardWriting.update();
     this.progressBoard.update(dt);
+    this.periodicBoard.update(dt);
     this.circuits.update(dt);
     this.laptop.update(dt);
     this.fire.update(dt, this.canvas.height || 720, this.camera.fov);
@@ -712,7 +984,13 @@ export class WorldRenderer implements GameSystem {
     this.finishes.update(dt, this.camera.position);
     // The usual frame interval, learnt while nothing is being warmed (the warm-up's yardstick).
     if (!this.warming && dt > 0) this.frameDt += (dt - this.frameDt) * 0.05;
-    this.warmStep(this.renderer, dt);
+    if (this.renderer) this.warmStep(this.renderer, dt);
+    // WebGPU: the shadow maps drawn while pipelines were being made left their objects out
+    // (GpuDevice.inBackground); all made, they are drawn again (a cached map is drawn when asked).
+    if (this.gpu && this.gpu.settled !== this.gpuSettled) {
+      this.gpuSettled = this.gpu.settled;
+      this.shadowCache?.invalidate();
+    }
     this.syncCity(dt);
     const city = this.cityInView();
     if (city) city.update(this.camera, this.game.state.world.clockS, dt);
@@ -722,16 +1000,25 @@ export class WorldRenderer implements GameSystem {
     try {
       if (this.post) {
         this.post.setUnder(city?.scene ?? null, city?.camera ?? null);
-        this.post.render(dt);
+        // Under Max, coloured as the room the player stands in, by the time of day (as WebGPU's).
+        const [px, , pz] = this.game.state.player.position;
+        const grade = this.game.world.roomAt(px, pz)?.grade ?? 'neutral';
+        this.post.render(dt, grade, daylight(this.game.state.world.clockS));
+      } else if (this.gpu?.post) {
+        this.gpu.post.setUnder(city?.scene ?? null, city?.camera ?? null);
+        // Coloured as the room the player stands in (G2-2), by the time of day where it sees out.
+        const [px, , pz] = this.game.state.player.position;
+        const grade = this.game.world.roomAt(px, pz)?.grade ?? 'neutral';
+        this.gpu.post.render(dt, grade, daylight(this.game.state.world.clockS));
       } else if (city) {
-        this.renderer.render(city.scene, city.camera);
-        this.renderer.autoClear = false;
-        this.renderer.clearDepth();
-        this.renderer.render(this.scene, this.camera);
-      } else this.renderer.render(this.scene, this.camera);
+        device.render(city.scene, city.camera);
+        device.autoClear = false;
+        device.clearDepth();
+        device.render(this.scene, this.camera);
+      } else device.render(this.scene, this.camera);
     } finally {
       this.shadowArmed = false;
-      this.renderer.autoClear = true;
+      device.autoClear = true;
       this.scene.background = background;
     }
   }
@@ -780,7 +1067,8 @@ export class WorldRenderer implements GameSystem {
    */
   private async precompile(sceneId: string): Promise<void> {
     const renderer = this.renderer;
-    if (!renderer) return;
+    const gpu = this.gpu;
+    if (!renderer && !gpu) return;
     const roots: THREE.Object3D[] = [...this.decor.meshesOf(sceneId)];
     const rooms = this.sceneRooms.get(sceneId);
     if (rooms) roots.push(rooms.group);
@@ -807,10 +1095,13 @@ export class WorldRenderer implements GameSystem {
     try {
       // Not in the attach's own task (its spawning is a long frame already): from the next frame.
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      if (this.renderer !== renderer) return;
+      if (this.renderer !== renderer || this.gpu !== gpu) return;
       // Only what is pending is compiled (and the materials it switches to), lit by the scene.
-      await this.compileOnly(renderer, [...pending, ...swapped], COMPILE_BATCH);
-      await this.warmDraw(this.firstDraws(renderer, pending));
+      if (gpu) await gpu.compile([...pending, ...swapped], this.camera, this.scene);
+      else if (renderer) {
+        await this.compileOnly(renderer, [...pending, ...swapped], COMPILE_BATCH);
+        await this.warmDraw(this.firstDraws(renderer, pending));
+      }
     } finally {
       // Shown, but for a room put to sleep meanwhile (roomSleep.ts): it stays asleep.
       for (const object of pending) {
@@ -827,6 +1118,25 @@ export class WorldRenderer implements GameSystem {
    * shortcut: a stand-in root whose traverse walks them — three r186's compile() calls only
    * traverse and traverseVisible on it; recheck on a three.js upgrade.
    */
+  /**
+   * A real person (Ultra; body/realBody.ts) made ready before it is shown: its maps uploaded, one a
+   * frame, then its programs compiled for the frame's target in batches, as a neighbour scene's.
+   */
+  private readonly prepareReal: PrepareReal = async (root, maps) => {
+    if (this.gpu) {
+      await this.gpu.compile(meshesIn([root]), this.camera, this.scene);
+      return;
+    }
+    const renderer = this.renderer;
+    if (!renderer) return;
+    for (const texture of realTextures(maps)) {
+      renderer.initTexture(texture);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      if (this.renderer !== renderer) return;
+    }
+    await this.compileOnly(renderer, meshesIn([root]), COMPILE_BATCH);
+  };
+
   private async compileOnly(
     renderer: THREE.WebGLRenderer,
     objects: THREE.Object3D[],
@@ -873,15 +1183,29 @@ export class WorldRenderer implements GameSystem {
    */
   private compileHidden(): void {
     const renderer = this.renderer;
-    if (!renderer) return;
+    if (!renderer && !this.gpu) return;
     const objects: THREE.Object3D[] = [];
     this.scene.traverse((object) => {
       if ((object as Partial<THREE.Mesh>).material) objects.push(object);
     });
     this.standIns(this.scene, objects);
+    if (!renderer) {
+      this.gpuCompile(objects, 'Hidden parts did not compile');
+      return;
+    }
     this.compileOnly(renderer, objects).catch((error: unknown) =>
       this.game.log.warn('Hidden parts did not compile', error),
     );
+  }
+
+  /**
+   * Every mesh under `roots` given its WebGPU pipelines in the background (GpuDevice.compile), a
+   * failure warned of: they are then made at their first draw.
+   */
+  private gpuCompile(roots: readonly THREE.Object3D[], failure: string): void {
+    this.gpu
+      ?.compile(meshesIn(roots), this.camera, this.scene)
+      .catch((error: unknown) => this.game.log.warn(failure, error));
   }
 
   /** Copies of `root`'s parts in the materials they switch to later (swaps), to compile. */
@@ -953,6 +1277,7 @@ export class WorldRenderer implements GameSystem {
         next: 0,
         tail: 0,
         batch: WARM_START,
+        elapsed: 0,
         done,
       };
     });
@@ -969,8 +1294,8 @@ export class WorldRenderer implements GameSystem {
     // As many a frame as the frame time allows: fewer after a slow frame, more after fast ones.
     // A frame the warm-up made slow (well over the usual interval, whatever the display or cap):
     // fewer; one at the usual pace: more.
-    if (dt > this.frameDt * WARM_SLOW + WARM_SLACK_S) w.batch = Math.max(1, w.batch >> 1);
-    else if (dt < this.frameDt * WARM_FAST) w.batch = Math.min(WARM_BATCH, w.batch * 2);
+    w.elapsed += dt;
+    w.batch = warmBatch(w.batch, dt, this.frameDt, w.elapsed);
     if (w.next >= w.objects.length) {
       // A few frames more before they are shown, for the GPU process to finish the batches.
       if (++w.tail < WARM_TAIL) return;
@@ -978,7 +1303,7 @@ export class WorldRenderer implements GameSystem {
       w.done();
       return;
     }
-    const end = Math.min(w.next + w.batch, w.objects.length);
+    const end = warmEnd(w.objects, w.next, w.batch, (object) => newTextureBytes(renderer, object));
     let shadows = false; // a shadow program or caster of a kind not drawn yet
     for (let i = w.next; i < end; i++) {
       const object = w.objects[i];
@@ -1082,8 +1407,10 @@ export class WorldRenderer implements GameSystem {
     this.roomLights.dispose();
     this.body.dispose();
     this.npcActors.dispose();
+    this.emergency.dispose();
     this.remotePlayers.dispose();
     this.progressBoard.dispose();
+    this.periodicBoard.dispose();
     this.circuits.dispose();
     this.fire.dispose();
     this.phone.dispose();
@@ -1101,8 +1428,13 @@ export class WorldRenderer implements GameSystem {
     this.idle.length = 0;
     this.post?.dispose();
     this.post = null;
+    this.pmrem?.dispose();
+    this.pmrem = null;
     this.renderer?.dispose(); // its GPU resources; the canvas stays with the page
     this.renderer = null;
+    this.gpu?.dispose();
+    this.gpu = null;
+    this.disposed = true;
   }
 
   /**
@@ -1119,6 +1451,9 @@ export class WorldRenderer implements GameSystem {
         this.buildRooms(sceneId, world.activeRooms, this.enhanced);
         this.buildDecor(sceneId);
         this.prewarmNeighbours(sceneId, true); // during the load, before its first frame
+        // Its people and those next door, hidden until seen: compiled here, built in no door's frame.
+        const near = this.neighbours(sceneId).map((scene) => scene.id);
+        this.npcActors.prepare(new Set([sceneId, ...near]));
         this.compileHidden();
       }),
     );
@@ -1126,6 +1461,7 @@ export class WorldRenderer implements GameSystem {
       events.subscribe('SceneUnloaded', ({ sceneId }) => {
         this.sleep.forgetAll();
         this.clearRooms();
+        this.dresses.clear();
         this.decor.clear(sceneId);
         this.dropRoomReflections();
       }),
@@ -1164,6 +1500,7 @@ export class WorldRenderer implements GameSystem {
       events.subscribe('GraphicsQualityChanged', () => {
         this.setLighting(this.enhanced ? 'enhanced' : 'basic');
         this.resize();
+        void this.syncDevice(); // Ultra on WebGPU, or back
       }),
     );
   }
@@ -1176,7 +1513,12 @@ export class WorldRenderer implements GameSystem {
     const { events, world, scenes } = this.game;
     s.add(
       events.subscribe('SceneAttaching', ({ sceneId }) => {
-        for (const room of world.roomsOf(sceneId)) this.attaching.add(room.id);
+        for (const room of world.roomsOf(sceneId)) {
+          this.attaching.add(room.id);
+          // Built in idle time while its entities spawn, not all in SceneAttached's frame.
+          this.idle.push(() => void this.dressOf(room));
+        }
+        this.runIdle();
       }),
     );
     // Its entities are in (precompile hides them, then shows them compiled); or it was given up.
@@ -1190,7 +1532,8 @@ export class WorldRenderer implements GameSystem {
       events.subscribe('EntityDespawned', ({ entityId }) => {
         this.mirrors.remove(entityId);
         this.readers.remove(entityId);
-        if (!this.decor.remove(entityId)) this.removeEntity(entityId);
+        this.decor.remove(entityId); // decor, or a viewed entity's batched part (a trim)
+        this.removeEntity(entityId);
       }),
     );
     s.add(events.subscribe('EntityStateChanged', ({ entityId }) => this.refresh(entityId)));
@@ -1208,13 +1551,9 @@ export class WorldRenderer implements GameSystem {
     for (const sceneId of scenes.residentIds) this.buildDecor(sceneId);
   }
 
-  /** A scene's decor batches, in the preset's finishes. */
+  /** A scene's decor batches (each in the preset's finishes as it is drawn). */
   private buildDecor(sceneId: string): void {
     this.decor.build(sceneId);
-    for (const mesh of this.decor.meshesOf(sceneId)) {
-      this.finishes.adopt(mesh);
-      this.adoptUltra(mesh);
-    }
     this.darknessDirty = true;
   }
 
@@ -1231,7 +1570,7 @@ export class WorldRenderer implements GameSystem {
    * odd width, and the browser then resamples the whole frame (render-quality audit F8).
    */
   private resize(): void {
-    const renderer = this.renderer;
+    const renderer = this.device;
     if (!renderer) return; // nothing drawn before init
     const width = this.host.clientWidth || window.innerWidth;
     const height = this.host.clientHeight || window.innerHeight;
@@ -1279,17 +1618,31 @@ export class WorldRenderer implements GameSystem {
   private syncSurfaces(on: boolean): void {
     if (!on) {
       if (this.surfaces.ready) this.surfaces.drop();
+      this.finishes.setWear(null);
       return;
     }
+    // Max's wear on them (loaded the first time); the surfaces compile again when it changes.
+    void this.surfaces
+      .setWear(QUALITY[this.game.graphicsQuality].wear, (message, error) =>
+        this.game.log.warn(message, error),
+      )
+      .then(() => {
+        if (this.disposed) return;
+        const wear = QUALITY[this.game.graphicsQuality].wear ? this.surfaces.wear : null;
+        if (wear) this.device?.initTexture(wear);
+        this.finishes.setWear(wear); // fingerprints on the glassware's sheen too
+      });
     if (this.surfaces.ready) {
-      this.surfaces.adopt(this.scene);
+      // WebGPU: a material's pipelines are made per look, so the new ones ahead (WebGL's programs
+      // were compiled with the first adopt). Not made, a room's first capture built them (1.1 s).
+      if (this.surfaces.adopt(this.scene) > 0 && this.gpu) this.compileHidden();
       return;
     }
-    const renderer = this.renderer;
     this.surfaces
       .load((message, error) => this.game.log.warn(message, error))
       .then(() => {
-        if (this.renderer !== renderer || !QUALITY[this.game.graphicsQuality].surfaces) return;
+        // (Laid on whichever device draws by then: Ultra's WebGPU starts while they load.)
+        if (this.disposed || !QUALITY[this.game.graphicsQuality].surfaces) return;
         this.surfaces.adopt(this.scene);
         this.compileHidden(); // the surfaces' programs, before they are first drawn
       })
@@ -1305,6 +1658,7 @@ export class WorldRenderer implements GameSystem {
   ultraReady(): Promise<void> {
     const q = QUALITY[this.game.graphicsQuality];
     const steps: Promise<unknown>[] = [];
+    if (q.webgpu) steps.push(this.syncDevice()); // its device, before the scene is built
     if (q.post) {
       this.fetchPost();
       if (this.postFetch) steps.push(this.postFetch);
@@ -1315,7 +1669,7 @@ export class WorldRenderer implements GameSystem {
           .load((message, error) => this.game.log.warn(message, error))
           .then(() => {
             // Uploaded now, behind the loading screen: ~40 maps of 1–2 K, a long first frame else.
-            for (const texture of this.surfaces.textures()) this.renderer?.initTexture(texture);
+            for (const texture of this.surfaces.textures()) this.device?.initTexture(texture);
           })
           .catch(() => undefined),
       );
@@ -1340,13 +1694,33 @@ export class WorldRenderer implements GameSystem {
    * (one light) are drawn without it.
    */
   private syncPost(on: boolean): void {
+    if (this.gpu) {
+      const had = this.gpu.post !== null;
+      this.gpu.usePost(on, this.scene, this.camera);
+      if (!had && this.gpu.post) this.compileHidden(); // its target's pipelines differ
+      return;
+    }
     const renderer = this.renderer;
     if (!on || !renderer) {
       this.post?.dispose();
       this.post = null;
       return;
     }
-    if (this.post) return;
+    // Max's chain differs from Ultra's (its grade, its AO samples): made again on a change.
+    const q = QUALITY[this.game.graphicsQuality];
+    const options: PostOptions = {
+      grade: q.grade,
+      aoSamples: q.aoSamples,
+      seeThrough: q.effects ? this.seeThrough : null,
+    };
+    const same = (a: PostOptions | null) =>
+      a !== null &&
+      a.grade === options.grade &&
+      a.aoSamples === options.aoSamples &&
+      a.seeThrough === options.seeThrough;
+    if (this.post && same(this.postOptions)) return;
+    this.post?.dispose();
+    this.post = null;
     if (this.postModule) {
       // Here already (fetched at start): made at once, so a load compiles for it (compileOnly).
       renderer.getDrawingBufferSize(this.postSize);
@@ -1356,7 +1730,9 @@ export class WorldRenderer implements GameSystem {
         this.camera,
         this.postSize.x,
         this.postSize.y,
+        options,
       );
+      this.postOptions = options;
       return;
     }
     this.fetchPost(() => {
@@ -1410,6 +1786,7 @@ export class WorldRenderer implements GameSystem {
     this.observed = true;
     this.canvas.style.width = '100%';
     this.canvas.style.height = '100%';
+    this.resizeObserver = observer;
     this.subscriptions.add(() => observer.disconnect());
   }
 
@@ -1433,10 +1810,11 @@ export class WorldRenderer implements GameSystem {
     this.fill.visible = this.enhanced && !this.roomLit;
     this.roomLights.visible = this.roomLit;
     this.applyQuality();
-    if (this.renderer) {
+    const device = this.device;
+    if (device) {
       // Filmic tone mapping keeps lit walls from clipping to white (enhanced scenes only).
-      this.renderer.toneMapping = this.enhanced ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
-      this.renderer.toneMappingExposure = 1.05;
+      device.toneMapping = this.enhanced ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+      device.toneMappingExposure = 1.05;
     }
     for (const { group } of this.sceneRooms.values()) this.shadeShells(group);
     this.placeLights();
@@ -1541,6 +1919,7 @@ export class WorldRenderer implements GameSystem {
     if (this.shadowCache) this.shadowCache.minInterval = 1 / q.shadowRateHz;
     this.syncPost(this.enhanced && q.post);
     this.syncSurfaces(q.surfaces); // by the preset alone: a scene change passes through basic lighting
+    this.containers.setDetail(q.liquids); // Ultra: the meniscus and the ripples
     if (!q.modelDetail) this.detail.drop(this.scene);
     this.syncFittings(q.modelDetail);
     for (const [sceneId, { rooms, enhanced, glass }] of [...this.sceneRooms]) {
@@ -1557,8 +1936,7 @@ export class WorldRenderer implements GameSystem {
         : null;
     const tilt = captured ? 0 : ROOM_LIGHT_TILT;
     if (!q.roomReflections && this.roomEnvironments.size > 0) this.dropRoomReflections(false);
-    const reflected =
-      this.enhanced && q.reflections > 0 ? (captured ?? this.environmentMap()) : null;
+    const reflected = this.enhanced && q.reflections > 0 ? this.reflectionOf(captured) : null;
     if (this.finishes.set(q, reflected, tilt)) {
       this.finishes.adopt(this.scene);
       this.adoptUltra(this.scene);
@@ -1571,7 +1949,7 @@ export class WorldRenderer implements GameSystem {
     this.body.castShadow = this.enhanced && q.shadows;
     this.mirrorScale = this.enhanced ? q.mirrorScale : 0;
     const environment = this.enhanced ? q.environment : 0;
-    this.scene.environment = environment > 0 ? (captured ?? this.environmentMap()) : null;
+    this.scene.environment = environment > 0 ? this.reflectionOf(captured) : null;
     this.scene.environmentIntensity = environment;
     this.scene.environmentRotation.x = tilt;
     this.applyAmbient();
@@ -1689,7 +2067,9 @@ export class WorldRenderer implements GameSystem {
   /** The room light, prefiltered (PMREM) once; never per frame. Null before WebGL exists. */
   /**
    * Ultra: four times a second, the room under the player; on entering one, its captured
-   * reflections (captured the first time, once nothing is being warmed) become the scene's.
+   * reflections (captured the first time, once nothing is being warmed) become the scene's. A room
+   * within CAPTURE_AHEAD_M is captured ahead (Phú, 2026-11-14: a lab's first visit came in with the
+   * hall's reflections and changed a moment later): walked into, its own show at once.
    */
   private followRoomReflections(dt: number, x: number, z: number): void {
     this.reflectionClock += dt;
@@ -1697,13 +2077,48 @@ export class WorldRenderer implements GameSystem {
     this.reflectionClock = 0;
     if (!this.enhanced || !QUALITY[this.game.graphicsQuality].roomReflections) return;
     const room = this.game.world.roomAt(x, z)?.id ?? null;
-    if (room === null || room === this.reflectedRoom || this.warming) return;
+    if (room === null || this.warming) return;
+    if (room === this.reflectedRoom) {
+      if (!this.capture) this.captureAhead(x, z);
+      return;
+    }
     if (!this.roomEnvironments.has(room)) {
       if (this.capture?.roomId !== room) this.startCapture(room);
       return; // taken over the next frames (captureStep), then applied
     }
     this.reflectedRoom = room;
     this.applyQuality();
+  }
+
+  /**
+   * The first room of a neighbour scene (through a door: the lab beyond the hall's) near the player
+   * whose reflections are not taken. Not the current scene's other rooms: they are captured on
+   * entering as before (ahead, Ultra under software WebGL fell to 1 frame a second, settings.spec).
+   */
+  private captureAhead(x: number, z: number): void {
+    const { scenes, world } = this.game;
+    for (const id of scenes.residentIds) {
+      if (id === scenes.currentSceneId) continue;
+      for (const room of world.roomsOf(id)) {
+        if (this.roomEnvironments.has(room.id)) continue;
+        const { min, max } = room.bounds;
+        const dx = Math.max(min[0] - x, 0, x - max[0]);
+        const dz = Math.max(min[2] - z, 0, z - max[2]);
+        if (Math.hypot(dx, dz) > CAPTURE_AHEAD_M) continue;
+        this.startCapture(room.id);
+        return;
+      }
+    }
+  }
+
+  /** A resident room by id: the current scene's or a neighbour's. */
+  private residentRoom(roomId: string) {
+    const { scenes, world } = this.game;
+    for (const id of scenes.residentIds) {
+      const room = world.roomsOf(id).find((r) => r.id === roomId);
+      if (room) return room;
+    }
+    return world.activeRooms.find((r) => r.id === roomId);
   }
 
   /**
@@ -1714,17 +2129,20 @@ export class WorldRenderer implements GameSystem {
    */
   private startCapture(roomId: string): void {
     this.dropCapture();
-    const room = this.game.world.roomAt(this.camera.position.x, this.camera.position.z);
-    if (!this.renderer || room?.id !== roomId) return;
+    const room = this.residentRoom(roomId);
+    const device = this.device;
+    if (!device || !room) return;
     const { min, max } = room.bounds;
-    const target = new THREE.WebGLCubeRenderTarget(256, { type: THREE.HalfFloatType });
+    const target = this.gpu
+      ? this.gpu.cubeTarget() // the device's own, kept
+      : new THREE.WebGLCubeRenderTarget(256, { type: THREE.HalfFloatType });
     const cube = new THREE.CubeCamera(0.1, 60, target);
     cube.position.set(
       (min[0] + max[0]) / 2,
       Math.min(min[1] + 1.6, max[1] - 0.2),
       (min[2] + max[2]) / 2,
     );
-    cube.coordinateSystem = this.renderer.coordinateSystem;
+    cube.coordinateSystem = device.coordinateSystem;
     cube.updateCoordinateSystem();
     cube.updateMatrixWorld(true);
     this.capture = { roomId, target, cube, face: 0 };
@@ -1733,13 +2151,17 @@ export class WorldRenderer implements GameSystem {
   /** One face of the capture under way; after the sixth, its reflections prefiltered and applied. */
   private captureStep(): void {
     const job = this.capture;
-    const renderer = this.renderer;
-    if (!job || !renderer) return;
+    const { renderer, gpu } = this;
+    if (!job || (!renderer && !gpu)) return;
     const here = this.game.world.roomAt(this.camera.position.x, this.camera.position.z)?.id;
-    if (here !== job.roomId) {
+    if (!this.game.world.hasRoom(job.roomId)) {
       this.dropCapture();
       return;
-    } // left before it was done
+    } // its scene gone before it was done
+    // WebGPU: what a pipeline is being made for is not drawn yet (GpuDevice.inBackground), and what
+    // is being compiled ahead would be built again by the face (0.5 s at the first room): no face
+    // is taken meanwhile, and a face that asked for new ones is taken again once they are made.
+    if (gpu?.compiling) return;
     const shown = { hands: this.hands.group.visible, body: this.body.group.visible };
     this.hands.group.visible = false;
     this.body.group.visible = false;
@@ -1748,35 +2170,45 @@ export class WorldRenderer implements GameSystem {
     // one frame: 2.4–3.3 s in the pendulum bay at Ultra, G-2).
     const strength = this.scene.environmentIntensity;
     this.scene.environmentIntensity = 0;
-    const autoShadows = renderer.shadowMap.autoUpdate;
-    renderer.shadowMap.autoUpdate = false; // the frame's own shadows serve
-    const before = renderer.getRenderTarget();
+    // WebGL: the frame's own shadows serve. (WebGPU's are drawn once a frame whatever draws.)
+    const autoShadows = renderer?.shadowMap.autoUpdate ?? true;
+    if (renderer) renderer.shadowMap.autoUpdate = false;
+    const before = renderer?.getRenderTarget() ?? null;
     try {
       const camera = job.cube.children[job.face] as THREE.Camera;
-      renderer.setRenderTarget(job.target, job.face);
-      renderer.render(this.scene, camera);
-      job.face++;
+      if (gpu) gpu.drawFace(this.scene, camera, job.target, job.face);
+      else if (renderer) {
+        renderer.setRenderTarget(job.target as THREE.WebGLCubeRenderTarget, job.face);
+        renderer.render(this.scene, camera);
+      }
+      if (!gpu?.compiling) job.face++;
     } finally {
-      renderer.setRenderTarget(before);
-      renderer.shadowMap.autoUpdate = autoShadows;
+      if (renderer) {
+        renderer.setRenderTarget(before);
+        renderer.shadowMap.autoUpdate = autoShadows;
+      }
       this.scene.environmentIntensity = strength;
       this.hands.group.visible = shown.hands;
       this.body.group.visible = shown.body;
     }
     if (job.face < 6) return;
-    const pmrem = new THREE.PMREMGenerator(renderer);
     try {
-      this.roomEnvironments.set(job.roomId, pmrem.fromCubemap(job.target.texture).texture);
+      const cube = job.target.texture;
+      const prefiltered = gpu
+        ? gpu.prefilter(cube)
+        : renderer && this.pmremOf(renderer).fromCubemap(cube).texture;
+      if (prefiltered) this.roomEnvironments.set(job.roomId, prefiltered);
     } finally {
-      pmrem.dispose();
       this.dropCapture();
     }
+    if (here !== job.roomId) return; // taken ahead: applied when walked into
     this.reflectedRoom = job.roomId;
     this.applyQuality();
   }
 
   private dropCapture(): void {
-    this.capture?.target.dispose();
+    // (WebGPU's cube is the device's, kept: GpuDevice.cubeTarget.)
+    if (this.capture?.target instanceof THREE.WebGLCubeRenderTarget) this.capture.target.dispose();
     this.capture = null;
   }
 
@@ -1789,16 +2221,53 @@ export class WorldRenderer implements GameSystem {
     if (apply) this.applyQuality();
   }
 
+  /**
+   * What reflects: the room captured, or else the generated one. Under WebGPU, in the device's
+   * one map (GpuDevice.reflection): a texture changed builds every lit material again.
+   */
+  private reflectionOf(captured: THREE.Texture | null): THREE.Texture | null {
+    return this.gpu ? this.gpu.reflection(captured) : (captured ?? this.environmentMap());
+  }
+
   private environmentMap(): THREE.Texture | null {
     if (!this.renderer) return null;
     if (!this.environment) {
-      const pmrem = new THREE.PMREMGenerator(this.renderer);
+      const pmrem = this.pmremOf(this.renderer);
       const room = new RoomEnvironment();
       this.environment = pmrem.fromScene(room, 0.04).texture;
       room.dispose();
-      pmrem.dispose();
     }
     return this.environment;
+  }
+
+  /**
+   * The one prefilter (three keeps its programs with it), its cubemap program compiled with it:
+   * one made and freed per room capture compiled and linked again each time, in the frame a room
+   * was walked into (~130 ms on the RTX 5070 at Ultra, 2026-11-14).
+   */
+  private pmremOf(renderer: THREE.WebGLRenderer): THREE.PMREMGenerator {
+    if (!this.pmrem) {
+      this.pmrem = new THREE.PMREMGenerator(renderer);
+      this.pmrem.compileCubemapShader();
+    }
+    return this.pmrem;
+  }
+
+  /** Room `roomId`'s ceiling box as drawn now (an emergency blows a hole in it), or null. */
+  private ceilingOf(roomId: string): THREE.Mesh | null {
+    for (const { group } of this.sceneRooms.values()) {
+      for (const child of group.children) {
+        if (
+          child instanceof THREE.Mesh &&
+          child.userData.part === 'ceiling' &&
+          child.userData.roomId === roomId &&
+          child.geometry instanceof THREE.BoxGeometry
+        ) {
+          return child;
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -1882,8 +2351,7 @@ export class WorldRenderer implements GameSystem {
         group.add(mesh);
       }
       // Its style's cladding and decoration (Phase U): a draw per finish, in the shared palette.
-      const sizeOf = (id: string) => this.game.content.items.tryGet(id)?.visual.size;
-      for (const { finish, geometry } of dressRoom(room, sizeOf)) {
+      for (const { finish, geometry } of this.dressOf(room)) {
         const mesh = new THREE.Mesh(geometry, this.palette.finish(finish));
         mesh.userData.part = 'skirting'; // receives shadows, casts none
         mesh.userData.roomId = room.id;
@@ -2008,23 +2476,36 @@ export class WorldRenderer implements GameSystem {
     };
     this.city = city;
     const renderer = this.renderer;
+    const gpu = this.gpu;
+    const device = this.device;
     void import('./city/CityView')
       .then(async ({ CityView, CITY_DEPTH }) => {
         const view = await CityView.load(import.meta.env.BASE_URL, detail);
-        if (this.city !== city || !renderer) {
+        if (this.city !== city || !device || this.device !== device) {
           view.dispose();
           return;
-        } // left, or another preset
+        } // left, or another preset or device
         const [x0, x1, z0, z1] = glassRect(room);
         view.place((x0 + x1) / 2, room.bounds.min[1] - CITY_DEPTH, (z0 + z1) / 2);
         view.update(this.camera, this.game.state.world.clockS, 0);
         // Its programs, for where it is drawn (under Ultra the composer's target, not the canvas):
         // no stall at the first look down.
-        if (this.post) renderer.setRenderTarget(this.post.target);
-        const compiled = renderer.compileAsync(view.scene, view.camera);
-        renderer.setRenderTarget(null);
-        await compiled;
-        view.upload(renderer);
+        // shortcut: under WebGPU compiled for the canvas, not the city's own pass (its target is
+        // made with the pass): a stall at the first look down stays possible there (G2-1).
+        if (gpu) await gpu.renderer.compileAsync(view.scene, view.camera);
+        else if (renderer) {
+          if (this.post) renderer.setRenderTarget(this.post.target);
+          const compiled = renderer.compileAsync(view.scene, view.camera);
+          renderer.setRenderTarget(null);
+          await compiled;
+        }
+        // Its textures one a frame, so the first look down does not stall on them: all at once
+        // they took one frame of 180–260 ms on an RTX 5070 (High, Ultra; 2026-11-14).
+        for (const texture of view.textures) {
+          if (this.city !== city || this.device !== device) break;
+          device.initTexture(texture);
+          await new Promise((next) => requestAnimationFrame(next));
+        }
         if (this.city !== city) {
           view.dispose();
           return;
@@ -2048,6 +2529,7 @@ export class WorldRenderer implements GameSystem {
     this.city = null;
     this.cityAway = 0;
     this.post?.setUnder(null, null);
+    this.gpu?.post?.setUnder(null, null);
   }
 
   /** Frees scene `sceneId`'s room shells, or every scene's without it. */
@@ -2083,9 +2565,9 @@ export class WorldRenderer implements GameSystem {
     if (open !== this.explainFramed) {
       // The station's desk display stands between the player and the apparatus: hidden meanwhile.
       const shown = this.explainFramed && this.views.get(`${this.explainFramed}-display`);
-      if (shown) shown.group.visible = true;
+      if (shown) this.showView(shown, true);
       const hidden = open && this.views.get(`${open}-display`);
-      if (hidden) hidden.group.visible = false;
+      if (hidden) this.showView(hidden, false);
       this.explainFramed = open;
       const view =
         open === null
@@ -2194,6 +2676,10 @@ export class WorldRenderer implements GameSystem {
   private async warmRoom(objects: THREE.Object3D[]): Promise<void> {
     const renderer = this.renderer;
     for (const object of objects) object.layers.set(PENDING_LAYER);
+    if (this.gpu) {
+      await this.gpu.compile(meshesIn(objects), this.camera, this.scene);
+      return;
+    }
     if (!renderer) return;
     await this.compileOnly(renderer, objects);
     await this.warmDraw(this.firstDraws(renderer, objects));
@@ -2210,11 +2696,12 @@ export class WorldRenderer implements GameSystem {
       return;
     }
     const { visual } = entity.item;
-    const material = new THREE.MeshStandardMaterial({
-      color: visual.color,
-      ...LOOKS[visual.material],
-    });
-    material.userData.look = visual.material; // its Ultra surface (surfaces.ts)
+    // Glass (finishes filter it), a light (dark with its room) and a reveal change their own.
+    const shared =
+      visual.material === 'glass' || visual.material === 'light' || visual.reveal
+        ? null
+        : this.paints.take(paintKey(visual), () => paintOf(visual));
+    const material = shared ?? paintOf(visual);
     const baseEmissive = new THREE.Color(visual.material === 'light' ? visual.color : '#000000');
     // A launcher is drawn as its apparatus; its pedestal is the entity's mesh (focus shows on it
     // and on every painted part, which share its material). The collider stays the item's box.
@@ -2231,6 +2718,10 @@ export class WorldRenderer implements GameSystem {
       ? buildTowerFrame(entity.item, entity.item.dropTower, material)
       : null;
     const bench = entity.item.bench ? this.benchFrame(entity.item, material) : null;
+    // Their fixed parts drawn as few times as they have materials (mergeStill.ts).
+    const merged = [launcher, pendulum, spring, tower, bench].flatMap((frame) =>
+      frame ? mergeStill(frame.parts) : [],
+    );
     // A prop's body is the entity's mesh (focus and glow show on it); its other parts are the
     // mesh's children, so a physics pose moves them too; a leaf's parts turn about its hinge.
     const parts = visual.prop ? this.props.get(visual.prop, visual.size) : null;
@@ -2248,15 +2739,43 @@ export class WorldRenderer implements GameSystem {
     mesh.receiveShadow = true;
     const leaves = parts ? attachParts(mesh, parts, entity.item, this.palette) : [];
     const group = new THREE.Group();
+    group.name = entity.id; // (named for three's tools and frame breakdowns)
     group.position.fromArray(entity.pose.position);
     group.quaternion.fromArray(entity.pose.rotation);
     group.add(mesh);
-    // A control's trim shares the cached geometry and material: nothing of its own to free.
+    // A control's trim shares the cached geometry and material: nothing of its own to free. The
+    // same on every desk, button and display and never lit on its own, it is drawn with the others
+    // of its room (decorBatches.ts addPart: ~110 draws fewer in the Physics Lab); a moving one, or
+    // one of no world scene, with its view.
     const trim = visual.model ? this.controlFor(visual.model, visual.size).trim : null;
-    if (trim) {
+    const trimScene = trim ? this.sceneOf(entity.roomId) : undefined;
+    if (trim && trimScene !== undefined && entity.item.physical.body !== 'dynamic') {
+      this.decor.addPart(trimScene, entity, `trim:${trim.uuid}`, {
+        geometry: trim,
+        material: this.trim,
+        casts: false,
+      });
+    } else if (trim) {
       const part = new THREE.Mesh(trim, this.trim);
       part.receiveShadow = true;
       group.add(part);
+    }
+    // A body of a shared shape and look, the same on many (a knob, a button, a desk, a bench, a
+    // monitor: ~400 draws in the Physics Lab), is drawn with the others of its room too; its own
+    // mesh draws it only while it looks otherwise (focused, lit, charred) or is outlined, the
+    // copy in the batch then at no size (placeBody). The batch takes the shape as made: Ultra's
+    // detail is laid on the batch as on the mesh.
+    const bodyScene = this.sceneOf(entity.roomId);
+    const bodyKey =
+      shared && bodyScene !== undefined && this.batchable(entity, mesh)
+        ? `body:${mesh.geometry.uuid}:${shared.uuid}:${mesh.castShadow}`
+        : null;
+    if (bodyKey && bodyScene !== undefined && shared) {
+      this.decor.addPart(bodyScene, entity, bodyKey, {
+        geometry: mesh.geometry,
+        material: shared,
+        casts: mesh.castShadow,
+      });
     }
     const running = this.game.entityStates.get(entity.id, 'running') === true;
     this.water.add(entity.id, entity.item, group, running);
@@ -2288,7 +2807,10 @@ export class WorldRenderer implements GameSystem {
       spring,
       tower,
       bench,
+      merged,
+      bodyKey,
       baseEmissive,
+      shared,
       // A loose vessel: a physical lab's container, or (shortcut: no better sign of one) a glass
       // item with no prop. Bench glass is merged per rig and not grounded (audit §12).
       grounded:
@@ -2322,9 +2844,15 @@ export class WorldRenderer implements GameSystem {
     if (key !== this.outlined) {
       this.outlined = key;
       const ids = this.outlineIds;
+      const before = [...ids];
       ids.length = 0;
       ids.push(...heldTargets.ids);
       for (const id of taskGuide.objects) if (!ids.includes(id)) ids.push(id);
+      // An outlined body is its own mesh's (the outline is drawn by it): out of its batch first.
+      for (const id of [...before, ...ids]) {
+        const view = this.views.get(id);
+        if (view && before.includes(id) !== ids.includes(id)) this.placeBody(view);
+      }
       this.outlines.sync(ids, this.outlineMesh, taskGuide.objects);
     }
     if (taskGuide.version !== this.guided) {
@@ -2381,12 +2909,14 @@ export class WorldRenderer implements GameSystem {
     this.contact.remove(entityId);
     this.outlines.forget(entityId);
     this.containers.unmount(entityId);
-    view.mesh.material.dispose();
+    if (view.mesh.material !== view.shared) view.mesh.material.dispose(); // its own, or its copy
+    if (view.shared) this.paints.release(paintKey(view.entity.item.visual));
     view.launcher?.dispose();
     view.pendulum?.dispose();
     view.spring?.dispose();
     view.tower?.dispose();
     view.bench?.dispose();
+    for (const geometry of view.merged) geometry.dispose();
     this.water.remove(entityId);
     this.reveals.remove(entityId);
     this.experiment.removeScreen(entityId);
@@ -2434,6 +2964,50 @@ export class WorldRenderer implements GameSystem {
     this.contact.place(entity.id, p.x, p.y - reach, p.z, (Math.max(w, d) / 2) * CONTACT_SPREAD);
   }
 
+  /**
+   * Whether an entity's body can be drawn among its room's (addEntity): still (never moved,
+   * turned or opened), a body of a shape it shares (no prop's parts on it, no apparatus frame of
+   * its own), nothing that reads or changes its mesh (a vessel, a circuit part, a reveal).
+   */
+  private batchable(entity: WorldEntity, mesh: THREE.Mesh): boolean {
+    const { item } = entity;
+    return (
+      item.physical.body !== 'dynamic' &&
+      mesh.children.length === 0 &&
+      !item.visual.prop &&
+      !item.visual.reveal &&
+      !item.container &&
+      !item.circuit &&
+      !item.hinged &&
+      !item.door &&
+      !item.slider &&
+      !item.launcher &&
+      !item.pendulum &&
+      !item.springStand &&
+      !item.dropTower &&
+      !item.bench
+    );
+  }
+
+  /**
+   * A batched body drawn where it is to be: by its own mesh while it looks otherwise than its
+   * shared look (focused, lit, charred: repaint) or is outlined (the outline is drawn by the mesh),
+   * else by its room's batch. On those events only.
+   */
+  private placeBody(view: EntityView): void {
+    if (view.bodyKey === null) return;
+    const own = view.mesh.material !== view.shared || this.outlineIds.includes(view.entity.id);
+    view.mesh.visible = own;
+    this.decor.hidePart(view.entity.id, view.bodyKey, own);
+  }
+
+  /** A view shown or hidden, its part drawn among its room's with it (a control's trim). */
+  private showView(view: EntityView, shown: boolean): void {
+    if (view.group.visible === shown) return;
+    view.group.visible = shown;
+    this.decor.hide(view.entity.id, !shown);
+  }
+
   /** Its leaves turned to the hinge system's fraction, eased as physics turns their bodies. */
   private turnLeaves(view: EntityView): void {
     const hinged = view.entity.item.hinged;
@@ -2458,7 +3032,7 @@ export class WorldRenderer implements GameSystem {
       if (was !== null) this.refresh(was);
     }
     const view = id === null ? undefined : this.views.get(id);
-    if (view && id !== null) view.group.visible = this.game.entityStates.get(id, 'taken') === true;
+    if (view && id !== null) this.showView(view, this.game.entityStates.get(id, 'taken') === true);
   }
 
   /**
@@ -2469,7 +3043,7 @@ export class WorldRenderer implements GameSystem {
     const view = this.views.get(entityId);
     if (!view) return;
     const states = this.game.entityStates;
-    view.group.visible = states.get(entityId, 'taken') !== true;
+    this.showView(view, states.get(entityId, 'taken') !== true);
     if (view.grounded) this.ground(view);
     this.water.refresh(entityId, states.get(entityId, 'running') === true);
     const angle = states.get(entityId, 'param.angle');
@@ -2479,11 +3053,13 @@ export class WorldRenderer implements GameSystem {
     }
     const active = states.get(entityId, 'active') === true;
     const { color } = view.entity.item.visual;
-    const material = view.mesh.material;
     // Blackened by a fire, or a circuit part ruined by heat (Phase E-2); its own colour again once
     // cleaned or swapped. Only an entity that was ever so is touched.
     const charred =
       states.get(entityId, 'charred') === true || states.get(entityId, 'broken') === true;
+    this.repaint(view, active || charred || entityId === this.focusedId);
+    this.placeBody(view);
+    const material = view.mesh.material;
     if (charred || material.userData.charred === true) {
       material.color.set(color);
       if (charred) material.color.multiplyScalar(0.2);
@@ -2500,6 +3076,33 @@ export class WorldRenderer implements GameSystem {
       if (entityId === this.focusedId) material.emissive.add(FOCUS_EMISSIVE);
       material.emissiveIntensity = 1;
     }
+  }
+
+  /**
+   * A shared view in a copy of its own while it differs from its look (`changed`: focused, active,
+   * charred), in the shared material again after. Every part painted with the one (a rig's parts
+   * share the body's) takes the other; the copy is made as the shared one was, so it draws with
+   * the same program.
+   */
+  private repaint(view: EntityView, changed: boolean): void {
+    const { shared } = view;
+    const from = view.mesh.material;
+    if (!shared || changed === (from !== shared)) return;
+    const to = changed ? paintOf(view.entity.item.visual) : shared;
+    view.group.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (this.twinned.get(mesh) === from)
+        this.twinned.delete(mesh); // its dark copy: redone
+      else if (mesh.material !== from) return;
+      mesh.material = to;
+    });
+    this.finishes.adopt(view.group);
+    this.surfaces.adopt(view.group);
+    if (this.darkRooms.has(view.entity.roomId) || this.darkened.has(from) || this.darkened.has(to))
+      this.darknessDirty = true;
+    if (changed) return;
+    this.darkened.delete(from);
+    from.dispose();
   }
 
   /**
@@ -2553,10 +3156,7 @@ export class WorldRenderer implements GameSystem {
   private prewarmNeighbours(sceneId: string, now = false): void {
     const { content } = this.game;
     const done = new Set<string>();
-    for (const { a, b } of this.game.scenes.doorPairs) {
-      const other = a.sceneId === sceneId ? b.sceneId : b.sceneId === sceneId ? a.sceneId : null;
-      const scene = other ? content.scenes.tryGet(other) : undefined;
-      if (!scene || scene.kind !== 'world') continue;
+    for (const scene of this.neighbours(sceneId)) {
       for (const roomId of scene.rooms) {
         for (const p of content.rooms.get(roomId).placements) {
           const item = content.items.tryGet(p.item);
@@ -2573,6 +3173,28 @@ export class WorldRenderer implements GameSystem {
       return;
     }
     this.runIdle();
+  }
+
+  /** The world scenes a door joins to `sceneId`, each once. */
+  private neighbours(sceneId: string): Extract<SceneDefinition, { kind: 'world' }>[] {
+    const out: Extract<SceneDefinition, { kind: 'world' }>[] = [];
+    for (const { a, b } of this.game.scenes.doorPairs) {
+      const other = a.sceneId === sceneId ? b.sceneId : b.sceneId === sceneId ? a.sceneId : null;
+      const scene = other ? this.game.content.scenes.tryGet(other) : undefined;
+      if (scene?.kind === 'world' && !out.includes(scene)) out.push(scene);
+    }
+    return out;
+  }
+
+  /** `room`'s dressing where it is in the session frame, built the first time (dresses). */
+  private dressOf(room: RoomDefinition): DressPart[] {
+    const key = `${room.id}@${room.bounds.min.join(',')}`;
+    let dress = this.dresses.get(key);
+    if (!dress) {
+      dress = dressRoom(room, (id) => this.game.content.items.tryGet(id)?.visual.size);
+      this.dresses.set(key, dress);
+    }
+    return dress;
   }
 
   /**
@@ -2693,6 +3315,79 @@ export class WorldRenderer implements GameSystem {
     return shapes;
   }
 }
+
+/**
+ * The warm-up's next batch: halved after a frame well over the usual interval `frameDt`, doubled
+ * after a quick one; past WARM_MAX_S of it, doubled whatever the frame time, so it ends in a few.
+ */
+export function warmBatch(batch: number, dt: number, frameDt: number, elapsed: number): number {
+  if (elapsed > WARM_MAX_S || dt < frameDt * WARM_FAST) return Math.min(WARM_BATCH, batch * 2);
+  if (dt > frameDt * WARM_SLOW + WARM_SLACK_S) return Math.max(1, batch >> 1);
+  return batch;
+}
+
+/**
+ * Where the warm-up's batch from `next` ends: at most `batch` objects, and no more new texture data
+ * than WARM_BYTES (`bytes` of an object), but always one.
+ */
+export function warmEnd(
+  objects: readonly THREE.Object3D[],
+  next: number,
+  batch: number,
+  bytes: (object: THREE.Object3D) => number,
+): number {
+  const last = Math.min(next + batch, objects.length);
+  let end = next;
+  let total = 0;
+  while (end < last) {
+    const object = objects[end];
+    const b = object ? bytes(object) : 0;
+    if (end > next && total + b > WARM_BYTES) break;
+    total += b;
+    end++;
+  }
+  return end;
+}
+
+/** Bytes of `object`'s textures not on the GPU yet: its first draw uploads them. */
+/** What is drawn under `roots` (each object with a material, the roots too). */
+function meshesIn(roots: readonly THREE.Object3D[]): THREE.Object3D[] {
+  const out: THREE.Object3D[] = [];
+  for (const root of roots) {
+    root.traverse((object) => {
+      if ((object as Partial<THREE.Mesh>).material) out.push(object);
+    });
+  }
+  return out;
+}
+
+function newTextureBytes(renderer: THREE.WebGLRenderer, object: THREE.Object3D): number {
+  let bytes = 0;
+  for (const material of [(object as Partial<THREE.Mesh>).material ?? []].flat()) {
+    for (const value of Object.values(material)) {
+      if (!(value instanceof THREE.Texture)) continue;
+      // three's own record: the version it last uploaded.
+      if ((renderer.properties.get(value) as { __version?: number }).__version === value.version)
+        continue;
+      const image = value.image as { width?: number; height?: number } | null;
+      bytes += (image?.width ?? 0) * (image?.height ?? 0) * 4;
+    }
+  }
+  return bytes;
+}
+
+/** An entity's paint: its colour in its look. */
+function paintOf(visual: ItemDefinition['visual']): THREE.MeshStandardMaterial {
+  const material = new THREE.MeshStandardMaterial({
+    color: visual.color,
+    ...LOOKS[visual.material],
+  });
+  material.userData.look = visual.material; // its Ultra surface (surfaces.ts)
+  return material;
+}
+
+/** Which entities share a paint. */
+const paintKey = (visual: ItemDefinition['visual']) => visual.material + ' ' + visual.color;
 
 /** A room's glass floor as a rectangle [x0, x1, z0, z1]. */
 function glassRect(room: RoomDefinition): Rect {

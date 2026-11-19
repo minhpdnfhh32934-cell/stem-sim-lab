@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { type PrepareReal, realTextures } from '../../render/body/realBody';
 import { FrameClock } from '../../../core/FrameClock';
 import type { CharacterDefinition } from '../../../gameplay/character';
 import { SELF_LAYER } from '../../render/body/BodyModel';
@@ -15,6 +16,11 @@ export class CustomPreview {
   private readonly renderer: THREE.WebGLRenderer;
   private readonly scene = new THREE.Scene();
   private readonly camera = new THREE.PerspectiveCamera(28, 1, 0.1, 20);
+  /** Ultra: a real person's maps uploaded and its programs compiled before it is shown. */
+  private readonly prepareReal: PrepareReal = async (root, maps) => {
+    for (const texture of realTextures(maps)) this.renderer.initTexture(texture);
+    await this.renderer.compileAsync(root, this.camera, this.scene);
+  };
   private readonly shadowMaterial = new THREE.MeshBasicMaterial({ colorWrite: false });
   private readonly floor: THREE.Mesh;
   private readonly resize: ResizeObserver;
@@ -28,9 +34,11 @@ export class CustomPreview {
 
   constructor(
     private readonly host: HTMLElement,
-    quality: QualityConfig,
+    private readonly quality: QualityConfig,
     /** The game's frame-rate cap (0: none), read each frame. */
     private readonly cap: () => number,
+    /** Where a real person that did not load is reported (Max). */
+    private readonly warn: (message: string) => void,
   ) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.maxPixelRatio));
@@ -75,6 +83,8 @@ export class CustomPreview {
       this.actor.dispose();
     }
     this.actor = new Actor(character, this.shadowMaterial, 0);
+    this.actor.setMotion(this.quality.motion); // Max: hair and clothes stir
+    this.actor.setReal(this.quality.realPeople, this.warn, this.prepareReal);
     this.scene.add(this.actor.group);
     const h = character.appearance.heightM;
     this.camera.position.set(0, h * 0.55, 4.6);

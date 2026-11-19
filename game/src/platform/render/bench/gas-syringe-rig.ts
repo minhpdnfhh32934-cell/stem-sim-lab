@@ -530,7 +530,7 @@ function rig(item: ItemDefinition): BenchRig {
   const extractLiquid = own(
     new THREE.MeshStandardMaterial({ color: '#c8a35a', roughness: 0.25, metalness: 0 }),
   );
-  const mixture = own(
+  const mixture = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#e8f2f4',
       roughness: 0.08,

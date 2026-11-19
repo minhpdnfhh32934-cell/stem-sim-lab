@@ -1,0 +1,41 @@
+{
+  "source": "Police_Male_02",
+  "parts": {
+    "body": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "head": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "equipment": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 1024
+    },
+    "pistol": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 1024
+    },
+    "helmet": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "opacity": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 512
+    }
+  }
+}

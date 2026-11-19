@@ -97,6 +97,22 @@ describe('the room server over HTTP (Server-Sent Events down, POSTs up)', () => 
     a.close();
   });
 
+  it('takes several messages in one POST, in order (sent together on a slow network)', async () => {
+    const base = await serve();
+    const character = characters[0];
+    const a = await player(base);
+    const pose = { scene: 'simlab-hub', x: 1, y: 0, z: 2, yaw: 0.5, speed: 1 };
+    const batch = [
+      { t: 'create', room: 'Lớp 11B', player: 'An', character },
+      { t: 'pose', pose },
+      { t: 'chat', text: 'xin chào' },
+    ];
+    expect((await a.send(batch)).status).toBe(204);
+    await expect.poll(() => a.last('joined')?.room.name).toBe('Lớp 11B');
+    await expect.poll(() => a.last('chat')?.text).toBe('xin chào'); // after the create: in the room
+    a.close();
+  });
+
   it('drops what it cannot trust: a stranger, a broken body, an over-long one', async () => {
     const base = await serve();
     const a = await player(base);

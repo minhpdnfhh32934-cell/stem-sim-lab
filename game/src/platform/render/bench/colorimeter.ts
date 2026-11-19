@@ -597,7 +597,7 @@ function rig(item: ItemDefinition): BenchRig {
   kit.group.position.copy(originOf(item));
 
   // The reaction mixture: in the cuvette (as far as it fills it) and in its beaker.
-  const mix = own(
+  const mix = kit.mine(
     new THREE.MeshStandardMaterial({
       roughness: 0.1,
       metalness: 0,

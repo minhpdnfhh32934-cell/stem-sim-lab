@@ -101,6 +101,48 @@ export interface QualityConfig {
    * Medium), a simple city of plain buildings (High), or Ultra's, in full detail near the tower.
    */
   city: 'none' | 'simple' | 'full';
+  /**
+   * Drawn with WebGPU (Phase G2, `render/gpu/`, its own chunk): Ultra's next level. Until its
+   * parity with the WebGL Ultra is accepted (G2-1), only where the browser preference
+   * `simlab.dev.ultraRenderer` is `webgpu` (WorldRenderer.wantsGpu).
+   */
+  webgpu: boolean;
+  /**
+   * The room's colour grade on the WebGL picture (Phase Max; postLook.ts `grade`, as Ultra on
+   * WebGPU has it): white balance, saturation and contrast by room and daylight, eased across a
+   * door. A pass only while it differs from neutral: none in a neutral lab.
+   */
+  grade: boolean;
+  /**
+   * GTAO's samples a pixel (three's default 16: 3 directions × 6 steps). Max 24 (3 × 8): smoother
+   * contact shading where things meet, for a little more of the pass.
+   */
+  aoSamples: number;
+  /**
+   * People's hair and clothes follow their bodies (Phase Max; render/body/motion.ts): pushed back
+   * by the air as they walk, lagging a start and settling after a stop. A shader change per body.
+   */
+  motion: boolean;
+  /**
+   * Wear on the real surfaces (Phase Max; surfaces.ts, public/max/textures/wear.png): smudges,
+   * fingerprints and fine scratches where a surface is glossy enough to show them. Needs `surfaces`.
+   */
+  wear: boolean;
+  /**
+   * Glass that bends what is behind it and particles soft where they meet a surface (Phase Max;
+   * effectsPass.ts): one pass after the ambient occlusion, reading its depth. Needs `post`.
+   */
+  effects: boolean;
+  /**
+   * Real people (Phase Max; body/realBody.ts): a character naming a `realBody` is drawn as that real
+   * person, moved by the drawn body's skeleton. Its files load the first time one is seen.
+   */
+  realPeople: boolean;
+  /**
+   * Liquid surfaces in detail (Ultra; ContainerView.ts liquidSurface): the meniscus's bright rim
+   * at the glass, ripples from a stream or a drop. A define on each surface's reflection pass.
+   */
+  liquids: boolean;
 }
 
 /**
@@ -122,6 +164,11 @@ export interface QualityConfig {
 /** Live screens' texels per metre from Medium up (audit F2: sharp from about 1 m, native). */
 const SCREEN_PX_PER_M = 1600;
 
+/**
+ * The levels were renamed on 2026-11-18 (Phú): Medium is the former High, High the former Ultra
+ * (Phase G), Ultra the former Max (Phase Max); the former Medium is gone. Comments and documents
+ * written before then name the levels as they were.
+ */
 export const QUALITY: Record<GraphicsQuality, QualityConfig> = {
   low: {
     roomLights: false,
@@ -142,28 +189,17 @@ export const QUALITY: Record<GraphicsQuality, QualityConfig> = {
     surfaces: false,
     modelDetail: false,
     city: 'none',
+    webgpu: false,
+    grade: false,
+    aoSamples: 16,
+    motion: false,
+    wear: false,
+    effects: false,
+    realPeople: false,
+    liquids: false,
   },
+  // The former High (renamed 2026-11-18, Phú).
   medium: {
-    roomLights: true,
-    shadows: true,
-    environment: 0,
-    maxPixelRatio: 1.5,
-    shadowRateHz: 30,
-    anisotropy: 8,
-    shadowMapSize: 1024,
-    screenPxPerM: SCREEN_PX_PER_M,
-    sheen: false,
-    reflections: 0,
-    contactShadows: true,
-    mirrorScale: 0.5,
-    shadowRadius: 1,
-    post: false,
-    roomReflections: false,
-    surfaces: false,
-    modelDetail: false,
-    city: 'none',
-  },
-  high: {
     roomLights: true,
     shadows: true,
     // environment was 0.25: it veiled distant contrast
@@ -183,10 +219,19 @@ export const QUALITY: Record<GraphicsQuality, QualityConfig> = {
     surfaces: false,
     modelDetail: false,
     city: 'simple',
+    webgpu: false,
+    grade: false,
+    aoSamples: 16,
+    motion: false,
+    wear: false,
+    effects: false,
+    realPeople: false,
+    liquids: false,
   },
-  // Phase G (docs/phase-g-ultra-contract.md): High's look and more, for the reference GPU (RTX 5070
-  // Laptop, 60 fps or more). Chosen only by the player, after its dialog; never by default.
-  ultra: {
+  // Phase G (docs/phase-g-ultra-contract.md, "Ultra" there): Medium's look and more, for the
+  // reference GPU (RTX 5070 Laptop, 60 fps or more). Chosen only by the player, after its dialog;
+  // never by default. Ultra until 2026-11-18, when Phú renamed it High.
+  high: {
     roomLights: true,
     shadows: true,
     environment: 0.08,
@@ -205,5 +250,45 @@ export const QUALITY: Record<GraphicsQuality, QualityConfig> = {
     surfaces: true,
     modelDetail: true,
     city: 'full',
+    webgpu: true,
+    grade: false,
+    aoSamples: 16,
+    motion: false,
+    wear: false,
+    effects: false,
+    realPeople: false,
+    liquids: false,
+  },
+  // Ultra (Phú 2026-11-18; "Max" in docs/phase-max-report.md until renamed the same day): above
+  // High, the most detail the game can draw, as real as it can be — characters, objects,
+  // phenomena. High's everything, and its own upgrades. Chosen only by the player, after its
+  // dialog; never by default.
+  ultra: {
+    roomLights: true,
+    shadows: true,
+    environment: 0.08,
+    maxPixelRatio: Infinity,
+    shadowRateHz: Infinity,
+    anisotropy: 16,
+    shadowMapSize: 4096,
+    screenPxPerM: SCREEN_PX_PER_M,
+    sheen: true,
+    reflections: 1,
+    contactShadows: true,
+    mirrorScale: 1,
+    shadowRadius: 6, // 12 taps from 6 (shadowTaps.ts): a wider, smooth penumbra
+    post: true,
+    roomReflections: true,
+    surfaces: true,
+    modelDetail: true,
+    city: 'full',
+    webgpu: true,
+    grade: true,
+    aoSamples: 24,
+    motion: true,
+    wear: true,
+    effects: true,
+    realPeople: true,
+    liquids: true,
   },
 };

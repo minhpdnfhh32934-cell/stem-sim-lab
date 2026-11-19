@@ -548,3 +548,53 @@ waist a little smaller, to look quick.
 
 - Not seen on Phú's display; Linh as the player in the mirror not looked at here (her data in
   the customiser instead). Frame times: **NOT RUN**.
+
+## 11. The page opens at once: its room made ahead (2026-11-14)
+
+Phú: "ở trang chủ sao ấn vào chọn nhân vật nó lại bị delay ở màn hình trắng một khoảng" — the page
+slid in over its light background and stood there while its room was made.
+
+Measured first (a production build in `vite preview`, headless Edge, **ANGLE D3D11, RTX 5070 Laptop
+GPU**, 1280 × 720, vsync off; requestAnimationFrame frames and long tasks from the click, then a CPU
+profile): 2.1–2.9 s from the click to the room — making the stage (eight people, `Actor`:
+1.2–1.5 s in one task), then its first frame (0.75–0.95 s: the programs compiled and linked in it,
+three waiting in `getProgramInfoLog`, the uploads); the sound engine starting at that first click
+(~0.33 s headless; its AudioContext takes 93 ms in a visible window, 19 ms after).
+
+Changed (`characterPage/CharacterStage.ts`, `CharacterPage.ts`, `MainMenu.ts`) — SPEC DEVIATION
+from D5 ("made on opening, freed on closing"), at Phú's request:
+
+- The stage is made ahead once the player is at the menu (a pointer or a key on it — a menu nobody
+  uses fetches nothing more), in idle time after the app's opening, a person at a time
+  (`build`); its programs compiled off the main thread (`compileAsync`, KHR_parallel_shader_compile),
+  then drawn unseen a person more each time (their uploads apart).
+- Its canvas is in the page only while the page is open (`show`/`hide`); closed, the room is kept
+  unseen and not drawn; it is freed when the menu goes (`release`, into the world). Made at
+  another graphics quality than the current one: made again on opening.
+- Opened before it is made: the rest is made a person a frame (the page slides on), then shown.
+
+Measured after (same machine and build):
+
+| Case                                                 | Click → room shown                                                 |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| Before                                               | 2.1–2.9 s, the page frozen                                         |
+| Opened 5 s after the pointer first moved on the menu | 39–40 ms (first frame 32–33 ms)                                    |
+| Opened 0.3 s after it                                | 1.15–1.2 s, the page sliding on (frames ≤ 115 ms, the last 315 ms) |
+
+The menu meanwhile, from the pointer's first move: a task of 144–239 ms (the chunk evaluated), then
+one a person (72–111 ms) and the last draw (147–160 ms) — about 1.2 s, once.
+
+Left: the sound engine's start (~0.1 s in a visible window) still falls on the first click; a
+page opened at once still makes its room then (~1.2 s); not seen on Phú's 300 Hz display.
+
+Checks:
+
+| Check                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Result                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx tsc --noEmit -p .`, `npx eslint .`, `npx prettier --check src e2e docs scripts CLAUDE.md package.json`                                                                                                                                                                                                                                                                                                                                                       | PASS                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `npx vitest run --maxWorkers=4`                                                                                                                                                                                                                                                                                                                                                                                                                                   | PASS — 323 files, 4144 tests                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `SIMLAB_DEV_PORT=5197 SIMLAB_PREVIEW_PORT=5196 npx playwright test e2e/character-page.spec.ts e2e/face-photo.spec.ts e2e/menu.spec.ts e2e/play-menu.spec.ts e2e/intro.spec.ts e2e/sound.spec.ts e2e/game.spec.ts e2e/pause.spec.ts e2e/canvas.spec.ts e2e/topics.spec.ts e2e/settings.spec.ts e2e/multiplayer.spec.ts e2e/vietnamese.spec.ts e2e/production.spec.ts e2e/renderer.production.spec.ts --project=dev --project=production --workers=1` (SwiftShader) | 29 PASS, 4 FAIL: `canvas.spec` (it counted the room's own context: the room's canvas is now left out, like the portrait's — then PASS), `pause.spec:252` (14 frames a second offered to the page, Roblox running: FAIL twice in a batch, PASS alone — flaky under load, not counted as a pass), both `renderer.production.spec` tests (failing at HEAD aa0504c too: the menu JS 863,183 B over the 600,000 B guard, and the Single player page) |
+| The same `canvas`, `pause`, `character-page`, `face-photo`, `menu` specs again (`--project=dev`)                                                                                                                                                                                                                                                                                                                                                                  | 10 PASS, 1 FAIL `pause.spec:252` (as above)                                                                                                                                                                                                                                                                                                                                                                                                     |
+
+`character-page.spec` now also checks the room's canvas is out of the page when closed and gone in
+the world.

@@ -40,6 +40,11 @@ export interface MergedPiece {
   readonly count: number;
   readonly index: number;
   readonly indices: number;
+  /**
+   * The turn (and scale) the piece was placed with, column-major, when it is not one of the
+   * quarter turns detail.ts tries itself (a part merged from a mesh turned any way: mergeStill.ts).
+   */
+  readonly linear?: readonly number[];
 }
 
 /** The pieces of one finish, merged (texture coordinates dropped: props are not textured). */
@@ -49,25 +54,47 @@ export function part(
   pieces: readonly THREE.BufferGeometry[],
   hinge?: Hinge,
 ): PropPart {
-  // Where each piece lies in the merged geometry, and what made it: Ultra's model detail
-  // (render/detail.ts) rebuilds the merge with its round pieces rounder and its boxes bevelled.
+  for (const piece of pieces) piece.deleteAttribute('uv');
+  const geometry = mergePieces(pieces);
+  if (!geometry) throw new Error('A prop part whose pieces do not merge');
+  return hinge ? { finish, geometry, casts, hinge } : { finish, geometry, casts };
+}
+
+/**
+ * `pieces` (alike in their attributes) as one geometry, or null if they do not merge. Where each
+ * piece lies in it, and what made it, is recorded (`userData.pieces`): Ultra's model detail
+ * (render/detail.ts) rebuilds the merge with its round pieces rounder and its boxes bevelled.
+ * `linear[i]`: the turn piece i was placed with, if any (MergedPiece.linear).
+ */
+export function mergePieces(
+  pieces: readonly THREE.BufferGeometry[],
+  linear?: readonly (THREE.Matrix4 | null)[],
+): THREE.BufferGeometry | null {
   const recipe: MergedPiece[] = [];
   let vertex = 0;
   let index = 0;
-  for (const piece of pieces) {
-    piece.deleteAttribute('uv');
+  pieces.forEach((piece, i) => {
     const count = piece.getAttribute('position').count;
     // Polyhedra come unindexed; all or none must be indexed to merge.
     if (!piece.index) piece.setIndex([...Array(count).keys()]);
     const indices = piece.index?.count ?? count;
     const { parameters } = piece as { parameters?: MergedPiece['parameters'] };
-    recipe.push({ type: piece.type, parameters, vertex, count, index, indices });
+    const turn = linear?.[i];
+    recipe.push({
+      type: piece.type,
+      parameters,
+      vertex,
+      count,
+      index,
+      indices,
+      ...(turn ? { linear: turn.toArray() } : {}),
+    });
     vertex += count;
     index += indices;
-  }
-  const geometry = mergeGeometries([...pieces]);
-  geometry.userData.pieces = recipe;
-  return hinge ? { finish, geometry, casts, hinge } : { finish, geometry, casts };
+  });
+  const geometry = mergeGeometries([...pieces]) as THREE.BufferGeometry | null;
+  if (geometry) geometry.userData.pieces = recipe;
+  return geometry;
 }
 
 /** A box w × h × d centred at (x, y, z). */

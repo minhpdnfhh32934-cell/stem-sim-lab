@@ -583,3 +583,236 @@
     transition: none !important;
   }
 }
+
+/* --- Ultra's dialogs (Phú 2026-11-16): in the settings' own look — the shell's edge and corners,
+   the heading over its line, the parts as rows under thin rules, the verdict in a description
+   box; the graphics section's violet (the second warning: red) at a few strengths, never mixed. */
+.ultra-dialog {
+  --section-rgb: 167 139 250;
+  width: min(640px, 100%);
+  max-width: none;
+  gap: 14px;
+  padding: 22px 28px 22px;
+  border: 1px solid rgb(var(--section-rgb) / 30%);
+  border-radius: 18px;
+  background: rgb(11 19 30);
+  box-shadow: 0 20px 60px -30px rgb(0 0 0 / 80%);
+}
+
+.ultra-dialog:has(.ultra-bar.warn) {
+  --section-rgb: 229 72 77;
+}
+
+/* The title: the settings heading. */
+.ultra-bar {
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgb(var(--section-rgb) / 70%);
+  color: var(--ink-strong);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.ultra-dialog > .menu-help {
+  display: block;
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+/* The minimum against this computer: rows as in the settings. */
+.ultra-specs {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--text-sm);
+}
+
+.ultra-specs th {
+  padding: 4px 4px 8px;
+  color: rgb(var(--section-rgb));
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.ultra-specs th:first-child {
+  width: 30%;
+}
+
+.ultra-specs th:nth-child(2) {
+  width: 27%;
+}
+
+.ultra-specs th:last-child {
+  width: 40px;
+}
+
+.ultra-specs td {
+  padding: 11px 4px;
+  overflow: hidden;
+  border-top: 1px solid rgb(var(--section-rgb) / 12%);
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* This computer's card: its whole name, on two lines if need be. */
+.ultra-specs td:nth-child(3) {
+  color: var(--ink-strong);
+  white-space: normal;
+}
+
+.ultra-spec-name {
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+/* Met, short, not readable: the settings' tab icon, in green, red or grey. */
+.ultra-specs td.ultra-mark-cell {
+  overflow: visible;
+  text-align: right;
+}
+
+.ultra-mark {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.ultra-mark.met {
+  background: rgb(62 207 116 / 14%);
+  color: #3ecf74;
+}
+
+.ultra-mark.short {
+  background: rgb(229 72 77 / 16%);
+  color: #ff6b70;
+}
+
+.ultra-mark.unknown {
+  background: rgb(135 150 171 / 14%);
+  color: #a9b6c8;
+}
+
+/* The verdict: the settings' description box. */
+.ultra-expect,
+.ultra-now {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgb(var(--section-rgb) / 7%);
+}
+
+.ultra-expect {
+  justify-content: space-between;
+}
+
+.ultra-expect-name,
+.ultra-now-name {
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+/* Good, playable, not advised: one solid colour each, as the chosen tab's icon. */
+.ultra-badge {
+  min-width: 96px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.ultra-badge.good {
+  background: #3ecf74;
+  color: #06210f;
+}
+
+.ultra-badge.ok {
+  background: #f5b446;
+  color: #2b1a00;
+}
+
+.ultra-badge.poor {
+  background: #e5484d;
+  color: #ffffff;
+}
+
+.ultra-dialog .menu-dialog-notes {
+  gap: 6px;
+  padding-left: 18px;
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.ultra-dialog .menu-dialog-notes li::marker {
+  color: rgb(var(--section-rgb));
+}
+
+.ultra-dialog:has(.ultra-bar.warn) .menu-dialog-notes {
+  color: var(--ink-strong);
+  font-size: var(--text-base);
+}
+
+/* The choices: the settings' selector box; the main one in the section's colour. */
+.ultra-dialog .menu-dialog-actions {
+  margin-top: 4px;
+}
+
+.ultra-dialog .menu-button {
+  min-width: 132px;
+  min-height: 44px;
+  border: 1px solid rgb(var(--section-rgb) / 28%);
+  border-radius: 10px;
+  background: rgb(var(--section-rgb) / 6%);
+  color: var(--ink-strong);
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.ultra-dialog .menu-button:hover {
+  background: rgb(var(--section-rgb) / 14%);
+}
+
+.ultra-dialog .menu-button.primary {
+  border-color: rgb(var(--section-rgb));
+  background: rgb(var(--section-rgb));
+  color: #08131c;
+}
+
+/* The second warning's way back is the safe one: green. */
+.ultra-dialog:has(.ultra-bar.warn) .menu-button.primary {
+  border-color: #3ecf74;
+  background: #3ecf74;
+  color: #06210f;
+}
+
+/* Under the presets while Ultra is on: how it plays here, measured; a row of its own. */
+.ultra-now {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.ultra-now[hidden] {
+  display: none;
+}
+
+.ultra-now-note {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+}

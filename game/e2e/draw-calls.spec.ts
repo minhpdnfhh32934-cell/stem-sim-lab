@@ -60,10 +60,10 @@ const LAB_CEILING: View = {
 const BAY_WALL: View = { scene: LAB, name: 'bay-wall', stand: [0, 0, -8.7], look: [0, 2.2, -13.5] };
 
 /** The views measured under each graphics quality, keyed by the value Settings stores. */
+// Medium is the former High (2026-11-18): its views and the former Medium's.
 const VIEWS = {
-  medium: [...SPAWNS, RANGE_LANE, PENDULUM],
+  medium: [...SPAWNS, RANGE_LANE, PENDULUM, LAB_CEILING, BAY_WALL],
   low: [LAB_CEILING, BAY_WALL, RANGE_LANE],
-  high: [LAB_CEILING, BAY_WALL, RANGE_LANE],
 };
 
 /** At least 10 display frames (afterFrame waits two). */
@@ -80,7 +80,7 @@ for (const [quality, views] of Object.entries(VIEWS)) {
       test.setTimeout(120_000);
       await page.addInitScript(countWebGL);
       await page.addInitScript(
-        (value) => localStorage.setItem('simlab.settings.graphicsQuality', value),
+        (value) => localStorage.setItem('simlab.settings.graphics', value),
         quality,
       );
       const errors = await continueInto(page, sceneSave(view.scene, view.stand, view.look));

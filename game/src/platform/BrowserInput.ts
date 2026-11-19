@@ -58,6 +58,9 @@ export class BrowserInput implements GameSystem {
       const action = this.actionByCode.get(event.code);
       // A field keeps its keys, except the developer panel's F3, which types nothing.
       if (!action || (isTextField(event.target) && action !== 'toggleDebug')) return;
+      // Space or Enter on a focused button or box presses it (a menu's button, the results' run
+      // boxes): no jump, no chat, nothing taken from it then.
+      if (isControl(event.target) && PRESS_KEYS.has(event.code)) return;
       // Paused: no game key reaches the game (the developer panel's F3 still does).
       if (this.game.state.session.paused && action !== 'toggleDebug') return;
       event.preventDefault();
@@ -133,6 +136,19 @@ export class BrowserInput implements GameSystem {
 
 /** Inputs that keep no keys for themselves: game keys still work while one has focus. */
 const KEYLESS_INPUTS = new Set(['checkbox', 'button', 'submit', 'reset']);
+
+/** The keys a focused control acts on itself. */
+const PRESS_KEYS = new Set(['Space', 'Enter', 'NumpadEnter']);
+
+/** A control that Space or Enter presses (a button, a box, a choice). */
+function isControl(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLButtonElement ||
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLSelectElement ||
+    target instanceof HTMLTextAreaElement
+  );
+}
 
 /** A field that keeps the keys (typing, arrows in a radio group or a list): no game keys then. */
 function isTextField(target: EventTarget | null): boolean {

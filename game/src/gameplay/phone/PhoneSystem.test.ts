@@ -46,7 +46,8 @@ describe('the phone', () => {
     press(game, 'interact');
     expect(game.phone.call.state).toBe('ringing');
     run(game, RING_S + 0.1);
-    expect(game.phone.call).toMatchObject({ state: 'talking', outcome: 'false-alarm' });
+    // 114 with nothing burning: they come all the same (and tell the caller off).
+    expect(game.phone.call).toMatchObject({ state: 'talking', outcome: 'dispatched' });
     press(game, 'stow');
     expect(game.phone.out).toBe(false);
     expect(game.phone.call.state).toBe('idle');

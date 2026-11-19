@@ -16,8 +16,11 @@ import { Customiser } from './Customiser';
  * filling it with everyone in their places. "<" and ">" (← →, or a click on a person) choose left
  * to right; their name, role and personality on a card, Choose below. The last place is the
  * player's own character: a black silhouette until they make one, whose button opens the
- * customiser (Edit, once made). Its 3D stage is a lazy chunk of its own, made on opening and freed
- * on closing (contract D5). Keys: ← → change, Enter chooses, Esc goes back.
+ * customiser (Edit, once made). Its 3D stage is a lazy chunk of its own (contract D5), made ahead
+ * once the player is at the menu, in idle time, a person at a time; kept unseen while the menu
+ * shows, its canvas in the page and drawn only while the page is open; freed when the menu goes
+ * (Phú, 2026-11-14: made on opening, the page waited ~2 s on an empty room). Keys: ← → change,
+ * Enter chooses, Esc goes back.
  */
 
 type Show = (element: HTMLElement, text: () => string) => HTMLElement;
@@ -56,6 +59,9 @@ export class CharacterPage {
   private readonly next = el('button', 'char-arrow next', '›');
   private readonly customiser: Customiser;
   private stage: CharacterStage | null = null;
+  /** The stage: none, being made (its chunk, its people), or made; the quality it was made at. */
+  private state: 'none' | 'making' | 'made' = 'none';
+  private madeAt = '';
   private opening = 0;
   private readonly subscriptions = new Disposables();
   /** Who the card shows (the stage's chosen, or the opening one before it is made). */
@@ -146,7 +152,21 @@ export class CharacterPage {
     return this.game.content.characters.has(CUSTOM_ID);
   }
 
-  /** Slides in with `current` chosen; the stage follows when its chunk is in. */
+  /** The stage made ahead, in idle time (the player at the menu): opening then shows it at once. */
+  prepare(current: string): void {
+    if (this.state === 'none' && !this.isOpen) this.makeStage(current);
+  }
+
+  /** The menu goes (into the world): the stage is freed. */
+  release(): void {
+    if (this.isOpen) return;
+    this.opening++;
+    this.stage?.dispose();
+    this.stage = null;
+    this.state = 'none';
+  }
+
+  /** Slides in with `current` chosen; the stage shows when it is made (at once if made ahead). */
   open(current: string): void {
     if (this.isOpen) return;
     this.isOpen = true;
@@ -156,30 +176,49 @@ export class CharacterPage {
     // Next frame: the slide starts from below.
     requestAnimationFrame(() => this.root.classList.add('open'));
     this.choose.focus();
-    this.makeStage(current);
+    if (this.state !== 'none' && this.madeAt !== this.game.graphicsQuality) this.reopen(current);
+    else if (this.state === 'none') this.makeStage(current);
+    else if (this.state === 'made') this.reveal();
   }
 
   private makeStage(current: string): void {
     const ticket = ++this.opening;
-    void import('./CharacterStage').then(({ CharacterStage: Stage }) => {
-      if (!this.isOpen || ticket !== this.opening) return;
+    this.state = 'making';
+    this.madeAt = this.game.graphicsQuality;
+    void import('./CharacterStage').then(async ({ CharacterStage: Stage }) => {
+      if (ticket !== this.opening) return;
       const quality = QUALITY[this.game.graphicsQuality];
-      this.stage = new Stage(
+      const stage = new Stage(
         this.stageHost,
         this.people(),
         current,
         quality,
         !this.made(),
         () => this.game.frameCap,
+        (message) => this.game.log.warn(message),
       );
-      this.root.dataset.ready = 'true';
+      this.stage = stage;
+      // The player waiting: a person a frame; else in idle time, after the app's opening.
+      const next = () => (this.isOpen ? nextFrame() : idle());
+      if (!(await stage.build(next, () => !this.isOpen)) || ticket !== this.opening) return;
+      this.state = 'made';
+      if (this.isOpen) this.reveal();
     });
+  }
+
+  /** The stage on screen, on whoever the card shows. */
+  private reveal(): void {
+    if (!this.stage) return;
+    this.stage.select(this.shown);
+    this.stage.show();
+    this.root.dataset.ready = 'true';
   }
 
   /** The room again, with the player's own character as just made, `current` chosen. */
   private reopen(current: string): void {
     this.stage?.dispose();
     this.stage = null;
+    this.state = 'none';
     delete this.root.dataset.ready;
     this.shown = current;
     this.refreshCard();
@@ -211,15 +250,13 @@ export class CharacterPage {
   private close(chosen: string | null): void {
     if (!this.isOpen) return;
     this.isOpen = false;
-    this.opening++;
     this.root.classList.remove('open');
     delete this.root.dataset.ready;
-    const stage = this.stage;
-    this.stage = null;
-    // Freed once it has slid away.
+    // Kept (made ahead for the next opening), not drawn once it has slid away.
     window.setTimeout(() => {
-      stage?.dispose();
-      if (!this.isOpen) this.root.classList.add('hidden');
+      if (this.isOpen) return;
+      this.stage?.hide();
+      this.root.classList.add('hidden');
     }, 350);
     this.onClose(chosen);
   }
@@ -272,9 +309,28 @@ export class CharacterPage {
   }
 
   dispose(): void {
+    this.opening++;
     this.subscriptions.dispose();
     this.customiser.dispose();
     this.stage?.dispose();
     this.stage = null;
   }
+}
+
+const nextFrame = () => new Promise<void>((done) => requestAnimationFrame(() => done()));
+
+/**
+ * When the page is idle and the app's opening has gone (its ball's flight is drawn on this thread:
+ * a person built under it would stutter it).
+ */
+function idle(): Promise<void> {
+  return new Promise((done) => {
+    const wait = () => {
+      if (document.querySelector('.app-intro')) window.setTimeout(wait, 250);
+      else if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(() => done(), { timeout: 1000 });
+      } else window.setTimeout(done, 50);
+    };
+    wait();
+  });
 }

@@ -5712,6 +5712,51 @@
     }
   },
   {
+    "id": "greenhouse-door-leaf",
+    "displayName": "Door",
+    "vi": {
+      "displayName": "Cửa"
+    },
+    "category": "structure",
+    "physical": {
+      "massKg": 60,
+      "body": "kinematic"
+    },
+    "slider": {
+      "travel": 1,
+      "openS": 0.45,
+      "closeS": 0.6,
+      "near": 2.2
+    },
+    "visual": {
+      "shape": "box",
+      "size": [1, 2.6, 0.08],
+      "color": "#9a6a40",
+      "material": "satin",
+      "prop": "greenhouse-leaf"
+    }
+  },
+  {
+    "id": "greenhouse-door-frame",
+    "displayName": "Door frame",
+    "vi": {
+      "displayName": "Khung cửa"
+    },
+    "category": "structure",
+    "tags": ["decor"],
+    "physical": {
+      "massKg": 80,
+      "body": "none"
+    },
+    "visual": {
+      "shape": "box",
+      "size": [2.6, 2.95, 0.4],
+      "color": "#8a5d38",
+      "material": "satin",
+      "prop": "greenhouse-frame"
+    }
+  },
+  {
     "id": "ph-meter-station",
     "displayName": "pH meter and samples",
     "description": "A bench pH meter with a sloped face and an LCD, its glass electrode on a stand's arm over a 100 mL beaker holding 50 mL of the chosen sample on a white tile. Behind it a rack of four reagent bottles sorted by the pair's strength (pKa ≤ 0, 0–7, 7–14, ≥ 14), three calibration buffers, a waste beaker, a wash bottle, and a white spotting tile with a universal-indicator dropper and its colour chart. RUN lowers the rinsed electrode into the sample; the reading settles towards the sample's pH and a drop of universal indicator on the tile takes its colour.",

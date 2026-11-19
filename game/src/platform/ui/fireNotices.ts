@@ -135,10 +135,5 @@ export function fireNotice(
       return { text: t.ui('fire.empty', 'The extinguisher is empty.'), kind: 'warn' };
     case 'out':
       return { text: t.ui('fire.out', 'The fire is out.'), kind: 'success' };
-    case 'brigade-arrived':
-      return {
-        text: t.ui('fire.brigade', 'The fire brigade has arrived and put the fire out.'),
-        kind: 'success',
-      };
   }
 }

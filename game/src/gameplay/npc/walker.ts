@@ -11,6 +11,9 @@ import type { DoorState } from '../door/DoorSystem';
 import { Gait } from '../player/gait';
 import type { NpcView } from './NpcSystem';
 
+/** What a walk moves: a person of the world, or anyone walked as they are (a responder). */
+export type WalkView = Omit<NpcView, 'npc'>;
+
 /** A path is planned again when its goal has moved this far (m), or after this long (s). */
 const REPLAN_M = 0.8;
 const REPLAN_S = 1;
@@ -34,6 +37,9 @@ const REACH_TO = 1.15;
 const TAP_AT = 0.85;
 /** Taps that leave a door shut before a person goes through anyway (a scene that would not come). */
 const TAPS = 3;
+/** A line at a door (`queue`): metres between places, seconds between turns once it is open. */
+const LINE_M = 0.8;
+const LINE_S = 0.35;
 const TURN_RATE = 10;
 
 /** What a person's walk needs of the world. */
@@ -73,6 +79,9 @@ interface Route {
   readonly tx: number;
   readonly tz: number;
   readonly yaw: number;
+  /** Into the near side's room, away from the door (a unit vector): where a line stands back. */
+  readonly ax: number;
+  readonly az: number;
   /** Where to stand to tap the reader, and the reader (near side's coordinates); null: not yet. */
   reader: { x: number; z: number; rx: number; ry: number; rz: number } | null;
 }
@@ -105,6 +114,7 @@ export class Walker {
     lz: number;
     yaw: number;
     to: string;
+    door: string;
     f: number;
   } | null = null;
   /** A card being tapped on a reader: how far into it (s), and whether it has been taken. */
@@ -112,14 +122,24 @@ export class Walker {
   private tapped = false;
   private taps = 0;
   private doorWait = 0;
+  /** Seconds their turn in a line at an open door has been coming. */
+  private lined = 0;
+  /** Going through a doorway: the door told each frame, so it stays open for them. */
+  private readonly passing = { entityId: '' };
   private readonly gait = new Gait();
   private readonly free: [number, number] = [0, 0];
   private readonly reader: Vec3 = [0, 0, 0];
   private readonly feet: Vec3 = [0, 0, 0];
 
+  /**
+   * Their place in a line at a door (0 first; the squads, Phú 2026-11-19): they wait that many
+   * places back from it and go through that many turns after it opens, one behind another.
+   */
+  queue = 0;
+
   constructor(
     private readonly id: string,
-    private readonly view: NpcView,
+    private readonly view: WalkView,
     private readonly at: Placement,
     private readonly w: WalkWorld,
   ) {}
@@ -141,6 +161,10 @@ export class Walker {
    */
   to(sceneId: string, x: number, z: number, speed: number, dt: number, keep: number): boolean {
     const { view } = this;
+    if (this.busy) {
+      this.go(dt); // a doorway or a card under way is finished first
+      return false;
+    }
     if (view.sit > 0) return false;
     if (view.sceneId === sceneId) return this.approach(sceneId, x, z, speed, dt, keep);
     const route = this.routeTo(sceneId);
@@ -148,14 +172,32 @@ export class Walker {
       view.speed = 0; // no way they may take (a procedure's entrance): they wait
       return false;
     }
-    if (!this.at.resident) {
-      this.arrive(route.to, route.tx, route.tz, route.yaw);
+    // From a scene not drawn into one that is: through the door, opened for them (Phú 2026-11-19).
+    const seen = this.w.offsetOf(route.to) !== null;
+    if (!this.at.resident && !seen) {
+      this.arrive(route.to, route.tx, route.tz, route.yaw); // nobody sees it
       return false;
     }
     const near = route.pair.a.sceneId === view.sceneId ? route.pair.a : route.pair.b;
     const doors = this.w.doors;
     const state = doors?.state(near.entityId) ?? null;
     const shut = state === 'closed' || state === 'closing';
+    // Their place in a line before the door until it is open and their turn has come.
+    const waiting = this.lined < this.queue * LINE_S;
+    const back = waiting ? this.queue * LINE_M : 0;
+    const sx = route.sx + route.ax * back;
+    const sz = route.sz + route.az * back;
+    if (shut && this.taps < TAPS && !this.at.resident) {
+      // Their side not drawn, the far side seen (Phú 2026-11-19: never through a shut door): at
+      // the door the card is not seen, so it is asked at once, by the seen side's leaf — the door
+      // brings in the scene behind that leaf (theirs) before it opens.
+      if (this.approach(view.sceneId, sx, sz, speed, dt, 0)) {
+        const far = near === route.pair.a ? route.pair.b : route.pair.a;
+        this.w.events.publish('DoorRequested', { entityId: far.entityId });
+        this.taps++;
+      }
+      return false;
+    }
     if (shut && this.taps < TAPS) {
       // Shut: to its reader, and the card on it.
       const reader = this.readerOf(route, near.entityId);
@@ -166,14 +208,20 @@ export class Walker {
       }
       return false;
     }
-    if (!this.approach(view.sceneId, route.sx, route.sz, speed, dt, 0)) return false;
-    // Before the door: through it once it is open (or opening for too long, or never to open).
+    if (!this.approach(view.sceneId, sx, sz, speed, dt, 0)) return false;
+    // Before the door: through it once it is open (or opening for too long, or never to open);
+    // while the scene behind it is still coming (`preparing`), waited for however long it takes.
     view.speed = 0;
-    this.doorWait += dt;
+    if (state !== 'preparing') this.doorWait += dt;
     const open = !doors || state === null || doors.fraction(near.entityId) > 0.9;
     if (!open && !shut && this.doorWait <= DOOR_WAIT_S) return false;
+    if (waiting) {
+      this.lined += dt; // open: their turn comes, then up to it and through
+      return false;
+    }
     this.doorWait = 0;
     this.taps = 0;
+    this.lined = 0;
     const far = this.w.offsetOf(route.to);
     if (!far) {
       this.arrive(route.to, route.tx, route.tz, route.yaw);
@@ -188,6 +236,7 @@ export class Walker {
       lz: route.tz,
       yaw: route.yaw,
       to: route.to,
+      door: near.entityId,
       f: 0,
     };
     return false;
@@ -210,6 +259,7 @@ export class Walker {
     this.view.card = false;
     this.view.reaching = false;
     this.doorWait = 0;
+    this.lined = 0;
     this.taps = 0;
     this.route = null;
     this.gait.reset();
@@ -353,6 +403,8 @@ export class Walker {
     const offset = this.w.offsetOf(c.to);
     view.heading = Math.atan2(-(c.tx - c.fx), -(c.tz - c.fz));
     view.speed = Math.hypot(c.tx - c.fx, c.tz - c.fz) / CROSS_S;
+    this.passing.entityId = c.door;
+    this.w.events.publish('DoorPassing', this.passing);
     if (!offset) {
       this.arrive(c.to, c.lx, c.lz, c.yaw);
       return;
@@ -405,8 +457,11 @@ export class Walker {
       tx: usable ? t.position[0] : 0,
       tz: usable ? t.position[2] : 0,
       yaw: usable ? t.yaw : 0,
+      ax: usable ? -Math.sin(s.yaw) : 0,
+      az: usable ? -Math.cos(s.yaw) : 0,
       reader: null,
     };
+    this.lined = 0;
     this.taps = 0;
     return this.route;
   }

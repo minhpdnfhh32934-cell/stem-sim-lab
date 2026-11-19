@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { type PrepareReal, realTextures } from '../../render/body/realBody';
 import { FrameClock } from '../../../core/FrameClock';
 import type { CharacterDefinition } from '../../../gameplay/character';
 import { SELF_LAYER, SHADOW_LAYER } from '../../render/body/BodyModel';
@@ -13,6 +14,8 @@ import { Seating } from './seating';
  * (`seating.ts`), seen from a fixed camera (C-9, Phú 2026-11-08). "<" and ">" (or a click on a
  * person) choose, left to right; the one chosen stays where they are, looks at the camera and is
  * lit up. The last place is the player's own character: a black silhouette until they make one.
+ * Made ahead while the menu idles (`build`, Phú 2026-11-14: the page waited ~2 s on an empty
+ * room), drawn only while shown.
  */
 
 const CAMERA = { x: 0.3, y: 1.5, z: 6.2, lookY: 0.95, lookZ: -2.4, fov: 36 };
@@ -22,11 +25,17 @@ export class CharacterStage {
   private readonly scene = new THREE.Scene();
   private readonly camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, 0.1, 40);
   private readonly room;
-  private readonly actors: Actor[];
+  private readonly actors: Actor[] = [];
   private readonly seating: Seating;
   private readonly shadowMaterial = new THREE.MeshBasicMaterial({ colorWrite: false });
   private readonly resize: ResizeObserver;
   private frame = 0;
+  private disposed = false;
+  /** Ultra: a real person's maps uploaded and its programs compiled before it is shown. */
+  private readonly prepareReal: PrepareReal = async (root, maps) => {
+    for (const texture of realTextures(maps)) this.renderer.initTexture(texture);
+    await this.renderer.compileAsync(root, this.camera, this.scene);
+  };
   /** Its own frame loop, kept to the game's frame-rate cap (it was every display frame). */
   private readonly clock = new FrameClock(performance.now(), 0.1);
   private time = 0;
@@ -39,14 +48,21 @@ export class CharacterStage {
    */
   constructor(
     private readonly host: HTMLElement,
-    people: readonly CharacterDefinition[],
+    private readonly people: readonly CharacterDefinition[],
     first: string,
-    quality: QualityConfig,
-    silhouette: boolean,
+    private readonly quality: QualityConfig,
+    private readonly silhouette: boolean,
     /** The game's frame-rate cap (0: none), read each frame. */
     private readonly cap: () => number,
+    /** Where a real person that did not load is reported (Max). */
+    private readonly warn: (message: string) => void,
   ) {
+    // In the page only while shown: made ahead, it draws unseen off the page.
+    const canvas = document.createElement('canvas');
+    canvas.className = 'character-stage-canvas';
+    canvas.dataset.role = 'character-room';
     this.renderer = new THREE.WebGLRenderer({
+      canvas,
       antialias: true,
       powerPreference: 'high-performance',
     });
@@ -56,8 +72,6 @@ export class CharacterStage {
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.shadowMap.enabled = quality.shadows;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
-    this.renderer.domElement.className = 'character-stage-canvas';
-    host.append(this.renderer.domElement);
 
     this.scene.background = new THREE.Color('#dfe6ea');
     this.scene.fog = new THREE.Fog('#dfe6ea', 11, 20);
@@ -74,11 +88,6 @@ export class CharacterStage {
     this.camera.position.set(CAMERA.x, CAMERA.y, CAMERA.z);
     this.camera.lookAt(CAMERA.x, CAMERA.lookY, CAMERA.lookZ);
 
-    const last = people.length - 1;
-    this.actors = people.map(
-      (c, i) => new Actor(c, this.shadowMaterial, i, silhouette && i === last),
-    );
-    for (const a of this.actors) this.scene.add(a.group);
     this.seating = new Seating(
       people.map((c) => c.id),
       first,
@@ -87,7 +96,50 @@ export class CharacterStage {
     this.resize = new ResizeObserver(() => this.fit());
     this.resize.observe(host);
     this.fit();
+  }
+
+  /**
+   * Its people, one each time `next` resolves (a person is ~0.1 s of work: RTX 5070 machine), their
+   * programs compiled off this thread (KHR_parallel_shader_compile), then one frame drawn unseen —
+   * its uploads and the shadows' programs, a person more each time while `unseen` (nobody is
+   * waiting: apart, not one long frame) — so the first frame shown is an ordinary one. False:
+   * disposed meanwhile.
+   */
+  async build(next: () => Promise<void>, unseen: () => boolean): Promise<boolean> {
+    const last = this.people.length - 1;
+    for (const [i, c] of this.people.entries()) {
+      await next();
+      if (this.disposed) return false;
+      const actor = new Actor(c, this.shadowMaterial, i, this.silhouette && i === last);
+      actor.setMotion(this.quality.motion); // Max: hair and clothes stir (made before the compile)
+      actor.setReal(this.quality.realPeople, this.warn, this.prepareReal); // Ultra: the real person
+      this.actors.push(actor);
+      this.scene.add(actor.group);
+    }
+    await this.renderer.compileAsync(this.scene, this.camera);
+    for (const actor of this.actors) actor.group.visible = false;
+    for (const actor of this.actors) {
+      actor.group.visible = true;
+      if (!unseen()) continue; // shown now: the first frame draws them
+      await next();
+      if (this.disposed) return false;
+      this.draw(0);
+    }
+    return !this.disposed;
+  }
+
+  /** Drawn every frame while shown (the page open), not at all while hidden. */
+  show(): void {
+    if (this.frame || this.disposed) return;
+    this.host.append(this.renderer.domElement);
+    this.fit();
     this.frame = requestAnimationFrame(this.tick);
+  }
+
+  hide(): void {
+    cancelAnimationFrame(this.frame);
+    this.frame = 0;
+    this.renderer.domElement.remove();
   }
 
   /** Who is chosen. */
@@ -148,7 +200,10 @@ export class CharacterStage {
   private readonly tick = (now: number) => {
     this.frame = requestAnimationFrame(this.tick);
     const dt = this.clock.tick(now, this.cap());
-    if (dt === null) return;
+    if (dt !== null) this.draw(dt);
+  };
+
+  private draw(dt: number): void {
     this.time += dt;
     this.seating.update(dt);
     const views = this.seating.view();
@@ -159,10 +214,11 @@ export class CharacterStage {
       this.actors[i]?.update(v, dt, this.time, look);
     }
     this.renderer.render(this.scene, this.camera);
-  };
+  }
 
   dispose(): void {
-    cancelAnimationFrame(this.frame);
+    this.disposed = true;
+    this.hide();
     this.resize.disconnect();
     for (const a of this.actors) a.dispose();
     this.room.dispose();

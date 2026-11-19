@@ -14,6 +14,7 @@ import {
 import type { WorldEntity } from '../../world/World';
 import { appearanceOf, type LiquidAppearance, type LiquidInput, tintOf } from './liquidAppearance';
 import { GLASSWARE_LOOK, LOOKS, liquidLook, transmit } from './looks';
+import { RIPPLE_GLSL } from './ripples';
 import { PRINT_COLOR, SQUARE_SCALE, VesselKit } from './vessels';
 
 /**
@@ -211,6 +212,10 @@ interface Entry {
   /** The placement it names as its station (entity id), if any. */
   readonly named: string | null;
   readonly lvl: { y: number; r: number };
+  /** Ultra's surface (liquidSurface): its uniforms, how stirred it is (0–1), the volume last seen. */
+  readonly surface: SurfaceUniforms;
+  stir: number;
+  fed: number;
   readonly tint: [number, number, number];
   version: number;
   state: Readonly<ContainerState> | null;
@@ -219,6 +224,90 @@ interface Entry {
   absorbance: number | undefined;
   station: Reading | null;
   retry: number;
+}
+
+/** How long (s) a stirred surface takes to settle to a third. */
+const RIPPLE_FADE_S = 0.9;
+/** Stirred less than this, a surface is still (its ripples no longer drawn). */
+const STILL = 0.002;
+
+interface SurfaceUniforms {
+  readonly uTime: { value: number };
+  readonly uRipple: { value: number };
+  readonly uImpact: { value: THREE.Vector2 };
+  readonly uMeniscus: { value: number };
+}
+
+/**
+ * Ultra's liquid surface on the surface's reflection pass (looks.ts `sheen`, the level's disc): the
+ * meniscus — the surface curving up the last few millimetres to the glass, so the room's light
+ * runs round the rim in a bright line as on real water — and ripples spreading from where a
+ * stream or a drop falls in, dying away (`uRipple`). Only the reflection's normal is bent: the
+ * level and the volume are the model's. Under LIQUID_DETAIL only: other levels draw as before.
+ */
+function liquidSurface(material: THREE.MeshStandardMaterial, on: boolean): SurfaceUniforms {
+  const u: SurfaceUniforms = {
+    uTime: { value: 0 },
+    uRipple: { value: 0 },
+    uImpact: { value: new THREE.Vector2() },
+    uMeniscus: { value: 0.1 },
+  };
+  if (on) material.defines = { ...(material.defines ?? {}), LIQUID_DETAIL: '' };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, u);
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        'void main() {',
+        `#ifdef LIQUID_DETAIL
+  varying vec2 vSurface;
+  varying vec3 vAcross;
+  varying vec3 vAlong;
+#endif
+void main() {`,
+      )
+      .replace(
+        '#include <project_vertex>',
+        `#include <project_vertex>
+#ifdef LIQUID_DETAIL
+  vSurface = position.xz; // the disc's own unit circle
+  vAcross = normalize( normalMatrix * vec3( 1.0, 0.0, 0.0 ) );
+  vAlong = normalize( normalMatrix * vec3( 0.0, 0.0, 1.0 ) );
+#endif`,
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        'void main() {',
+        `#ifdef LIQUID_DETAIL
+  uniform float uTime;
+  uniform float uRipple;
+  uniform vec2 uImpact;
+  uniform float uMeniscus;
+  varying vec2 vSurface;
+  varying vec3 vAcross;
+  varying vec3 vAlong;
+  ${RIPPLE_GLSL}
+#endif
+void main() {`,
+      )
+      .replace(
+        '#include <normal_fragment_begin>',
+        `#include <normal_fragment_begin>
+#ifdef LIQUID_DETAIL
+  {
+    float r = length( vSurface );
+    vec2 out_ = r > 1e-4 ? vSurface / r : vec2( 0.0 );
+    // The meniscus: rising over its last share of the radius, steepest at the glass.
+    float rise = smoothstep( 1.0 - uMeniscus, 1.0, r );
+    vec2 slope = out_ * rise * rise * 2.4;
+    // Rings from where it was stirred, travelling out, fading with distance and with time.
+    if ( uRipple > 0.002 ) slope += ripple( vSurface, uImpact, uTime, uRipple ).xy;
+    normal = normalize( normal - slope.x * vAcross - slope.y * vAlong );
+  }
+#endif`,
+      );
+  };
+  material.customProgramCacheKey = () => 'liquid-surface';
+  return u;
 }
 
 export class ContainerViews {
@@ -280,6 +369,11 @@ export class ContainerViews {
   private readonly spout: Vec3 = [0, 0, 0];
   private readonly local = new THREE.Vector3();
   private readonly through: [number, number, number] = [1, 1, 1];
+  /** Ultra's liquid surfaces (quality.ts `liquids`): the meniscus and the ripples drawn. */
+  private detail = false;
+  private readonly hit = new THREE.Vector3();
+  /** The surfaces still stirred this frame (Ultra; effectsPass.ts draws their ripples). */
+  private readonly stirring: Entry[] = [];
 
   constructor(private readonly deps: ContainerViewDeps) {
     this.stream.visible = false;
@@ -412,6 +506,9 @@ export class ContainerViews {
           ? `${entity.roomId}/${entity.params.station}`
           : null,
       lvl: { y: 0, r: 0 },
+      surface: liquidSurface(look.sheen, this.detail),
+      stir: 0,
+      fed: 0,
       tint: [1, 1, 1],
       version: -1,
       state: null,
@@ -442,11 +539,32 @@ export class ContainerViews {
     if (this.streamFrom === entityId) this.stream.visible = false;
   }
 
+  /** Ultra's liquid surfaces on or off (quality.ts `liquids`): each surface's program again on a change. */
+  setDetail(on: boolean): void {
+    if (on === this.detail) return;
+    this.detail = on;
+    for (const e of this.list) {
+      const defines = (e.look.sheen.defines ??= {}) as Record<string, string>;
+      if (on) defines.LIQUID_DETAIL = '';
+      else delete defines.LIQUID_DETAIL;
+      e.look.sheen.needsUpdate = true;
+      e.stir = 0;
+    }
+  }
+
   /** Every frame: redraws what a changed container needs, moves the level planes, the stream. */
   update(dt: number): void {
     this.clock += dt;
     for (const entry of this.list) this.step(entry, dt);
     this.flow();
+    this.stirring.length = 0;
+    if (!this.detail) return;
+    for (const e of this.list) if (e.cap?.visible === true && e.stir > STILL) this.stirring.push(e);
+  }
+
+  /** Ultra's liquid surfaces still stirred (a stream or a drop fell in lately): their ripples. */
+  stirred(): readonly Entry[] {
+    return this.stirring;
   }
 
   dispose(): void {
@@ -497,6 +615,8 @@ export class ContainerViews {
     e.state = source.container(e.id);
     const state = e.state;
     e.ul = state ? totalUl(state.contents) : 0;
+    if (e.ul > e.fed + 1e-6 && e.fed > 0) e.stir = Math.max(e.stir, 0.7);
+    e.fed = e.ul;
     for (const part of e.closedParts) part.visible = state?.closed === true;
     if (e.reading) e.reading.visible = e.ul > 0;
     const { shape, body, cap } = e;
@@ -514,6 +634,18 @@ export class ContainerViews {
 
   private step(e: Entry, dt: number): void {
     if (this.deps.source.containerVersion(e.id) !== e.version) this.sync(e);
+    if (this.detail) {
+      // The ripples die away over about a second once nothing more falls in.
+      e.stir *= Math.exp(-dt / RIPPLE_FADE_S);
+      const u = e.surface;
+      u.uTime.value = this.clock;
+      u.uRipple.value = e.stir;
+      u.uMeniscus.value = THREE.MathUtils.clamp(
+        MENISCUS_HEIGHT / Math.max(e.lvl.r, 1e-4),
+        0.03,
+        0.45,
+      );
+    }
     if (e.tapShut.length > 0) {
       const open = this.deps.source.tapOpen?.(e.id) === true;
       for (const part of e.tapOpen) part.visible = open;
@@ -635,6 +767,14 @@ export class ContainerViews {
     this.stream.position.set(this.spout[0], this.spout[1], this.spout[2]);
     const radius = tap ? TAP_STREAM_RADIUS : STREAM_RADIUS;
     this.stream.scale.set(radius, Math.max(this.spout[1] - floor, 0.001), radius);
+    if (this.detail && dst.cap && dst.ul > 0) {
+      dst.stir = dst.surface.uRipple.value = 1; // this frame, not the next
+      dst.cap.updateWorldMatrix(true, false);
+      const at = dst.cap.worldToLocal(this.hit.set(this.spout[0], floor, this.spout[2]));
+      const r = Math.hypot(at.x, at.z);
+      const k = r > 0.9 ? 0.9 / r : 1; // a stream at the wall: its ripples from just inside
+      dst.surface.uImpact.value.set(at.x * k, at.z * k);
+    }
     // The water, through whatever the source holds.
     const t = src.tint;
     this.streamMaterial.color.setRGB(

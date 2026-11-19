@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
 import { bootTestGame } from '../../game/testing';
 import { SELF_LAYER } from './body/BodyModel';
-import { Mirrors, reflectedOffset, screenRect } from './mirrors';
+import { type GlassSpec, Mirrors, reflectedOffset, screenRect } from './mirrors';
 import { QUALITY } from './quality';
 
 const reflectors = (mirrors: Mirrors) =>
@@ -17,9 +17,9 @@ async function preparationRoom() {
 }
 
 describe('mirrors (Phase H-1)', () => {
-  it('reflect at the preset’s scale: High whole, Medium half, Low none', () => {
+  it('reflect at the preset’s scale: Medium and up whole, Low none', () => {
     expect([QUALITY.low.mirrorScale, QUALITY.medium.mirrorScale, QUALITY.high.mirrorScale]).toEqual(
-      [0, 0.5, 1],
+      [0, 1, 1],
     );
   });
 
@@ -58,6 +58,52 @@ describe('mirrors (Phase H-1)', () => {
     expect(reflectors(mirrors)).toHaveLength(1);
     mirrors.remove(mirror.id);
     expect(reflectors(mirrors)).toHaveLength(0);
+    mirrors.dispose();
+    game.dispose();
+  });
+
+  it('give another device’s glass the crop and what to hide (Ultra on WebGPU)', async () => {
+    const { game, mirror } = await preparationRoom();
+    const hands = new THREE.Group();
+    const mirrors = new Mirrors(hands);
+    mirrors.add(mirror);
+    mirrors.setScale(1, 1600, 900);
+    const specs: GlassSpec[] = [];
+    mirrors.useGlass((geometry, s) => {
+      specs.push(s);
+      return Object.assign(new THREE.Mesh(geometry), { dispose: () => undefined });
+    });
+    expect(reflectors(mirrors)).toHaveLength(0); // the device's glass, not WebGL's Reflector
+    expect(mirrors.group.children).toHaveLength(1);
+    const [spec] = specs;
+    if (!spec) throw new Error('no glass made');
+    // Seen from the room, the glass's part of the view (mirrored) and a camera seeing the body.
+    const camera = new THREE.PerspectiveCamera(70, 16 / 9, 0.05, 50);
+    camera.position.set(0, 1.6, 0.5);
+    camera.lookAt(-3, 1.2, 0.3);
+    camera.updateMatrixWorld();
+    mirrors.group.updateMatrixWorld(true);
+    const seen = spec.view(camera);
+    expect(seen.camera).not.toBe(camera);
+    expect(seen.camera.layers.isEnabled(SELF_LAYER)).toBe(true);
+    const [x, y, w, h] = seen.part;
+    expect(w).toBeGreaterThan(0);
+    expect(w).toBeLessThan(1);
+    expect(x + w).toBeLessThanOrEqual(1);
+    expect(y + h).toBeLessThanOrEqual(1);
+    // TRAA jitters the frame’s camera by a view offset: still cropped (to a pixel), seeing the head.
+    camera.setViewOffset(1600, 900, 0.3, -0.2, 1600, 900);
+    const jittered = spec.view(camera);
+    expect(jittered.camera).not.toBe(camera);
+    expect(jittered.camera.layers.isEnabled(SELF_LAYER)).toBe(true);
+    [x, y, w, h].forEach((v, i) => expect(jittered.part[i]).toBeCloseTo(v, 2));
+    camera.clearViewOffset();
+    spec.hide(true);
+    expect([hands.visible, mirrors.group.visible]).toEqual([false, false]);
+    spec.hide(false);
+    expect([hands.visible, mirrors.group.visible]).toEqual([true, true]);
+    mirrors.useGlass(null); // back to WebGL
+    expect(reflectors(mirrors)).toHaveLength(1);
     mirrors.dispose();
     game.dispose();
   });

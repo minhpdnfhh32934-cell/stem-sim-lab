@@ -1,0 +1,841 @@
+/* The main menu over the live background (liveMenu.ts; Phú 2026-11-18): drawn as the wallpaper is
+   — ink lines, slanted shapes, hard shadows, solid colours (no gradients) — a palette for each
+   hour of the scene and a layout for each way the view is turned. Its motion: the title stamped
+   on, the buttons sliding in one after another with a little overshoot, a lift and a shine under
+   the pointer, a press, the panel flying out and back in when the layout changes, the colours
+   crossfading with the hour. Transforms and opacity only (the compositor's), and still for
+   players who ask for less motion. */
+
+/* The palette on the page's body (liveMenu.ts sets live-ui and the hour there too), so the menu's
+   dialogs opened on the body follow it as well (liveKit.css). */
+body.live-ui {
+  /* Day: white glass, ink black, sky-blue Play, yellow labels. */
+  --l-ink: #111417;
+  --l-shadow: #111417;
+  --l-title: #ffffff;
+  --l-accent: #ffd23f;
+  --l-on-accent: #111417;
+  --l-glass: rgb(255 255 255 / 72%);
+  --l-text: #111417;
+  --l-play: #2fa8ff;
+  --l-play-text: #ffffff;
+  --l-glow: 0 0 0 transparent;
+  --l-title-shadow: 8px 8px 0 #111417;
+  --l-dot: #111417;
+  --l-dot-opacity: 0.18;
+  --l-skew: -12deg;
+  --l-ease: cubic-bezier(0.2, 0.9, 0.1, 1);
+  --l-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --l-fade: 0.9s ease;
+  /* For the pages' own parts (liveKit.css): text, a darker accent readable on the glass, the
+     glass solid enough to read on, the play pages' two moods. */
+  --l-text-strong: #000000;
+  --l-text-dim: #3a4450;
+  --l-accent-rgb: 14 104 168;
+  --l-glass-rgb: 250 252 255;
+  --l-glass-strong: rgb(255 255 255 / 88%);
+  --l-glass-hover: rgb(255 255 255 / 84%);
+  --l-solo-rgb: 196 104 16;
+  --l-multi-rgb: 14 104 168;
+}
+
+.menu.live {
+  background: transparent;
+}
+
+/* The evening: plum ink, an orange Play, warm cream glass, amber labels. */
+body.live-ui.live-dusk {
+  --l-ink: #2a0f1f;
+  --l-shadow: #2a0f1f;
+  --l-title: #ffe6c7;
+  --l-accent: #ffb03b;
+  --l-on-accent: #2a0f1f;
+  --l-glass: rgb(255 231 205 / 70%);
+  --l-text: #2a0f1f;
+  --l-play: #ff6a2b;
+  --l-play-text: #fff5ea;
+  --l-title-shadow: 8px 8px 0 #2a0f1f;
+  --l-dot: #2a0f1f;
+  --l-dot-opacity: 0.22;
+  --l-text-strong: #1a0612;
+  --l-text-dim: #6a4352;
+  --l-accent-rgb: 176 64 14;
+  --l-glass-rgb: 255 238 220;
+  --l-glass-strong: rgb(255 238 220 / 90%);
+  --l-glass-hover: rgb(255 238 220 / 86%);
+  --l-solo-rgb: 176 64 14;
+  --l-multi-rgb: 110 40 90;
+}
+
+/* Night: black glass, neon cyan ink (Khoa's), a magenta Play (Linh's), glowing. */
+body.live-ui.live-night {
+  --l-ink: #19f0ff;
+  --l-shadow: rgb(255 47 208 / 80%);
+  --l-title: #07070d;
+  --l-accent: #19f0ff;
+  --l-on-accent: #07070d;
+  --l-glass: rgb(6 8 16 / 62%);
+  --l-text: #e9fdff;
+  --l-play: #ff2fd0;
+  --l-play-text: #12000c;
+  --l-glow: 0 0 22px rgb(25 240 255 / 45%);
+  --l-title-shadow: 8px 8px 0 #ff2fd0, 0 0 30px rgb(25 240 255 / 85%);
+  --l-dot: #19f0ff;
+  --l-dot-opacity: 0.35;
+  --l-text-strong: #ffffff;
+  --l-text-dim: #9fd6df;
+  --l-accent-rgb: 25 240 255;
+  --l-glass-rgb: 8 10 20;
+  --l-glass-strong: rgb(8 10 20 / 86%);
+  --l-glass-hover: rgb(14 20 34 / 78%);
+  --l-solo-rgb: 255 120 220;
+  --l-multi-rgb: 25 240 255;
+}
+
+/* The scene behind everything; the menu's own sky, emblem and trail give way to it. */
+/* Hidden until it has drawn its first frames, then faded in over the still (liveMenu.ts). */
+.menu-live-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.menu-live-scene.shown {
+  opacity: 1;
+}
+
+/* The still of the scene as it starts, under it while it is built: as tall as the window and
+   centred (the scene keeps its height of view on a wide window), covering on a narrow one. */
+.menu-live-still {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background: #9fb4c6 center / auto 100% no-repeat;
+}
+
+@media (max-aspect-ratio: 8/5) {
+  .menu-live-still {
+    background-size: cover;
+  }
+}
+
+/* Waiting for the opening to leave: the panel and the corners kept back for their entrance. */
+.menu.live.live-wait :is(.menu-panel, .menu-live-clock, .menu-live-hint) {
+  opacity: 0;
+}
+
+.menu.live .menu-sky,
+.menu.live .menu-emblem,
+.menu.live .menu-trail {
+  display: none;
+}
+
+/* ---- The layout: the name and the buttons placed by the view --------------------------------- */
+.menu.live .menu-panel {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  display: block;
+  pointer-events: none;
+
+  /* Behind the two (the framing): the name under the lab, the buttons under the name. */
+  --brand-x: clamp(24px, 7.5vw, 160px);
+  --brand-y: 27vh;
+  --controls-x: clamp(28px, 8vw, 170px);
+  --controls-y: 48vh;
+}
+
+.menu.live.live-front .menu-panel {
+  /* Before them: the name high on the left, over the sky; the buttons in a row low down. */
+  --brand-x: clamp(20px, 5.6vw, 120px);
+  --brand-y: 5vh;
+  --controls-x: clamp(20px, 5.6vw, 120px);
+  --controls-y: 54vh;
+}
+
+.menu.live.live-side .menu-panel {
+  /* At her right side: the bare roof on the left; the name and the buttons down it. */
+  --brand-x: clamp(24px, 7vw, 150px);
+  --brand-y: 9vh;
+  --controls-x: clamp(28px, 7.5vw, 160px);
+  --controls-y: 32vh;
+}
+
+.menu.live .menu-brand,
+.menu.live .menu-controls {
+  pointer-events: auto;
+}
+
+/* ---- The name: a slanted sticker, inked, a hard shadow; halftone dots behind ------------------ */
+.menu.live .menu-brand {
+  position: absolute;
+  left: var(--brand-x);
+  top: var(--brand-y);
+  text-align: left;
+  transform: skewX(-10deg);
+  transform-origin: left bottom;
+}
+
+.menu.live .menu-brand::before {
+  content: '';
+  position: absolute;
+  left: -42px;
+  top: -38px;
+  z-index: -1;
+  width: 280px;
+  height: 180px;
+  background-image: radial-gradient(var(--l-dot) 2.6px, transparent 2.8px);
+  background-size: 14px 14px;
+  opacity: var(--l-dot-opacity);
+  transition: opacity var(--l-fade);
+}
+
+.menu.live .menu-title {
+  padding: 0;
+  font-size: clamp(64px, 7vw, 120px);
+  font-style: italic;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: 0.08em;
+  color: var(--l-title);
+  -webkit-text-stroke: 4px var(--l-ink);
+  paint-order: stroke fill;
+  text-shadow: var(--l-title-shadow);
+  transition:
+    color var(--l-fade),
+    text-shadow var(--l-fade);
+}
+
+.menu.live .menu-subtitle {
+  display: inline-block;
+  margin: 14px 0 0 6px;
+  padding: 6px 14px;
+  border: 3px solid var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+  font-size: clamp(11px, 0.9vw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  box-shadow: 5px 5px 0 var(--l-shadow);
+  transition:
+    background-color var(--l-fade),
+    color var(--l-fade),
+    border-color var(--l-fade),
+    box-shadow var(--l-fade);
+}
+
+.menu.live .menu-subtitle::before {
+  display: none;
+}
+
+/* ---- The buttons: parallelograms in a cascade, inked, hard shadows, an icon each ------------ */
+.menu.live .menu-controls {
+  position: absolute;
+  left: var(--controls-x);
+  top: var(--controls-y);
+  width: min(440px, 36vw);
+  min-width: 300px;
+  gap: 14px;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.menu.live .menu-controls > * {
+  --i: 0;
+
+  margin-left: calc(var(--i) * 18px);
+}
+
+.menu.live .menu-controls > :nth-child(2) {
+  --i: 1;
+}
+
+.menu.live .menu-controls > :nth-child(3) {
+  --i: 2;
+}
+
+.menu.live .menu-controls > :nth-child(4),
+.menu.live .menu-controls > :nth-child(5) {
+  --i: 3;
+}
+
+.menu.live .menu-controls > :nth-child(6) {
+  --i: 4;
+}
+
+.menu.live .menu-controls > :nth-child(7) {
+  --i: 5;
+}
+
+.menu.live .menu-controls .menu-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 0 26px;
+  overflow: hidden;
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass);
+  backdrop-filter: blur(10px);
+  color: var(--l-text);
+  font-size: clamp(16px, 1.25vw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: left;
+  box-shadow:
+    7px 7px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew));
+  transition:
+    transform 0.28s var(--l-spring),
+    box-shadow 0.28s var(--l-ease),
+    background-color var(--l-fade),
+    color var(--l-fade),
+    border-color var(--l-fade);
+}
+
+/* The icon: drawn by its mask in the text's colour. */
+.menu.live .menu-controls .menu-button::before {
+  content: '';
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background-color: currentColor;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+/* A shine that crosses the button under the pointer: one solid pale bar. */
+.menu.live .menu-controls .menu-button::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: -40%;
+  width: 22%;
+  background: rgb(255 255 255 / 45%);
+  transform: skewX(-20deg) translateX(-120%);
+  pointer-events: none;
+}
+
+.menu.live .menu-controls .menu-button:hover:not(:disabled),
+.menu.live .menu-controls .menu-button:focus-visible {
+  border-color: var(--l-ink);
+  background: var(--l-glass);
+  box-shadow:
+    12px 12px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew)) translate(-5px, -5px);
+}
+
+.menu.live .menu-controls .menu-button:hover:not(:disabled)::after,
+.menu.live .menu-controls .menu-button:focus-visible::after {
+  transform: skewX(-20deg) translateX(720%);
+  transition: transform 0.7s var(--l-ease);
+}
+
+.menu.live .menu-controls .menu-button:active:not(:disabled) {
+  box-shadow:
+    2px 2px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew)) translate(4px, 4px);
+  transition-duration: 0.08s;
+}
+
+.menu.live .menu-controls .menu-button:focus-visible {
+  outline: 3px solid var(--l-accent);
+  outline-offset: 5px;
+}
+
+.menu.live .menu-controls .menu-play {
+  min-height: 84px;
+  background: var(--l-play);
+  color: var(--l-play-text);
+  font-size: clamp(24px, 2vw, 32px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  box-shadow:
+    9px 9px 0 var(--l-shadow),
+    var(--l-glow);
+
+  --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 4l14 8-14 8z'/></svg>");
+}
+
+.menu.live .menu-controls .menu-play:hover:not(:disabled),
+.menu.live .menu-controls .menu-play:focus-visible {
+  background: var(--l-play);
+  box-shadow:
+    14px 14px 0 var(--l-shadow),
+    var(--l-glow);
+}
+
+.menu.live.live-night .menu-controls .menu-play {
+  box-shadow:
+    9px 9px 0 var(--l-shadow),
+    0 0 26px rgb(255 47 208 / 75%);
+  animation: live-neon 3.2s ease-in-out infinite;
+}
+
+/* Its glow and its entrance or exit together (the glow's rule, more specific, had replaced them:
+   at night Play jumped to its new place instead of moving). */
+.menu.live.live-night.live-enter .menu-controls .menu-play {
+  animation:
+    live-in 0.62s var(--l-ease) calc(0.32s + var(--i) * 0.07s) both,
+    live-neon 3.2s ease-in-out infinite;
+}
+
+.menu.live.live-night.live-swap .menu-controls .menu-play {
+  animation:
+    live-out 0.26s cubic-bezier(0.5, 0, 0.9, 0.4) both,
+    live-neon 3.2s ease-in-out infinite;
+}
+
+@keyframes live-neon {
+  50% {
+    box-shadow:
+      9px 9px 0 var(--l-shadow),
+      0 0 40px rgb(255 47 208 / 95%);
+  }
+}
+
+.menu.live .menu-catalog-open {
+  --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6'><path d='M4 4h7v16H4zM13 4h7v16h-7z'/></svg>");
+}
+
+.menu.live .menu-controls-open {
+  --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'><path d='M3 8h18v9H3zM7 11v3M5.5 12.5h3M15 11.5h.01M18 13.5h.01'/></svg>");
+}
+
+.menu.live .menu-settings-open {
+  --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'><circle cx='12' cy='12' r='3.4'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1'/></svg>");
+}
+
+/* The character: the face in an inked ring, the name on a slanted label. */
+.menu.live .menu-character {
+  grid-template-columns: auto 1fr;
+  width: max-content;
+  min-height: 0;
+  gap: 0 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--l-on-accent);
+  transition: transform 0.28s var(--l-spring);
+}
+
+.menu.live .menu-character:hover,
+.menu.live .menu-character:focus-visible {
+  border: none;
+  background: none;
+  transform: translate(-3px, -3px);
+}
+
+.menu.live .menu-character-portrait {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  width: 74px;
+  height: 74px;
+  border: 4px solid var(--l-ink);
+  background: var(--l-accent);
+  box-shadow:
+    5px 5px 0 var(--l-shadow),
+    var(--l-glow);
+  transition:
+    border-color var(--l-fade),
+    box-shadow var(--l-fade);
+}
+
+.menu.live .menu-character-label,
+.menu.live .menu-character-name {
+  grid-column: 2;
+  justify-self: start;
+  padding: 2px 16px;
+  border: 3px solid var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+  transform: skewX(var(--l-skew));
+  transition:
+    background-color var(--l-fade),
+    border-color var(--l-fade);
+}
+
+.menu.live .menu-character-label {
+  border-bottom: none;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.menu.live .menu-character-name {
+  font-size: 22px;
+  font-weight: 900;
+  box-shadow: 5px 5px 0 var(--l-shadow);
+}
+
+.menu.live .menu-room,
+.menu.live .menu-message:not(:empty) {
+  justify-self: start;
+  width: max-content;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-glass);
+  color: var(--l-text);
+  font-weight: 700;
+  transform: skewX(var(--l-skew));
+}
+
+.menu.live .menu-room:empty,
+.menu.live .menu-message:empty {
+  display: none;
+}
+
+/* Before them: the buttons as a row under a long Play (the picture's foot is open there). */
+/* Each button as wide as its label (Phú 2026-11-18: "Danh mục thí nghiệm" was cut off when the
+   three shared a fixed width); the long Play spans the three. */
+.menu.live.live-front .menu-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(max-content, auto));
+  justify-content: stretch;
+  column-gap: 18px;
+  row-gap: 16px;
+  width: max-content;
+  min-width: min(720px, 58vw);
+}
+
+.menu.live.live-front .menu-controls > * {
+  margin-left: 0;
+}
+
+.menu.live.live-front .menu-character,
+.menu.live.live-front .menu-play,
+.menu.live.live-front .menu-room,
+.menu.live.live-front .menu-message {
+  grid-column: 1 / -1;
+}
+
+.menu.live.live-front .menu-controls .menu-button:not(.menu-play) {
+  min-width: 190px;
+  padding: 0 clamp(16px, 1.5vw, 26px);
+  gap: clamp(10px, 0.9vw, 16px);
+  white-space: nowrap;
+}
+
+/* ---- The clock and the hint: two small slanted labels in the corners ------------------------ */
+.menu-live-clock,
+.menu-live-hint {
+  position: fixed;
+  right: clamp(16px, 2.6vw, 48px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  border: 2px solid var(--l-ink);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+  pointer-events: none;
+  transition:
+    background-color var(--l-fade),
+    color var(--l-fade),
+    border-color var(--l-fade);
+}
+
+.menu-live-clock {
+  top: clamp(16px, 3.4vh, 40px);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+}
+
+.menu-live-hint {
+  bottom: clamp(16px, 3.4vh, 40px);
+  background: var(--l-glass);
+  color: var(--l-text);
+}
+
+.menu-live-mouse {
+  width: 12px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+}
+
+.menu-live-mouse::after {
+  content: '';
+  display: block;
+  width: 2px;
+  height: 5px;
+  margin: 3px auto 0;
+  background: currentColor;
+  animation: live-wheel 1.6s ease-in-out infinite;
+}
+
+@keyframes live-wheel {
+  50% {
+    transform: translateY(4px);
+    opacity: 0.3;
+  }
+}
+
+/* While a page is open (Play, Settings, the catalog) the corners stay quiet. */
+.menu.live:has(.menu-panel.hidden) :is(.menu-live-clock, .menu-live-hint) {
+  opacity: 0;
+}
+
+/* ---- The entrance: stamped name, labels sliding, buttons arriving one after another --------- */
+.menu.live.live-enter .menu-title {
+  animation: live-stamp 0.62s var(--l-spring) both;
+}
+
+.menu.live.live-enter .menu-subtitle {
+  animation: live-slide 0.5s var(--l-ease) 0.28s both;
+}
+
+.menu.live.live-enter .menu-brand::before {
+  animation: live-dots 0.9s ease 0.1s both;
+}
+
+.menu.live.live-enter .menu-controls > * {
+  animation: live-in 0.62s var(--l-ease) both;
+  animation-delay: calc(0.32s + var(--i) * 0.07s);
+}
+
+.menu.live.live-enter :is(.menu-live-clock, .menu-live-hint) {
+  animation: live-drop 0.55s var(--l-spring) 0.5s both;
+}
+
+@keyframes live-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.7) rotate(-7deg);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(0.93) rotate(1.5deg);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes live-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+}
+
+@keyframes live-dots {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes live-in {
+  0% {
+    opacity: 0;
+    translate: -90px 0;
+  }
+
+  70% {
+    opacity: 1;
+    translate: 9px 0;
+  }
+
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes live-drop {
+  from {
+    opacity: 0;
+    translate: 0 -24px;
+  }
+}
+
+/* A new layout: everything flies out to the left, quickly, before coming back in. */
+.menu.live.live-swap :is(.menu-brand, .menu-controls > *) {
+  animation: live-out 0.26s cubic-bezier(0.5, 0, 0.9, 0.4) both;
+}
+
+@keyframes live-out {
+  to {
+    opacity: 0;
+    translate: -110px 0;
+  }
+}
+
+/* ---- After Play: the pages as see-through glass over the scene ------------------------------- */
+.menu.live .play-stage {
+  --glass: rgb(8 12 20 / 46%);
+  --glass-line: rgb(255 255 255 / 22%);
+}
+
+.menu.live
+  :is(
+    .play-choice,
+    .solo-hero,
+    .solo-fresh,
+    .play-row,
+    .play-empty-card,
+    .mp-card,
+    .mp-browser,
+    .multiplayer-selected,
+    .mp-identity,
+    .settings-shell,
+    .menu-catalog
+  ) {
+  backdrop-filter: blur(16px) saturate(1.15);
+}
+
+.menu.live .play-choice {
+  background: var(--glass);
+}
+
+/* The pages' heads in the menu's ink: the eyebrow and the lead on labels, the title a sticker,
+   Back a slanted button — readable over a bright sky as over the night. */
+.menu.live .stage-eyebrow {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+  font-weight: 800;
+  box-shadow: 4px 4px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+}
+
+.menu.live .stage-eyebrow::before {
+  display: none;
+}
+
+.menu.live .play-stage .stage-title {
+  align-self: flex-start;
+  font-size: clamp(36px, 4vw, 56px);
+  font-style: italic;
+  font-weight: 900;
+  color: var(--l-title);
+  -webkit-text-stroke: 3px var(--l-ink);
+  paint-order: stroke fill;
+  text-shadow: 6px 6px 0 var(--l-shadow);
+}
+
+.menu.live .stage-lead {
+  align-self: flex-start;
+  padding: 6px 14px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-glass);
+  color: var(--l-text);
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.menu.live .stage-back {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass);
+  color: var(--l-text);
+  font-weight: 800;
+  box-shadow: 5px 5px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+  transition: transform 0.28s var(--l-spring);
+}
+
+.menu.live .stage-back:hover:not(:disabled),
+.menu.live .stage-back:focus-visible {
+  border-color: var(--l-ink);
+  background: var(--l-glass);
+  transform: skewX(var(--l-skew)) translate(-3px, -3px);
+}
+
+.menu.live
+  :is(
+    .play-choice,
+    .settings-shell,
+    .menu-catalog,
+    .solo-hero,
+    .solo-fresh,
+    .play-row,
+    .play-empty-card,
+    .mp-card,
+    .mp-browser,
+    .multiplayer-selected,
+    .mp-identity
+  ) {
+  border: 3px solid var(--l-ink);
+  box-shadow: 9px 9px 0 var(--l-shadow);
+}
+
+.menu.live .play-choice:hover,
+.menu.live .play-choice:focus-visible {
+  border-color: var(--l-ink);
+  box-shadow: 14px 14px 0 var(--l-shadow);
+}
+
+.menu.live .settings-shell {
+  background: rgb(11 19 30 / 55%);
+}
+
+.menu.live .settings-tabs {
+  background: rgb(7 13 21 / 40%);
+}
+
+.menu.live .menu-catalog {
+  background: rgb(8 12 20 / 50%);
+}
+
+.menu.live .play-stage:not(.hidden) {
+  animation: live-stage-in 0.6s var(--l-ease);
+}
+
+.menu.live .play-stage:not(.hidden) .play-choice {
+  animation: live-card-in 0.7s var(--l-spring) both;
+}
+
+.menu.live .play-stage:not(.hidden) .play-choice:nth-child(2) {
+  animation-delay: 0.09s;
+}
+
+@keyframes live-stage-in {
+  from {
+    opacity: 0;
+    translate: -40px 0;
+  }
+}
+
+@keyframes live-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(60px) rotate(-2deg) scale(0.94);
+  }
+}
+
+/* Less motion asked for: no flights, stamps or shines; the colours still change. */
+@media (prefers-reduced-motion: reduce) {
+  .menu.live *,
+  .menu.live *::before,
+  .menu.live *::after,
+  .menu-live-scene,
+  .menu-live-clock,
+  .menu-live-hint {
+    animation: none !important;
+    transition-property: background-color, color, border-color !important;
+  }
+}

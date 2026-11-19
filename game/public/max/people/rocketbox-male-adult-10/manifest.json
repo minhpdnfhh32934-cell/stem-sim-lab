@@ -1,0 +1,23 @@
+{
+  "source": "Male_Adult_10",
+  "parts": {
+    "head": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "body": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "opacity": {
+      "normal": false,
+      "rough": false,
+      "alpha": true,
+      "size": 1024
+    }
+  }
+}

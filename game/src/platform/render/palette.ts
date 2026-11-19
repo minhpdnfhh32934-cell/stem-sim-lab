@@ -82,6 +82,9 @@ export const FINISHES = {
   // Phase V: the sky in the hub's clerestories and oculus, painted by the time of day (sky.ts).
   'outside-sky': { color: '#eaf2fb', look: 'light' },
   // Phase V-2: the hub's glass floor, faintly green as laminated glass is.
+  // Biology's doors: a clear pane, and the leaves etched in it
+  'pane-glass': { color: '#dcefe6', look: 'glass', opacity: 0.2 },
+  'etched-glass': { color: '#f4faf5', look: 'glass', opacity: 0.55 },
   'floor-glass': { color: '#d6ecea', look: 'glass', opacity: 0.12 },
 } as const satisfies Record<string, FinishSpec>;
 

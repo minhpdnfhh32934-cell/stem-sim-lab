@@ -2,7 +2,23 @@ import { Disposables } from '../../core/EventBus';
 import { LANGUAGE_NAMES, LANGUAGES } from '../../core/i18n';
 import type { GameSystem } from '../../core/SystemRunner';
 import type { Game } from '../../game/Game';
-import { FRAME_CAPS, GRAPHICS_QUALITIES } from '../../persistence/settings';
+import {
+  FRAME_CAPS,
+  GRAPHICS_QUALITIES,
+  type GraphicsQuality,
+  MENU_BACKGROUNDS,
+  highOrMore,
+} from '../../persistence/settings';
+import {
+  checkUltra,
+  type Experience,
+  experienceOf,
+  type MachineFacts,
+  readMachine,
+  ULTRA_MINIMUM,
+  type UltraCheck,
+} from '../ultraCheck';
+import { setHintDot } from './hintDot';
 import { el } from './dom';
 import './settingsPage.css';
 
@@ -78,6 +94,13 @@ export class SettingsPanel implements GameSystem {
   /** What each preset gives, one line in its tile (2026-11-12: in place of one long paragraph). */
   private readonly qualityHints = GRAPHICS_QUALITIES.map(() => el('span', 'settings-tile-hint'));
   private readonly qualityHelp = el('p', 'menu-help');
+  /** The main menu's background (Phú 2026-11-18): the game's own, or the live wallpaper. */
+  private readonly menuBackground = el('fieldset', 'menu-choice settings-menu-background');
+  private readonly menuBackgroundLegend = el('legend');
+  private readonly menuBackgroundNames = MENU_BACKGROUNDS.map(() => el('span'));
+  private readonly menuBackgroundHelp = el('p', 'menu-help');
+  /** The red dot on the menu background's row, shown once the player follows the dots here. */
+  private hintRow = false;
   /** Ultra's consent (Phase G, contract §3): shown before Ultra is turned on, never after. */
   private readonly ultra = el('div', 'menu-dialog-backdrop hidden');
   private readonly ultraBox = el('div', 'menu-dialog');
@@ -86,17 +109,37 @@ export class SettingsPanel implements GameSystem {
   private readonly ultraNotes = el('ul', 'menu-dialog-notes');
   private readonly ultraOn = el('button', 'menu-button primary');
   private readonly ultraCancel = el('button', 'menu-button');
+  /** Ultra's minimum against this computer (Phú 2026-11-16): a table as a game's specs page. */
+  private readonly ultraSpecs = el('table', 'ultra-specs');
+  /** The experience expected here: one solid badge (good, playable, not advised). */
+  private readonly ultraExpect = el('div', 'ultra-expect');
+  /** The second warning, when this computer is below the minimum. */
+  private readonly warn = el('div', 'menu-dialog-backdrop hidden');
+  private readonly warnBox = el('div', 'menu-dialog ultra-dialog');
+  private readonly warnTitle = el('h2', 'menu-dialog-title ultra-bar warn');
+  private readonly warnBody = el('p', 'menu-help');
+  private readonly warnMissing = el('ul', 'menu-dialog-notes');
+  private readonly warnOn = el('button', 'menu-button');
+  private readonly warnKeep = el('button', 'menu-button primary');
+  /** Ultra measured while playing here: shown under the presets while Ultra is on. */
+  private readonly ultraNow = el('p', 'ultra-now');
+  private ultraNowAt = 0;
+  /** The level the dialog asks about: Ultra or Max (Max takes the same dialog, its own words). */
+  private asking: 'high' | 'ultra' = 'high';
+  /** The dialog open now (its buttons, the first focused; Escape closes it), or null. */
+  private dialog: { buttons: HTMLButtonElement[]; close: () => void } | null = null;
   private readonly ultraKeys = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape' && e.key !== 'Tab') return;
+    const open = this.dialog;
+    if (!open || (e.key !== 'Escape' && e.key !== 'Tab')) return;
     e.stopImmediatePropagation(); // the menu behind does not see it
+    e.preventDefault();
     if (e.key === 'Escape') {
-      e.preventDefault();
-      this.closeUltra();
+      open.close();
       return;
     }
-    // Focus stays in the dialog: Tab goes between its two buttons.
-    e.preventDefault();
-    (document.activeElement === this.ultraOn ? this.ultraCancel : this.ultraOn).focus();
+    // Focus stays in the dialog: Tab goes round its buttons.
+    const at = open.buttons.indexOf(document.activeElement as HTMLButtonElement);
+    open.buttons[(at + 1) % open.buttons.length]?.focus();
   };
   private readonly roomSleep = el('div', 'menu-field');
   /** The frame cap, the preset and the rooms out of sight: one card, as all three are the load. */
@@ -148,7 +191,6 @@ export class SettingsPanel implements GameSystem {
     this.quality.setAttribute('aria-describedby', this.qualityHelp.id);
     this.quality.append(this.qualityLegend);
     GRAPHICS_QUALITIES.forEach((quality, i) => {
-      if (quality === 'ultra' && import.meta.env.VITE_SIMLAB_EMBED === '1') return;
       const tile = el('span', 'settings-tile');
       const hint = this.qualityHints[i] ?? el('span');
       // The hint is shown, not part of the choice's name (read as its description instead).
@@ -158,14 +200,39 @@ export class SettingsPanel implements GameSystem {
       const name = tile;
       this.quality.append(
         radio('graphics-quality', quality, quality === this.game.graphicsQuality, name, () =>
-          quality === 'ultra' ? this.askUltra() : this.game.setGraphicsQuality(quality),
+          quality === 'high' || quality === 'ultra'
+            ? this.askUltra(quality)
+            : this.game.setGraphicsQuality(quality),
         ),
       );
       this.quality.lastElementChild
         ?.querySelector('input')
         ?.setAttribute('aria-describedby', hint.id);
     });
-    this.quality.append(this.qualityHelp);
+    // The measured line last: a row of its own under the name and the selector.
+    this.quality.append(this.qualityHelp, this.ultraNow);
+    // The menu's background: the live one costs the graphics card, so it sits with the load's
+    // settings, and is not offered at Low.
+    this.menuBackgroundHelp.id = 'settings-menu-background-help';
+    this.menuBackground.setAttribute('aria-describedby', this.menuBackgroundHelp.id);
+    this.menuBackground.append(this.menuBackgroundLegend);
+    MENU_BACKGROUNDS.forEach((background, i) => {
+      this.menuBackground.append(
+        radio(
+          'menu-background',
+          background,
+          background === this.game.menuBackground,
+          this.menuBackgroundNames[i] ?? el('span'),
+          () => {
+            this.hintRow = false;
+            this.game.setMenuBackground(background);
+            this.paintHints();
+          },
+        ),
+      );
+    });
+    this.menuBackground.append(this.menuBackgroundHelp);
+    this.menuBackground.hidden = this.game.graphicsQuality === 'low';
     // Rooms out of sight (world/dormancy.ts): a switch under the preset, as both lighten the load.
     const row = el('label', 'menu-option');
     this.roomSleepBox.type = 'checkbox';
@@ -178,8 +245,16 @@ export class SettingsPanel implements GameSystem {
     );
     row.append(this.roomSleepBox, this.roomSleepName);
     this.roomSleep.append(row, this.roomSleepHelp);
-    this.graphics.append(this.graphicsTitle, this.quality, this.frameCap, this.roomSleep);
-    for (const group of [this.languages, this.quality, this.frameCap]) this.selector(group);
+    this.graphics.append(
+      this.graphicsTitle,
+      this.quality,
+      this.frameCap,
+      this.menuBackground,
+      this.roomSleep,
+    );
+    for (const group of [this.languages, this.quality, this.frameCap, this.menuBackground]) {
+      this.selector(group);
+    }
     this.panes.append(this.languages, this.graphics);
     const main = el('div', 'settings-main');
     this.describe.setAttribute('aria-hidden', 'true'); // each control has its own description
@@ -203,16 +278,43 @@ export class SettingsPanel implements GameSystem {
     this.ultraBox.setAttribute('aria-labelledby', this.ultraTitle.id);
     this.ultraOn.type = 'button';
     this.ultraCancel.type = 'button';
+    this.ultraBox.classList.add('ultra-dialog');
+    this.ultraTitle.classList.add('ultra-bar');
     this.ultraOn.addEventListener('click', () => {
       this.closeUltra();
-      this.game.setGraphicsQuality('ultra');
+      // Below the minimum: asked a second time, with what that means for playing here.
+      if (this.check().expected === 'good') this.game.setGraphicsQuality(this.asking);
+      else this.askAgain();
     });
     this.ultraCancel.addEventListener('click', () => this.closeUltra());
     const actions = el('div', 'menu-dialog-actions');
     actions.append(this.ultraCancel, this.ultraOn);
-    this.ultraBox.append(this.ultraTitle, this.ultraIntro, this.ultraNotes, actions);
+    this.ultraBox.append(
+      this.ultraTitle,
+      this.ultraIntro,
+      this.ultraSpecs,
+      this.ultraExpect,
+      this.ultraNotes,
+      actions,
+    );
     this.ultra.append(this.ultraBox);
-    document.body.append(this.ultra);
+    this.warn.setAttribute('role', 'presentation');
+    this.warnBox.setAttribute('role', 'alertdialog');
+    this.warnBox.setAttribute('aria-modal', 'true');
+    this.warnTitle.id = 'settings-ultra-warn-title';
+    this.warnBox.setAttribute('aria-labelledby', this.warnTitle.id);
+    this.warnOn.type = 'button';
+    this.warnKeep.type = 'button';
+    this.warnOn.addEventListener('click', () => {
+      this.closeWarn();
+      this.game.setGraphicsQuality(this.asking);
+    });
+    this.warnKeep.addEventListener('click', () => this.closeWarn());
+    const warnActions = el('div', 'menu-dialog-actions');
+    warnActions.append(this.warnOn, this.warnKeep);
+    this.warnBox.append(this.warnTitle, this.warnMissing, this.warnBody, warnActions);
+    this.warn.append(this.warnBox);
+    document.body.append(this.ultra, this.warn);
     this.render();
     this.subscriptions.add(
       this.game.events.subscribe('LanguageChanged', () => {
@@ -221,15 +323,31 @@ export class SettingsPanel implements GameSystem {
         queueMicrotask(() => this.showTabs());
       }),
     );
+    // The dots follow the background chosen anywhere, and their being seen.
+    this.subscriptions.add(
+      this.game.events.subscribe('MenuBackgroundChanged', () => this.paintHints()),
+    );
+    this.subscriptions.add(this.game.events.subscribe('LiveHintSeen', () => this.paintHints()));
     // The preset can change without a click (a default suggested for this machine): follow it.
     this.subscriptions.add(
       this.game.events.subscribe('GraphicsQualityChanged', ({ quality }) => {
         for (const input of this.quality.querySelectorAll('input')) {
           input.checked = input.value === quality;
         }
+        this.menuBackground.hidden = quality === 'low';
+        this.paintHints();
         this.follow(false);
+        this.showUltraNow();
       }),
     );
+  }
+
+  /** Ultra's measured experience, written again once a second while the settings are shown. */
+  update(dt: number): void {
+    this.ultraNowAt -= dt;
+    if (this.ultraNowAt > 0 || !this.root.isConnected) return;
+    this.ultraNowAt = 1;
+    this.showUltraNow();
   }
 
   /** A section of settings that arrives later (the sound, with its engine), after the others. */
@@ -317,6 +435,17 @@ export class SettingsPanel implements GameSystem {
     this.select(this.active, false);
   }
 
+  /**
+   * The way to the live background for a first-time player (Phú 2026-11-18): a red dot on the
+   * Graphics tab until it is opened, then on the Menu background row until a choice is made.
+   */
+  private paintHints(): void {
+    const label = this.game.texts.ui('menu.hintNew', 'New');
+    const graphics = this.tabButtons.find(({ section }) => section === this.graphics)?.tab;
+    if (graphics) setHintDot(graphics, this.game.liveHint, label);
+    setHintDot(this.menuBackgroundLegend, this.hintRow, label, true);
+  }
+
   /** Shows one section: its tab lit (the highlight slides there), its rows coming in in turn. */
   private select(section: Element | null, animate = true): void {
     if (!section) return;
@@ -342,6 +471,12 @@ export class SettingsPanel implements GameSystem {
     [...section.children].forEach((row, i) => {
       if (row instanceof HTMLElement) row.style.setProperty('--i', String(i));
     });
+    // Followed the dot to Graphics: the dot moves to the row, and the hint counts as seen.
+    if (section === this.graphics && this.game.liveHint && this.root.isConnected) {
+      this.hintRow = true;
+      this.game.seeLiveHint();
+    } else if (section !== this.graphics) this.hintRow = false;
+    this.paintHints();
     if (animate && changed) replay(this.heading, 'swap');
     this.follow(false); // a section shown again: its selectors on their choices
     this.place();
@@ -404,47 +539,258 @@ export class SettingsPanel implements GameSystem {
     this.resized.disconnect();
     window.removeEventListener('keydown', this.ultraKeys, true);
     this.ultra.remove();
+    this.warn.remove();
     this.root.remove();
   }
 
   /**
-   * Ultra chosen: the preset stays as it was (its radio checked again) until the player agrees in
-   * the dialog. Each time Ultra is chosen from another preset (decision D2).
+   * High or Ultra chosen: the preset stays as it was (its radio checked again) until the player
+   * agrees in the dialog. Each time either is chosen from another preset (decision D2; the dialog
+   * was Ultra's and Max's before the levels were renamed, 2026-11-18).
    */
-  private askUltra(): void {
+  private askUltra(level: 'high' | 'ultra'): void {
+    this.asking = level;
     const current = this.game.graphicsQuality;
     for (const input of this.quality.querySelectorAll('input')) {
       input.checked = input.value === current;
     }
     this.follow(false); // Ultra's radio put back: the selector shows the preset kept
     this.words();
-    this.ultra.classList.remove('hidden');
-    window.addEventListener('keydown', this.ultraKeys, true);
-    this.ultraCancel.focus();
+    this.open(this.ultra, [this.ultraCancel, this.ultraOn], () => this.closeUltra());
   }
 
   private closeUltra(): void {
-    this.ultra.classList.add('hidden');
+    this.shut(this.ultra);
+  }
+
+  /** The second warning: what this computer lacks, and what playing at Ultra will be like here. */
+  private askAgain(): void {
+    this.warnWords();
+    this.open(this.warn, [this.warnKeep, this.warnOn], () => this.closeWarn());
+  }
+
+  private closeWarn(): void {
+    this.shut(this.warn);
+  }
+
+  private open(backdrop: HTMLElement, buttons: HTMLButtonElement[], close: () => void): void {
+    backdrop.classList.remove('hidden');
+    this.dialog = { buttons, close };
+    window.addEventListener('keydown', this.ultraKeys, true);
+    buttons[0]?.focus();
+  }
+
+  private shut(backdrop: HTMLElement): void {
+    backdrop.classList.add('hidden');
+    this.dialog = null;
     window.removeEventListener('keydown', this.ultraKeys, true);
-    this.quality.querySelector<HTMLInputElement>('input[value="ultra"]')?.focus();
+    this.quality.querySelector<HTMLInputElement>(`input[value="${this.asking}"]`)?.focus();
+  }
+
+  /** Ultra's minimum against this computer, as the browser tells it. */
+  private check(): UltraCheck {
+    return checkUltra(this.machine());
+  }
+
+  /** This computer as the browser tells it (the GPU read here when the renderer has not loaded). */
+  private machine(): MachineFacts {
+    return readMachine(this.game.gpuName, this.game.softwareRenderer);
+  }
+
+  /** "Good", "Playable", "Not advised": one solid badge. */
+  private badge(experience: Experience): HTMLElement {
+    const t = this.game.texts;
+    const words: Record<Experience, string> = {
+      good: t.ui('menu.ultraGood', 'Good'),
+      ok: t.ui('menu.ultraOk', 'Playable'),
+      poor: t.ui('menu.ultraPoor', 'Not advised'),
+    };
+    return el('span', 'ultra-badge ' + experience, words[experience]);
+  }
+
+  /** High or Ultra on: how it plays here, measured (or being measured); hidden under the others. */
+  private showUltraNow(): void {
+    const on = highOrMore(this.game.graphicsQuality);
+    this.ultraNow.hidden = !on;
+    if (!on) return;
+    const t = this.game.texts;
+    const fps = this.game.ultraFps;
+    const label = el(
+      'span',
+      'ultra-now-name',
+      t.ui('menu.levelHere', '{level} on this computer', {
+        level: this.levelName(this.game.graphicsQuality),
+      }),
+    );
+    if (fps === null) {
+      const note = t.ui('menu.ultraMeasuring', 'measured while you play…');
+      this.ultraNow.replaceChildren(label, el('span', 'ultra-now-note', note));
+      return;
+    }
+    const measured = t.ui('menu.ultraMeasured', '{fps} frames a second while playing', {
+      fps: String(Math.round(fps)),
+    });
+    this.ultraNow.replaceChildren(
+      label,
+      this.badge(experienceOf(fps, this.game.frameCap)),
+      el('span', 'ultra-now-note', measured),
+    );
+  }
+
+  /** The second warning's words: what is below the minimum here. */
+  private warnWords(): void {
+    const t = this.game.texts;
+    const c = this.check();
+    const level = this.levelName(this.asking);
+    this.warnTitle.textContent = t.ui('menu.levelWarnTitle', 'Below the minimum for {level}', {
+      level,
+    });
+    const missing: string[] = [];
+    if (this.machine().software) {
+      missing.push(t.ui('menu.ultraWarnSoftware', 'No graphics card is drawing the game.'));
+    } else if (c.gpu === false) {
+      missing.push(
+        t.ui('menu.ultraWarnGpu', 'The graphics card is below the {gpu} class.', {
+          gpu: ULTRA_MINIMUM.gpu,
+        }),
+      );
+    } else if (c.gpu === null) {
+      missing.push(
+        t.ui('menu.ultraWarnGpuUnknown', 'The browser does not name the graphics card.'),
+      );
+    }
+    if (!c.threads) {
+      missing.push(
+        t.ui('menu.ultraWarnCpu', 'The processor has fewer than {n} threads.', {
+          n: String(ULTRA_MINIMUM.threads),
+        }),
+      );
+    }
+    if (c.memory === false) {
+      missing.push(
+        t.ui('menu.ultraWarnRam', 'Less than {n} GB of memory.', {
+          n: String(ULTRA_MINIMUM.memoryGb),
+        }),
+      );
+    }
+    this.warnMissing.replaceChildren(...missing.map((line) => el('li', undefined, line)));
+    this.warnBody.textContent = t.ui(
+      'menu.ultraWarnBody',
+      '{level} may then run at few frames a second, stutter as you walk and aim, and make the computer hot and loud; labs may open slowly. You can turn it off at any time in Settings.',
+      { level },
+    );
+    this.warnKeep.textContent = t.ui('menu.ultraWarnKeep', 'Keep the current level');
+    this.warnOn.textContent = t.ui('menu.ultraWarnOn', 'Turn on anyway');
+  }
+
+  /** The minimum, this computer, met or not: a row each, and the experience expected here. */
+  private specs(): void {
+    const t = this.game.texts;
+    const c = this.check();
+    const m = this.machine();
+    const unread = t.ui('menu.ultraUnread', 'not readable');
+    const threads = (n: number) => t.ui('menu.ultraThreads', '{n} threads', { n: String(n) });
+    const memory =
+      m.memoryGb === null
+        ? unread
+        : m.memoryGb >= ULTRA_MINIMUM.memoryGb
+          ? t.ui('menu.ultraRamAtLeast', '{n} GB or more', { n: String(m.memoryGb) })
+          : String(m.memoryGb) + ' GB';
+    const rows: [string, string, string, boolean | null][] = [
+      [
+        t.ui('menu.ultraReqGpu', 'Graphics card'),
+        ULTRA_MINIMUM.gpu,
+        m.software
+          ? t.ui('menu.ultraNoCard', 'no graphics card (software)')
+          : cardName(m.gpu) || unread,
+        c.gpu,
+      ],
+      [
+        t.ui('menu.ultraReqVram', 'Graphics memory'),
+        String(ULTRA_MINIMUM.vramGb) + ' GB',
+        unread,
+        null,
+      ],
+      [
+        t.ui('menu.ultraReqCpu', 'Processor'),
+        threads(ULTRA_MINIMUM.threads),
+        threads(m.threads),
+        c.threads,
+      ],
+      [
+        t.ui('menu.ultraReqRam', 'Memory'),
+        String(ULTRA_MINIMUM.memoryGb) + ' GB',
+        memory,
+        c.memory,
+      ],
+    ];
+    const head = el('tr');
+    head.append(
+      el('th'),
+      el('th', undefined, t.ui('menu.ultraMinimum', 'Minimum')),
+      el('th', undefined, t.ui('menu.ultraThisMachine', 'This computer')),
+      el('th'),
+    );
+    const body = rows.map(([name, need, has, met]) => {
+      const row = el('tr');
+      const kind = met === true ? 'met' : met === false ? 'short' : 'unknown';
+      const mark = el('td', 'ultra-mark-cell');
+      mark.append(el('span', 'ultra-mark ' + kind, met === true ? '✔' : met === false ? '✘' : '?'));
+      row.append(
+        el('td', 'ultra-spec-name', name),
+        el('td', undefined, need),
+        el('td', undefined, has),
+        mark,
+      );
+      return row;
+    });
+    const thead = el('thead');
+    thead.append(head);
+    const tbody = el('tbody');
+    tbody.append(...body);
+    this.ultraSpecs.replaceChildren(thead, tbody);
+    this.ultraExpect.replaceChildren(
+      el('span', 'ultra-expect-name', t.ui('menu.ultraExpected', 'Expected experience')),
+      this.badge(c.expected),
+    );
+  }
+
+  /** A level's name in the interface language (as its radio shows it). */
+  private levelName(quality: GraphicsQuality): string {
+    const t = this.game.texts;
+    switch (quality) {
+      case 'low':
+        return t.ui('menu.graphicsLow', 'Low');
+      case 'medium':
+        return t.ui('menu.graphicsMedium', 'Medium');
+      case 'high':
+        return t.ui('menu.graphicsHigh', 'High');
+      case 'ultra':
+        return t.ui('menu.graphicsUltra', 'Ultra');
+    }
   }
 
   /** The dialog's words, in the interface language (and the software renderer's warning). */
   private words(): void {
     const t = this.game.texts;
-    this.ultraTitle.textContent = t.ui('menu.ultraTitle', 'Turn on Ultra graphics?');
-    this.ultraIntro.textContent = t.ui(
-      'menu.ultraIntro',
-      'Ultra adds ambient occlusion where things meet, soft shadows, reflections of the room you are in and the glow of lamps and screens, with more detail to come. Before you turn it on:',
-    );
+    const ultra = this.asking === 'ultra';
+    const level = this.levelName(this.asking);
+    this.ultraTitle.textContent = t.ui('menu.levelTitle', 'Turn on {level} graphics?', { level });
+    this.ultraIntro.textContent = ultra
+      ? t.ui(
+          'menu.ultraIntro',
+          'Ultra is everything High draws and more: the most detail the game has, made as real as it can be, from the people to the objects and what happens in the labs. It is the heaviest level. Before you turn it on:',
+        )
+      : t.ui(
+          'menu.highIntro',
+          'High adds ambient occlusion where things meet, soft shadows, reflections of the room you are in and the glow of lamps and screens. Before you turn it on:',
+        );
+    this.specs();
     const notes = [
       t.ui(
-        'menu.ultraGpu',
-        'It is made for a dedicated graphics card of the RTX 4060 / RX 7600 class or better, with at least 8 GB of video memory.',
-      ),
-      t.ui(
         'menu.ultraCost',
-        'It draws fewer frames per second than High, and on a laptop it brings more heat, fan noise and battery use.',
+        'It draws fewer frames per second than {lower}, and on a laptop it brings more heat, fan noise and battery use.',
+        { lower: this.levelName(ultra ? 'high' : 'medium') },
       ),
       t.ui(
         'menu.ultraLoad',
@@ -452,16 +798,17 @@ export class SettingsPanel implements GameSystem {
       ),
       t.ui('menu.ultraSame', 'Experiments and their results are the same at every graphics level.'),
     ];
-    if (this.game.softwareRenderer) {
+    if (this.machine().software) {
       notes.push(
         t.ui(
           'menu.ultraSoftware',
-          'This browser is drawing without a graphics card (software rendering): Ultra will be very slow here.',
+          'This browser is drawing without a graphics card (software rendering): {level} will be very slow here.',
+          { level },
         ),
       );
     }
     this.ultraNotes.replaceChildren(...notes.map((note) => el('li', undefined, note)));
-    this.ultraOn.textContent = t.ui('menu.ultraOn', 'Turn on Ultra');
+    this.ultraOn.textContent = t.ui('menu.levelOn', 'Turn on {level}', { level });
     this.ultraCancel.textContent = t.ui('menu.ultraCancel', 'Cancel');
   }
 
@@ -491,11 +838,17 @@ export class SettingsPanel implements GameSystem {
     this.qualityNames.forEach((span, i) => (span.textContent = names[i] ?? ''));
     const hints = [
       t.ui('menu.graphicsLowHint', 'Plain light, no shadows, fewer pixels. For older computers.'),
-      t.ui('menu.graphicsMediumHint', 'Shadows on. The balance for most computers.'),
-      t.ui('menu.graphicsHighHint', 'Softer, more natural reflections on metal.'),
+      t.ui(
+        'menu.graphicsMediumHint',
+        'Shadows, soft reflections on metal and glass. The balance for most computers.',
+      ),
+      t.ui(
+        'menu.graphicsHighHint',
+        'Ambient occlusion, soft shadows, reflections of the room. A strong graphics card.',
+      ),
       t.ui(
         'menu.graphicsUltraHint',
-        'Ambient occlusion, soft shadows, reflections of the room. A strong graphics card.',
+        'Everything of High, and the most detail: as real as the game can draw. The strongest graphics cards.',
       ),
     ];
     this.qualityHints.forEach((span, i) => (span.textContent = hints[i] ?? ''));
@@ -503,13 +856,37 @@ export class SettingsPanel implements GameSystem {
       'menu.graphicsSame',
       'Experiment results are the same at every setting.',
     );
+    this.menuBackgroundLegend.textContent = t.ui('menu.menuBackground', 'Menu background');
+    this.paintHints();
+    const backgrounds = [
+      t.ui('menu.menuBackgroundDefault', 'Default'),
+      t.ui('menu.menuBackgroundLive', 'Live'),
+    ];
+    this.menuBackgroundNames.forEach((span, i) => (span.textContent = backgrounds[i] ?? ''));
+    this.menuBackgroundHelp.textContent = t.ui(
+      'menu.menuBackgroundHelp',
+      'Live: Linh and Khoa on a rooftop over the city, from afternoon into the night; scroll the mouse to turn the view. It uses the graphics card while the menu shows. Not at Low quality.',
+    );
+    for (const input of this.menuBackground.querySelectorAll('input')) {
+      input.checked = input.value === this.game.menuBackground;
+    }
     this.roomSleepName.textContent = t.ui('menu.roomSleep', 'Draw only rooms you can see');
     this.roomSleepHelp.textContent = t.ui(
       'menu.roomSleepHelp',
       'Rooms behind closed doors you are far from are not drawn or kept in graphics memory, and are made ready again as you walk towards their door, before it opens. Lighter for the machine; experiments and everything else go on in every room.',
     );
     this.roomSleepBox.checked = this.game.roomSleep;
+    this.showUltraNow();
   }
+}
+
+/** The card's own name out of the browser's renderer string ("ANGLE (NVIDIA, NVIDIA GeForce …)"). */
+function cardName(renderer: string): string {
+  const inner =
+    /^ANGLE \([^,]+, (.+?)(?: \(0x[0-9A-Fa-f]+\))?(?: Direct3D.*| Vulkan.*| OpenGL.*)?\)$/.exec(
+      renderer,
+    );
+  return (inner?.[1] ?? renderer).trim();
 }
 
 /** Plays a CSS animation class again (removed, laid out, added). */

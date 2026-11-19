@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { BenchPose } from '../../../gameplay/experiment/StationSystem';
 import { ItemDefinitionSchema } from '../../../gameplay/item';
 import type { SessionState } from '../../../simulation/ExperimentSession';
@@ -48,10 +48,17 @@ const pose = (
   sample: Record<string, number>,
 ): BenchPose => ({ status, parameters, sample });
 
+/** The rigs build() made, freed after each test (a shared material goes with its last owner). */
+const built: { dispose(): void }[] = [];
+afterEach(() => {
+  for (const kit of built.splice(0)) kit.dispose();
+});
+
 function build() {
   const painted = new THREE.MeshStandardMaterial();
   const frame = powerBoard.frame(item, painted);
   const rig = powerBoard.rig!(item);
+  built.push(frame, rig);
   const root = new THREE.Group();
   root.add(new THREE.Mesh(frame.body, painted), frame.parts, rig.group);
   const named = (name: string) => root.getObjectByName(name) as THREE.Mesh;

@@ -9,6 +9,7 @@ import { benchFixture, ohmModel } from '../../../game/benchFixture';
 import { type ItemDefinition, ItemDefinitionSchema } from '../../../gameplay/item';
 import type { SessionState } from '../../../simulation/ExperimentSession';
 import type { SimulationModel } from '../../../simulation/SimulationModel';
+import { lookKey, sharedKey } from '../assembly';
 import { BENCH_MODELS, benchModel } from './registry';
 
 // Every bench model content names has a builder (none ships yet: the check runs on what will),
@@ -39,6 +40,31 @@ function unread(raw: RawContent, ohm: SimulationModel = ohmModel): string[] {
         .map((v) => `${room.id}/${placement.id}: ${v}`);
     }),
   );
+}
+
+/**
+ * Each placed bench model's settings: its experiment's parameters all at their minimum, default
+ * and maximum, and the variables its model outputs.
+ */
+function settings(raw: RawContent) {
+  const models = new Registry('simulation model', [...BUILT_IN_MODELS, ohmModel]);
+  const c = buildContent(raw, { behaviors: new Registry('behaviour', BUILT_IN_BEHAVIORS), models });
+  const out = new Map<string, { parameters: Record<string, number>[]; variables: string[] }>();
+  for (const room of c.rooms.all()) {
+    for (const placement of room.placements) {
+      const bench = c.items.tryGet(placement.item)?.bench;
+      const experiment = bench && c.experiments.tryGet(String(placement.params.experimentId));
+      if (!experiment) continue;
+      const entry = out.get(bench.model) ?? { parameters: [], variables: [] };
+      for (const pick of ['min', 'default', 'max'] as const)
+        entry.parameters.push(
+          Object.fromEntries(experiment.parameters.map((p) => [p.id, p[pick]])),
+        );
+      entry.variables.push(...models.get(experiment.model).variables);
+      out.set(bench.model, entry);
+    }
+  }
+  return out;
 }
 
 const STATES: readonly SessionState[] = ['idle', 'configured', 'running', 'stopped', 'completed'];
@@ -118,6 +144,50 @@ describe('bench models', () => {
       rig?.dispose();
       expect(freed.size).toBe(made.size);
       expect(paintedFreed).toBe(false);
+    },
+  );
+
+  // A material an assembly shares (`own`) is every rig's with the same values: none may change it.
+  const placed = settings(bundledContent);
+  const benchItems = parsed(items);
+  it.each(Object.keys(BENCH_MODELS))(
+    '%s never changes a material it shares, built or posed',
+    (key) => {
+      const model = BENCH_MODELS[key]!;
+      const { parameters = [{}], variables = ohmModel.variables } = placed.get(key) ?? {};
+      const reads = [...new Set([...variables, ...(model.reads ?? [])])];
+      const builds = benchItems.filter((i) => i.bench?.model === key);
+      if (builds.length === 0)
+        builds.push({ ...board, bench: { model: key, top: board.bench!.top } });
+      const changed = new Set<string>();
+      const check = (root: THREE.Object3D, when: string) =>
+        root.traverse((o) => {
+          for (const m of [(o as Partial<THREE.Mesh>).material ?? []].flat()) {
+            const was = sharedKey(m);
+            if (was !== undefined && lookKey(m) !== was)
+              changed.add(`${when}: ${o.name || o.type}`);
+          }
+        });
+      for (const item of builds) {
+        const frame = model.frame(item, new THREE.MeshStandardMaterial());
+        const rig = model.rig?.(item);
+        const root = new THREE.Group().add(frame.parts, ...(rig ? [rig.group] : []));
+        check(root, 'built');
+        for (const scale of [0, 0.5, 1, Number.NaN]) {
+          const sample = Object.fromEntries(
+            reads.map((v) => [v, scale * (model.fullScale?.[v] || 1)]),
+          );
+          for (const values of parameters) {
+            for (const status of STATES) {
+              rig?.pose({ status, parameters: values, sample, state: () => scale === 1 }, 1 / 60);
+              check(root, `${status} at ${scale}`);
+            }
+          }
+        }
+        frame.dispose();
+        rig?.dispose();
+      }
+      expect([...changed]).toEqual([]);
     },
   );
 });

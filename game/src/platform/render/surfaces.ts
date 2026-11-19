@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { MATERIALS } from '../../gameplay/item';
 import type { Floor } from '../../world/definitions';
 import type { Finish } from './palette';
+import { setNodeLook } from './nodeLooks';
 
 /** An item's look (`visual.material`). */
 type Material = (typeof MATERIALS)[number];
@@ -36,6 +37,11 @@ export interface SurfaceSet {
   readonly normal: number;
   /** Whether it has an ambient occlusion map. */
   readonly ao: boolean;
+  /**
+   * How worn it shows under Max (0 none … 1 fully; wear.png): smudges, fingerprints and fine
+   * scratches, only where the surface is glossy enough to show them.
+   */
+  readonly wear: number;
 }
 
 export const SURFACE_SETS = {
@@ -47,6 +53,7 @@ export const SURFACE_SETS = {
     rough: 0.35,
     normal: 0.8,
     ao: false,
+    wear: 0.7,
   },
   'floor-concrete': {
     folder: 'Concrete048',
@@ -56,6 +63,7 @@ export const SURFACE_SETS = {
     rough: 0.7,
     normal: 1,
     ao: true,
+    wear: 0.4,
   },
   // The room's own tiles stay (their map): only a fine stone grain over them. A tiled set laid its
   // own smaller grid over the Biology Lab's (G-4 bench look).
@@ -67,6 +75,7 @@ export const SURFACE_SETS = {
     rough: 0.3,
     normal: 0.4,
     ao: false,
+    wear: 0.6,
   },
   'floor-wood': {
     folder: 'WoodFloor051',
@@ -76,6 +85,7 @@ export const SURFACE_SETS = {
     rough: 0.6,
     normal: 0.8,
     ao: false,
+    wear: 0.6,
   },
   plaster: {
     folder: 'PaintedPlaster017',
@@ -85,6 +95,7 @@ export const SURFACE_SETS = {
     rough: 0.5,
     normal: 0.6,
     ao: false,
+    wear: 0.15,
   },
   steel: {
     folder: 'Metal012',
@@ -95,6 +106,7 @@ export const SURFACE_SETS = {
     rough: 0.12, // patches of roughness on a mirror-like metal read as galvanised spangle
     normal: 0.25,
     ao: false,
+    wear: 1,
   },
   aluminium: {
     folder: 'Metal051A',
@@ -104,6 +116,7 @@ export const SURFACE_SETS = {
     rough: 0.12,
     normal: 0.2,
     ao: false,
+    wear: 1,
   },
   'painted-metal': {
     folder: 'Metal027',
@@ -113,6 +126,7 @@ export const SURFACE_SETS = {
     rough: 0.6,
     normal: 0.6,
     ao: false,
+    wear: 0.8,
   },
   'plastic-white': {
     folder: 'Plastic010',
@@ -122,6 +136,7 @@ export const SURFACE_SETS = {
     rough: 0.25,
     normal: 0.5,
     ao: false,
+    wear: 0.9,
   },
   'plastic-glossy': {
     folder: 'Plastic006',
@@ -131,6 +146,7 @@ export const SURFACE_SETS = {
     rough: 0.25,
     normal: 0.4,
     ao: false,
+    wear: 1,
   },
   rubber: {
     folder: 'Rubber004',
@@ -140,6 +156,7 @@ export const SURFACE_SETS = {
     rough: 0.4,
     normal: 0.8,
     ao: false,
+    wear: 0.3,
   },
   wood: {
     folder: 'Wood092',
@@ -149,6 +166,7 @@ export const SURFACE_SETS = {
     rough: 0.6,
     normal: 0.6,
     ao: false,
+    wear: 0.6,
   },
 } as const satisfies Record<string, SurfaceSet>;
 
@@ -247,6 +265,10 @@ uniform float uTriRough;
 uniform float uTriNormal;
 uniform float uTriColorMean;
 uniform float uTriRoughMean;
+#ifdef WEAR
+  uniform sampler2D tWear;
+  uniform float uWear;
+#endif
 vec4 triSample( sampler2D t, vec3 p, vec3 w ) {
   return texture2D( t, p.zy ) * w.x + texture2D( t, p.xz ) * w.y + texture2D( t, p.xy ) * w.z;
 }
@@ -260,6 +282,30 @@ vec3 triP = vTriPos / uTriScale;
   float triL = dot( triSample( tTriColor, triP, triWt ).rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   diffuseColor.rgb *= mix( 1.0, triL / uTriColorMean, uTriDetail );
 }
+`;
+/**
+ * Max's wear (wear.png: R smudges, G fingerprints, B fine scratches), in world space: smudges at a
+ * broad scale; fingerprints at a fine one, gathered where the smudges are (prints come in clusters,
+ * where hands go, not evenly over everything); scratches fine. They dull a glossy surface where
+ * they are (its roughness up) — a matt one shows none — and a scratch lightens it a little.
+ */
+const FRAGMENT_WEAR = /* glsl */ `
+#ifdef WEAR
+{
+  vec3 wearBig = triSample( tWear, vTriPos / 1.6, triWt ).rgb;
+  vec3 wearFine = triSample( tWear, vTriPos / 0.45 + 0.37, triWt ).rgb;
+  float smudge = smoothstep( 0.1, 0.35, wearBig.r );
+  float prints = wearFine.g * smoothstep( 0.12, 0.3, wearBig.r );
+  float scratch = wearFine.b;
+  float glossy = 1.0 - smoothstep( 0.3, 0.7, roughnessFactor );
+  roughnessFactor = clamp(
+    roughnessFactor + uWear * glossy * ( 0.16 * smudge + 0.22 * prints + 0.18 * scratch ),
+    0.04,
+    1.0
+  );
+  diffuseColor.rgb *= 1.0 + uWear * 0.06 * scratch;
+}
+#endif
 `;
 const FRAGMENT_ROUGH = /* glsl */ `
 {
@@ -326,6 +372,10 @@ export class Surfaces {
   private loaded: Map<SurfaceId, Loaded> | null = null;
   private loading: Promise<void> | null = null;
   private readonly patched = new Set<THREE.MeshStandardMaterial>();
+  /** Max's wear (wear.png), loaded the first time Max is chosen; on while Max is. */
+  private wearTexture: THREE.Texture | null = null;
+  private wearLoading: Promise<void> | null = null;
+  private wearOn = false;
 
   constructor(
     /** The base URL the textures are served under (Vite's BASE_URL). */
@@ -367,10 +417,14 @@ export class Surfaces {
     return out;
   }
 
-  /** Lays the loaded surfaces on every standard material under `root` that has one. */
-  adopt(root: THREE.Object3D): void {
+  /**
+   * Lays the loaded surfaces on every standard material under `root` that has one; how many
+   * materials took one now.
+   */
+  adopt(root: THREE.Object3D): number {
     const loaded = this.loaded;
-    if (!loaded) return;
+    if (!loaded) return 0;
+    const before = this.patched.size;
     root.traverse((object) => {
       const mesh = object as Partial<THREE.Mesh>;
       if (!mesh.material) return;
@@ -384,6 +438,50 @@ export class Surfaces {
         this.patch(material, id, surface);
       }
     });
+    return this.patched.size - before;
+  }
+
+  /**
+   * Max's wear on or off (quality.ts `wear`): loaded the first time; every surface compiled again
+   * when it changes (its program keyed by it). Resolves once it shows (or failed, warned).
+   */
+  setWear(on: boolean, warn: (message: string, error: unknown) => void): Promise<void> {
+    if (!on) {
+      if (this.wearOn) {
+        this.wearOn = false;
+        for (const material of this.patched) material.needsUpdate = true;
+      }
+      return Promise.resolve();
+    }
+    this.wearLoading ??= this.loadWear().catch((error: unknown) => {
+      this.wearLoading = null;
+      warn('Max wear did not load', error);
+    });
+    return this.wearLoading.then(() => {
+      if (!this.wearTexture || this.wearOn) return;
+      this.wearOn = true;
+      for (const material of this.patched) material.needsUpdate = true;
+    });
+  }
+
+  /** Max's wear texture, for the load's uploads (null until it is here). */
+  get wear(): THREE.Texture | null {
+    return this.wearTexture;
+  }
+
+  private async loadWear(): Promise<void> {
+    const url = `${this.base}max/textures/wear.png`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+    const image = await createImageBitmap(await response.blob(), { colorSpaceConversion: 'none' });
+    const t = new THREE.Texture(image);
+    t.wrapS = THREE.RepeatWrapping;
+    t.wrapT = THREE.RepeatWrapping;
+    t.colorSpace = THREE.NoColorSpace;
+    t.anisotropy = this.anisotropy();
+    t.flipY = false;
+    t.needsUpdate = true;
+    this.wearTexture = t;
   }
 
   /** Every surface off (Ultra left): materials as they were, textures freed. */
@@ -392,6 +490,7 @@ export class Surfaces {
       // The patch is the instance's own: removed, the class's defaults show through again.
       delete (material as Partial<THREE.MeshStandardMaterial>).onBeforeCompile;
       delete (material as Partial<THREE.MeshStandardMaterial>).customProgramCacheKey;
+      setNodeLook(material, null);
       material.needsUpdate = true;
     }
     this.patched.clear();
@@ -400,6 +499,10 @@ export class Surfaces {
     }
     this.loaded = null;
     this.loading = null;
+    this.wearTexture?.dispose();
+    this.wearTexture = null;
+    this.wearLoading = null;
+    this.wearOn = false;
   }
 
   private patch(material: THREE.MeshStandardMaterial, id: SurfaceId, s: Loaded): void {
@@ -416,8 +519,11 @@ export class Surfaces {
         uTriNormal: { value: set.normal },
         uTriColorMean: { value: s.colorMean },
         uTriRoughMean: { value: s.roughMean },
+        tWear: { value: this.wearTexture },
+        uWear: { value: set.wear },
       });
       if (s.ao) shader.defines = { ...shader.defines, TRI_AO: '' };
+      if (this.wearOn && this.wearTexture) shader.defines = { ...shader.defines, WEAR: '' };
       shader.vertexShader = shader.vertexShader
         .replace('#include <common>', `#include <common>\n${VERTEX_HEAD}`)
         .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>\n${VERTEX_BODY}`);
@@ -426,7 +532,7 @@ export class Surfaces {
         .replace('#include <map_fragment>', `#include <map_fragment>\n${FRAGMENT_COLOR}`)
         .replace(
           '#include <roughnessmap_fragment>',
-          `#include <roughnessmap_fragment>\n${FRAGMENT_ROUGH}`,
+          `#include <roughnessmap_fragment>\n${FRAGMENT_ROUGH}\n${FRAGMENT_WEAR}`,
         )
         .replace(
           '#include <normal_fragment_maps>',
@@ -434,7 +540,20 @@ export class Surfaces {
         )
         .replace('#include <aomap_fragment>', `#include <aomap_fragment>\n${FRAGMENT_AO}`);
     };
-    material.customProgramCacheKey = () => `ultra-surface:${id}`;
+    material.customProgramCacheKey = () => `ultra-surface:${id}${this.wearOn ? '|wear' : ''}`;
+    setNodeLook(material, {
+      kind: 'surface',
+      color: s.color,
+      normal: s.normal,
+      roughness: s.roughness,
+      ao: s.ao,
+      scale: set.scale,
+      detail: set.detail,
+      rough: set.rough,
+      normalScale: set.normal,
+      colorMean: s.colorMean,
+      roughMean: s.roughMean,
+    });
     material.needsUpdate = true;
     this.patched.add(material);
   }

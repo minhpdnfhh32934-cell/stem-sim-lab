@@ -8,6 +8,7 @@ import type { BehaviorDefinition } from '../gameplay/interaction/behaviors';
 import { MAX_CARRIED_RADIUS } from '../gameplay/inventory/InventorySystem';
 import { type ItemDefinition, ItemDefinitionSchema } from '../gameplay/item';
 import { type NpcDefinition, NpcDefinitionSchema } from '../gameplay/npc/npc';
+import { type ResponderSquad, ResponderSquadSchema } from '../gameplay/emergency/squad';
 import { type TaskDefinition, TaskDefinitionSchema } from '../gameplay/task/task';
 import { DECOR } from '../gameplay/props';
 import {
@@ -92,6 +93,8 @@ export interface CoreRawContent {
   strings: unknown;
   /** People of the world who are not the player (`npcs.json`, Phase Y); none when absent. */
   npcs?: unknown;
+  /** Who comes when an emergency number is called (`responders.json`); none when absent. */
+  responders?: unknown;
 }
 
 /** Unvalidated content of the lab pack (`content/lab.ts`): the experiments and their topics. */
@@ -153,6 +156,7 @@ export interface Content {
   tasks: Registry<TaskDefinition>;
   actions: Registry<ActionSequence>;
   npcs: Registry<NpcDefinition>;
+  responders: Registry<ResponderSquad>;
   strings: Strings;
 }
 
@@ -399,6 +403,13 @@ function validate(raw: RawContent, code: CodeRegistries, withLab: boolean): Cont
     tasks: parseList(problems, 'tasks', 'task', TaskDefinitionSchema, raw.tasks),
     actions: parseList(problems, 'actions', 'action', ActionSequenceSchema, raw.actions ?? []),
     npcs: parseList(problems, 'npcs', 'npc', NpcDefinitionSchema, raw.npcs ?? []),
+    responders: parseList(
+      problems,
+      'responders',
+      'squad',
+      ResponderSquadSchema,
+      raw.responders ?? [],
+    ),
     strings: parseStrings(raw.strings, problems),
   };
   if (problems.length === 0) problems.push(...check(content, code, withLab));

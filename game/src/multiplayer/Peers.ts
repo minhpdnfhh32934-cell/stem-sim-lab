@@ -26,6 +26,10 @@ export interface RemotePlayer {
   body: Vec3 | null;
   /** A capsule stands for them in physics (no one walks through them). */
   bodied: boolean;
+  /** Seconds since their last pose came, and their walk's velocity from the last two (m/s). */
+  since: number;
+  vx: number;
+  vz: number;
 }
 
 /** Something another player threw, flying as thrown in this game (drawn; it touches nothing). */
@@ -59,6 +63,14 @@ const GRAVITY = 9.81;
 
 /** How fast a drawn player catches up with their last pose (1/s): ~0.1 s behind at 15 poses/s. */
 const EASE = 14;
+/**
+ * A pose is drawn ahead by their walk's velocity, as long as no newer one has come, up to this
+ * (s): the others' moves are seen with less of the network's delay, never guessed further.
+ */
+const LEAD_S = 0.25;
+/** The fastest walk believed (m/s): a faster jump between two poses is a door or a load. */
+const LEAD_SPEED = 8;
+
 /** Farther than this (m) from their last pose, a player is placed there at once (a door, a load). */
 const SNAP_M = 3;
 
@@ -127,6 +139,20 @@ export class Peers implements GameSystem {
   pose(id: string, pose: Pose | null): void {
     const player = this.byId.get(id);
     if (!player) return;
+    // Their velocity from the last two poses (same scene, a believable walk), else none.
+    const last = player.target;
+    const gap = Math.max(player.since, 1 / 60);
+    if (last && pose && last.scene === pose.scene && pose.speed > 0.05) {
+      const vx = (pose.x - last.x) / gap;
+      const vz = (pose.z - last.z) / gap;
+      const fast = Math.hypot(vx, vz) > LEAD_SPEED;
+      player.vx = fast ? 0 : vx;
+      player.vz = fast ? 0 : vz;
+    } else {
+      player.vx = 0;
+      player.vz = 0;
+    }
+    player.since = 0;
     player.target = pose;
     const jump =
       pose === null ||
@@ -156,6 +182,33 @@ export class Peers implements GameSystem {
     const id = this.locks[stationId];
     if (id === undefined || id === this.you) return null;
     return this.byId.get(id)?.name ?? null;
+  }
+
+  /**
+   * Whose game drives the people of the world while no one has them (their day): the one in the
+   * room longest (the lowest number: `p3` before `p7`), so every game agrees without asking.
+   * Its name, or null when it is this game's (or there is no room).
+   */
+  dayDriver(): string | null {
+    if (!this.room || this.you === null) return null;
+    let first: RemotePlayer | null = null;
+    for (const player of this.players) {
+      if (!first || order(player.id) < order(first.id)) first = player;
+    }
+    return first && order(first.id) < order(this.you) ? first.name : null;
+  }
+
+  /** The room server's round trip (ms): the last, and the most in the last ten probes. */
+  rtt = 0;
+  rttMax = 0;
+  private readonly rtts: number[] = [];
+
+  /** A probe came back after `ms` (`LanRooms`). */
+  roundTrip(ms: number): void {
+    this.rtt = ms;
+    this.rtts.push(ms);
+    if (this.rtts.length > 10) this.rtts.shift();
+    this.rttMax = Math.max(...this.rtts);
   }
 
   /** The station `stationId` is someone else's: the player reads whose. */
@@ -217,9 +270,12 @@ export class Peers implements GameSystem {
       if (!p) continue;
       this.place(p);
       if (!t) continue;
-      p.x += (t.x - p.x) * k;
+      p.since += step;
+      // Where they are by now: their last pose, led by their walk until a newer one comes.
+      const lead = t.speed > 0.05 ? Math.min(p.since, LEAD_S) : 0;
+      p.x += (t.x + p.vx * lead - p.x) * k;
       p.y += (t.y - p.y) * k;
-      p.z += (t.z - p.z) * k;
+      p.z += (t.z + p.vz * lead - p.z) * k;
       p.speed += (t.speed - p.speed) * k;
       let turn = t.yaw - p.heading;
       turn = Math.atan2(Math.sin(turn), Math.cos(turn));
@@ -241,6 +297,9 @@ export class Peers implements GameSystem {
       target: null,
       body: null,
       bodied: false,
+      since: 0,
+      vx: 0,
+      vz: 0,
     };
     this.byId.set(info.id, player);
     this.players.push(player);
@@ -290,4 +349,9 @@ export class Peers implements GameSystem {
   private changed(): void {
     this.deps.events.publish('RoomChanged', {});
   }
+}
+
+/** A player's place in the room: their id's number (`p7` → 7). */
+function order(id: string): number {
+  return Number(id.replace(/\D/g, '')) || 0;
 }

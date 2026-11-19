@@ -93,7 +93,25 @@ export const CUES = [
   'fire',
   'spray',
   'alarm',
-  'siren',
+  'siren-wail',
+  'siren-yelp',
+  // An emergency call answered (Phú 2026-11-13): the helicopter, the breach, the squad
+  'rotor',
+  'charge',
+  'blast',
+  'debris',
+  // What hung under the hole shatters on the floor like glass (Phú 2026-11-16)
+  'shatter',
+  'shard',
+  'rope',
+  'radio',
+  'slap',
+  // Going into a world (Phú 2026-11-14): the portal opening, the world shown
+  'enter-portal',
+  'enter-arrive',
+  // A call ringing in the ear (Phú 2026-11-14)
+  'phone-ring',
+  'tinnitus',
 ] as const;
 export type Cue = (typeof CUES)[number];
 

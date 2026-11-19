@@ -66,3 +66,73 @@ before, not counted as passes.
 Not done in S-1: Phú's QA by ear; the entry procedure's sounds (S-2) and the lab equipment's (S-3).
 Committed at Phú's request (2026-11-05) in dc3a234, before the QA by ear, which is still to be
 done.
+
+## The opening's sound (2026-11-14)
+
+Phú: "Âm thanh khởi động đã có chưa, nếu chưa thì làm đi" — there was none: the app's opening
+(`AppIntro`, the emblem and SIMLAB) was silent, and the menu's music begins at the first click.
+
+- `src/platform/audio/opening.ts`: the opening's own sound, made in code, in the menu music's key
+  (D major) and on the opening's picture — air rising as the rings spin in (0.1–1.9 s), a swish and
+  a quiet glide up with the ball's flight (1.05–2.2 s), a bell where it lands (2.2 s) with the
+  menu's first chord (Dmaj9) under it, a run of small bells as the light sweeps across the name
+  (2.95 s, a letter each 0.07 s), the chord ringing into the menu (to 6.5 s), in a 2.4 s hall.
+  `OPENING` is the score (data), `scheduleOpening` puts it on any context's clock, `playOpening`
+  plays it at the player's master × music volume (nothing when muted or at 0).
+- `AppIntro` starts it; skipped (a click or key), it fades with the picture; run its course, the
+  chord rings on into the menu. With reduced motion it starts at the landing.
+- Browsers allow no sound before the first click unless told otherwise: the opening plays only
+  when the browser lets it, else it stays silent (its context closed after 600 ms, no error). The
+  desktop app (`scripts/desktop-app.ps1`) now starts Edge with
+  `--autoplay-policy=no-user-gesture-required`, so it plays there; in a browser tab it usually
+  does not.
+- Menu JS: +5,437 B (863,183 → 868,620 B, the production spec's count).
+
+Checks:
+
+| Check                                                                                                                                                                                                                      | Result                                                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx tsc --noEmit -p .`, `npx eslint src/platform/audio src/platform/ui/AppIntro.ts`, `npx prettier --check src scripts e2e docs`                                                                                          | PASS                                                                                                                                                                                                                                                                                   |
+| `npx vitest run --maxWorkers=4`                                                                                                                                                                                            | PASS — 323 files, 4143 tests (`opening.test.ts`: in D major, never past full scale at full volume)                                                                                                                                                                                     |
+| Headless Edge, dev server, `?intro=1`, AudioContext recorded (scratch script)                                                                                                                                              | with `--autoplay-policy=no-user-gesture-required`: running at once, 37 oscillators and 2 noise sources scheduled, closed after; without: suspended, closed, nothing scheduled; no console warning or error in either                                                                   |
+| The same score rendered offline (OfflineAudioContext, 48 kHz, default volumes 80 % × 70 %)                                                                                                                                 | peak 0.274 (at the landing, 2.0–2.5 s: −24 dB RMS); silent after 6.5 s                                                                                                                                                                                                                 |
+| `SIMLAB_DEV_PORT=5197 SIMLAB_PREVIEW_PORT=5196 npx playwright test e2e/intro.spec.ts e2e/play-menu.spec.ts e2e/sound.spec.ts e2e/renderer.production.spec.ts --project=dev --project=production --workers=1` (SwiftShader) | 5 PASS; 2 FAIL `renderer.production.spec.ts`, both also failing at HEAD aa0504c (run with this change's `AppIntro` taken out): the menu JS is over the 600,000 B guard (863,183 B at HEAD), and the failed-download test looks for the menu's SIMLAB heading on the Single player page |
+
+Left: whether it sounds right is Phú's QA by ear (thầy cannot hear); the menu JS guard and the
+failed-download test are out of date since before this step (not changed here).
+
+## Entering a world (2026-11-14)
+
+Phú: "thêm âm thanh cho khi vào phòng chơi nữa" — the entering transition (EnterTransition: a LAN
+room or a solo world, the portal, then the white light onto the world) was silent.
+
+- `WorldEntry` (GameEvents): the menu says when the portal opens and when the world is shown;
+  `SoundCues` plays `enter-portal` (a rumble swelling, a tone gliding up an octave from D2, a rising
+  whine, the streaks' air, a chime as the screen is covered; 1.9 s) and `enter-arrive` (the white
+  light's whoosh, a low thump as it clears, a D major chord blooming into the world; 2.4 s), both made
+  in code (`sounds.json`), on the interface bus.
+- Levels (renderSynth): peak 0.748 and 0.797 (at the default master 80 % × interface 70 %, 0.29 and
+  0.38 heard); the bank test checks no sound made in code clips.
+- The very first click of a session loads the sound engine: a world entered with that click has
+  no portal sound (the arrival is heard).
+
+Checks: `npx vitest run src/platform/audio src/content` PASS (39 tests: `cues.test.ts` the two cues
+on `WorldEntry`; `bank.test.ts` levels); the full checks are in `docs/phase-c-report.md` §11 (same
+run). Whether they sound right is Phú's QA by ear.
+
+## Two fixes (2026-11-18)
+
+- **The volume sliders and the opening's sounds.** The emblem opening's chord (`audio/opening.ts`)
+  and the rocket opening's roar (`audio/rocketSound.ts`) play in audio contexts of their own,
+  before the game's mixer starts. They read the volumes once, at their start, so a slider moved
+  while they played changed nothing. Both now take `volume(master, bus, muted)`; the main menu
+  passes every `AudioSettingsChanged` to them (the live menu forwards it to the roar). The menu's
+  music was already following the sliders: measured in the browser pane, Music or Master at 0 %
+  brings the output to 0 (RMS 0.061 → 0.000), back up at 80 % (0.058).
+- **Two sirens at once on a call to the police (113) or the brigade (114)** (Phú). The fire's
+  cues counted down all four beats, the siren's too, and the call counted the siren's down again:
+  its cycle came twice as fast, and a new siren started while the last still sounded. The fire
+  now counts only its own three. Test in `cues.test.ts` (it failed before the fix: 4 sirens where
+  3 fit).
+- Checks: `npx tsc --noEmit -p .` PASS, `npm run lint` PASS, `npx prettier --check .` PASS,
+  `npx vitest run --maxWorkers=6` PASS (338 files, 4218 tests). Not heard in the desktop app.

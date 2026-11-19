@@ -1,7 +1,28 @@
+import { Logger } from '../../core/Logger';
+import { loadGraphicsQuality, loadMenuBackground } from '../../persistence/settings';
+import { type OpeningSound, playOpening } from '../audio/opening';
+import { createBrowserStorage } from '../storage';
 import { el, svg } from './dom';
 import { EMBLEM } from './emblemShape';
 import { emblem } from './menuArt';
 
+/** When the opening starts to leave (its last motion begins) and when it has gone. */
+export interface IntroPhases {
+  readonly leaving: Promise<void>;
+  readonly gone: Promise<void>;
+  /**
+   * The opening is the live wallpaper's rocket prologue (Phú 2026-11-18): the live menu plays it,
+   * this only covers the page until it can.
+   */
+  readonly prologue: boolean;
+  /** The cover goes: the prologue is drawing. Whether the player asked to skip meanwhile. */
+  release(): boolean;
+  /** The player changed the volumes: the opening's own sound follows (0–100 each). */
+  volume(master: number, music: number, muted: boolean): void;
+}
+
+/** How long after the game is ready the cover waits for the prologue to draw (ms). */
+const COVER_WAIT_MS = 15000;
 /** The opening runs at least this long (ms), then ends once the game is ready. */
 const MIN_MS = 3600;
 const MIN_MS_STILL = 700;
@@ -42,12 +63,28 @@ export class AppIntro {
   private readonly root = el('div', 'app-intro');
   private readonly art = emblem();
   private readonly word = el('div', 'app-intro-word');
-  private readonly started = performance.now();
+  private started = performance.now();
+  /**
+   * The rocket's opening instead (Phú 2026-11-18), when the menu's background is live: the live
+   * menu plays it in the wallpaper's world (wallpaper/prologue/); this is the cover over the page
+   * until it can draw (released), or a while after the game is ready (it could not).
+   */
+  private covering = false;
+  private released = false;
   private ready = false;
   private skipped = false;
   private ending = false;
+  /** Its sound (audio/opening.ts), when the browser lets it play before a click. */
+  private sound: OpeningSound | null = null;
   /** The menu's own emblem and name, hidden while this one flies onto them. */
   private readonly covered: (HTMLElement | SVGElement)[] = [];
+  /**
+   * Its phases, for what must wait for it (the menu's live background: built while the opening
+   * plays, its work froze the opening's motions; Phú 2026-11-18). Both at once without it.
+   */
+  readonly phases: IntroPhases;
+  private leaveNow: () => void = () => undefined;
+  private goneNow: () => void = () => undefined;
   private readonly skip = (event: Event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -56,7 +93,56 @@ export class AppIntro {
   };
 
   constructor(parent: HTMLElement) {
-    if (!AppIntro.wanted()) return;
+    const prologue = AppIntro.wanted() && AppIntro.rocketWanted();
+    this.phases = {
+      leaving: new Promise((resolve) => (this.leaveNow = resolve)),
+      gone: new Promise((resolve) => (this.goneNow = resolve)),
+      prologue,
+      release: () => this.uncover(),
+      volume: (master, music, muted) => this.sound?.volume(master, music, muted),
+    };
+    if (!AppIntro.wanted()) {
+      this.leaveNow();
+      this.goneNow();
+      return;
+    }
+    if (prologue) this.startCover(parent);
+    else this.startEmblem(parent);
+  }
+
+  /** The cover while the live menu builds the rocket prologue: its sky, the name, a loading line. */
+  private startCover(parent: HTMLElement): void {
+    this.covering = true;
+    this.root.classList.add('app-intro-cover');
+    this.root.setAttribute('aria-hidden', 'true');
+    this.root.append(
+      el('div', 'app-intro-cover-sky'),
+      el('div', 'app-intro-cover-word', 'SIMLAB'),
+      el('div', 'app-intro-cover-bar'),
+    );
+    parent.append(this.root);
+    window.addEventListener('keydown', this.skip, true);
+    this.root.addEventListener('pointerdown', this.skip);
+  }
+
+  /** The prologue is drawing: the cover fades off it (once). */
+  private uncover(): boolean {
+    if (!this.covering || this.released) return this.skipped;
+    this.released = true;
+    this.leaveNow();
+    this.release();
+    const fade = this.root.animate([{ opacity: 0 }], {
+      duration: 600,
+      easing: 'ease-out',
+      fill: 'forwards',
+    });
+    this.root.classList.add('leaving');
+    this.leave(600, [fade]);
+    return this.skipped;
+  }
+
+  /** The emblem's opening. */
+  private startEmblem(parent: HTMLElement): void {
     this.root.setAttribute('aria-hidden', 'true');
     const { art, word } = this;
     art.classList.remove('menu-emblem');
@@ -78,31 +164,54 @@ export class AppIntro {
     parent.append(this.root);
     window.addEventListener('keydown', this.skip, true);
     this.root.addEventListener('pointerdown', this.skip);
+    this.sound = playOpening(matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
 
   /** Off for automated browsers unless asked for; the address can turn it on or off. */
   static wanted(): boolean {
     const asked = new URLSearchParams(location.search).get('intro');
     if (asked === '0') return false;
-    if (asked === '1') return true;
+    if (asked === '1' || asked === 'rocket' || asked === 'emblem') return true;
     return !navigator.webdriver;
+  }
+
+  /**
+   * The rocket's when the menu's background is live (not at Low), with motion allowed;
+   * `?intro=rocket` or `?intro=emblem` asks for one.
+   */
+  static rocketWanted(): boolean {
+    const asked = new URLSearchParams(location.search).get('intro');
+    if (asked === 'rocket') return true;
+    if (asked === 'emblem' || matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    const { storage } = createBrowserStorage();
+    const log = Logger.create('warn').child('opening');
+    return (
+      loadMenuBackground(storage, log) === 'live' && loadGraphicsQuality(storage, log) !== 'low'
+    );
   }
 
   /** The game is ready: the opening ends when it has run its course (or was skipped). */
   done(): void {
     this.ready = true;
+    if (this.covering) {
+      // Not released in time (the live menu could not build its world): the cover goes anyway.
+      window.setTimeout(() => this.uncover(), COVER_WAIT_MS);
+      return;
+    }
     this.root.classList.add('ready');
     this.maybeEnd();
   }
 
   /** The game could not start: the opening goes at once (the error is shown instead). */
   fail(): void {
+    this.sound?.fade();
     this.release();
     this.remove();
   }
 
   private maybeEnd(): void {
-    if (!this.ready || this.ending || !this.root.isConnected) return;
+    // The cover ends when the prologue draws (release), not here.
+    if (this.covering || !this.ready || this.ending || !this.root.isConnected) return;
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const left = (still ? MIN_MS_STILL : MIN_MS) - (performance.now() - this.started);
     if (this.skipped || left <= 0) this.end();
@@ -112,6 +221,9 @@ export class AppIntro {
   private end(): void {
     if (this.ending) return;
     this.ending = true;
+    this.leaveNow();
+    // Skipped: its sound goes with the picture; run its course, the chord rings on into the menu.
+    if (this.skipped) this.sound?.fade();
     this.release();
     this.root.classList.add('leaving');
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -213,6 +325,8 @@ export class AppIntro {
     for (const element of this.covered) element.style.visibility = '';
     this.covered.length = 0;
     this.root.remove();
+    this.leaveNow();
+    this.goneNow();
   }
 
   private release(): void {

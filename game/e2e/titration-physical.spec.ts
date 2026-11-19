@@ -1,9 +1,11 @@
 import { expect, type Page, test } from '@playwright/test';
+import { POUR_REACH } from '../src/gameplay/interaction/hold';
 import { continueInto, sceneSave } from './saves';
 import {
   afterFrame,
   Aim,
   approach,
+  EYE_HEIGHT,
   expectDebug,
   handsFree,
   lookAngles,
@@ -27,6 +29,12 @@ const TILE: Vec3 = [-5.714, 0.918, -1.903];
 /** Where the burette stands on the floor to be filled: behind the player at START, in the open. */
 const FLOOR: Vec3 = [-5.714, 0, 0.147];
 const MOUTH: Vec3 = [FLOOR[0], 0.6, FLOOR[2]]; // the 0.6 m burette's mouth, standing there
+/**
+ * How far (m, across the floor) the feet may be from the mouth: the pour assist reaches only a
+ * mouth within POUR_REACH of the eye (3 cm spare: where the burette lands, the 4 Hz panel). About
+ * 0.56 m; the 0.65 m allowed before was 1.21 m from the eye, and nothing poured.
+ */
+const POUR_ACROSS = Math.sqrt((POUR_REACH - 0.03) ** 2 - (EYE_HEIGHT - MOUTH[1]) ** 2);
 const T = {
   burette: [-5.014, 1.2, -1.703],
   naoh: [-6.564, 0.97, -2.373],
@@ -120,13 +128,13 @@ test('titration by hand: fill on the floor, clamp, pipette, indicator, tile, tap
   await turnHigh(page, aim, Math.PI);
   await aim.at(MOUTH);
   await page.waitForTimeout(600);
-  // Facing the burette, short taps forward or back until it is 0.4–0.65 m away (feet to mouth).
+  // Facing the burette, short taps forward or back until it is 0.4 m to POUR_ACROSS away.
   for (let i = 0; i < 40; i++) {
     await page.waitForTimeout(350);
     const [x, , z] = await positionMm(page);
     const d = Math.hypot(MOUTH[0] - x, MOUTH[2] - z);
-    if (d >= 0.4 && d <= 0.65) break;
-    const key = d > 0.65 ? 'w' : 's';
+    if (d >= 0.4 && d <= POUR_ACROSS) break;
+    const key = d > POUR_ACROSS ? 'w' : 's';
     await page.keyboard.down(key);
     await page.waitForTimeout(45);
     await page.keyboard.up(key);

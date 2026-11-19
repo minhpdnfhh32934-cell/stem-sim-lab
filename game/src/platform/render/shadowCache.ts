@@ -103,10 +103,12 @@ export class ShadowCache {
   update(scene: THREE.Object3D, now = 0): void {
     this.frame++;
     this.mask = 0;
+    let anyLit = false;
     for (let i = 0; i < this.lights.length; i++) {
       const light = this.lights[i];
       if (!light) continue;
       this.mask |= light.shadow.camera.layers.mask;
+      if (lit(light)) anyLit = true;
       if (this.lightChanged(light, i) && light.castShadow) {
         this.mark(light, light);
         // The light itself moved or changed (a slot given another room's light): its old map is
@@ -114,9 +116,16 @@ export class ShadowCache {
         this.urgent[i] = 1;
       }
     }
-    this.walk(scene);
-    this.casters.forEach(this.sweepCaster);
-    this.skeletons.forEach(this.sweepBones);
+    if (anyLit) {
+      this.walk(scene);
+      this.casters.forEach(this.sweepCaster);
+      this.skeletons.forEach(this.sweepBones);
+    } else {
+      // No light casts (Low; a dark room): no map can show a caster, so none is compared. A light
+      // lit again draws its whole map (lightChanged); its casters are known again from that frame.
+      this.casters.clear();
+      this.skeletons.clear();
+    }
     this.pace(now);
   }
 

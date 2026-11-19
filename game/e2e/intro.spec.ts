@@ -7,6 +7,9 @@ test('the opening: shown, then the menu; a key skips it; off for tests by defaul
   page,
 }) => {
   test.setTimeout(60_000);
+  // The default background (the live one, the default since Phase W, hides the sky, the emblem
+  // and the trail, and plays its own opening).
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.menuBackground', 'default'));
   await page.goto('/?intro=1');
   const intro = page.locator('.app-intro');
   await expect(intro).toBeVisible();

@@ -94,6 +94,9 @@ export class RoomHub {
       case 'list':
         client.send({ t: 'rooms', rooms: this.list() });
         return;
+      case 'ping':
+        client.send({ t: 'pong', n: message.n });
+        return;
       case 'create': {
         if (this.rooms.size >= MAX_ROOMS) {
           client.send({ t: 'refused', reason: 'too-many-rooms' });

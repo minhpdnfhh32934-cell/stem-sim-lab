@@ -14,6 +14,7 @@ const room = (id: string, minX: number, maxX: number): RoomDefinition => ({
   wallColor: '#ffffff',
   floor: 'vinyl',
   style: 'plain',
+  grade: 'neutral',
   dark: false,
   openings: [],
   placements: [],

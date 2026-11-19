@@ -76,25 +76,62 @@ export const saveFrameCap = (storage: SaveStorage, cap: FrameCap, log: Logger): 
 
 /**
  * Graphics quality presets (what each turns on: platform/render/quality.ts). Medium by default: a
- * simulator meets every kind of machine, and medium is the look tuned and measured as the norm.
+ * simulator meets every kind of machine. Four since 2026-11-18 (Phú): Medium is the former High,
+ * High the former Ultra (Phase G), Ultra the former Max (Phase Max); the former Medium is gone.
  */
 export const GRAPHICS_QUALITIES = ['low', 'medium', 'high', 'ultra'] as const;
 export type GraphicsQuality = (typeof GRAPHICS_QUALITIES)[number];
+/** High and the level above it: Ultra has everything High has, and more. */
+export const highOrMore = (quality: GraphicsQuality): boolean =>
+  quality === 'high' || quality === 'ultra';
 export const DEFAULT_GRAPHICS_QUALITY: GraphicsQuality = 'medium';
 const GRAPHICS_QUALITY: Setting<GraphicsQuality> = {
-  key: 'simlab.settings.graphicsQuality',
+  key: 'simlab.settings.graphics',
   options: GRAPHICS_QUALITIES,
   fallback: DEFAULT_GRAPHICS_QUALITY,
   name: 'the graphics quality',
   fallbackName: 'medium',
 };
+/**
+ * Where the five levels before 2026-11-18 were kept, and what each is now: the same look under
+ * its new name (the former Medium, gone, to the nearest: Medium).
+ */
+const OLD_GRAPHICS_KEY = 'simlab.settings.graphicsQuality';
+const RENAMED: Readonly<Record<string, GraphicsQuality>> = {
+  low: 'low',
+  medium: 'medium',
+  high: 'medium',
+  ultra: 'high',
+  max: 'ultra',
+};
 
-export const loadGraphicsQuality = (storage: SaveStorage, log: Logger): GraphicsQuality =>
-  load(storage, log, GRAPHICS_QUALITY);
+/**
+ * A level kept under the old key (before 2026-11-18) moved to the new key, renamed, once: the new
+ * key wins when both are there. Unreadable storage leaves it (reading the level says so).
+ */
+function moveOldGraphics(storage: SaveStorage): void {
+  try {
+    if (storage.read(GRAPHICS_QUALITY.key) !== null) return;
+    const old = storage.read(OLD_GRAPHICS_KEY);
+    const renamed = old === null ? undefined : RENAMED[old];
+    if (renamed) storage.write(GRAPHICS_QUALITY.key, renamed);
+  } catch {
+    // Unreadable storage: reading the level fails next and says so (load).
+  }
+}
+
+export function loadGraphicsQuality(storage: SaveStorage, log: Logger): GraphicsQuality {
+  moveOldGraphics(storage);
+  return load(storage, log, GRAPHICS_QUALITY);
+}
 /** Whether a valid preset was picked on an earlier visit (else the game may suggest one). */
 export function graphicsQualityChosen(storage: SaveStorage): boolean {
   try {
-    return GRAPHICS_QUALITIES.some((q) => q === storage.read(GRAPHICS_QUALITY.key));
+    const old = storage.read(OLD_GRAPHICS_KEY);
+    return (
+      GRAPHICS_QUALITIES.some((q) => q === storage.read(GRAPHICS_QUALITY.key)) ||
+      (old !== null && RENAMED[old] !== undefined)
+    );
   } catch {
     return false;
   }
@@ -162,6 +199,44 @@ export const loadRoomSleep = (storage: SaveStorage, log: Logger): boolean =>
   load(storage, log, ROOM_SLEEP);
 export const saveRoomSleep = (storage: SaveStorage, on: boolean, log: Logger): void =>
   save(storage, log, ROOM_SLEEP, on);
+
+/**
+ * The main menu's background (Phú 2026-11-18): the game's own (its stars), or the live wallpaper
+ * (Linh and Khoa on the roof, platform/wallpaper) laid out round. The live one unless the game's
+ * own is chosen (Phú, later that day); at Low the menu shows the game's own whatever is chosen.
+ */
+export const MENU_BACKGROUNDS = ['default', 'live'] as const;
+export type MenuBackground = (typeof MENU_BACKGROUNDS)[number];
+const MENU_BACKGROUND: Setting<MenuBackground> = {
+  key: 'simlab.settings.menuBackground',
+  options: MENU_BACKGROUNDS,
+  fallback: 'live',
+  name: 'the menu background',
+  fallbackName: 'the live one',
+};
+export const loadMenuBackground = (storage: SaveStorage, log: Logger): MenuBackground =>
+  load(storage, log, MENU_BACKGROUND);
+export const saveMenuBackground = (
+  storage: SaveStorage,
+  background: MenuBackground,
+  log: Logger,
+): void => save(storage, log, MENU_BACKGROUND, background);
+
+/**
+ * Whether the player has been shown the way to the live menu background (Phú 2026-11-18: on a
+ * first start, red dots on Settings, then on Graphics, then on Menu background).
+ */
+const LIVE_HINT_SEEN: Setting<boolean> = {
+  key: 'simlab.settings.liveHintSeen',
+  options: [false, true],
+  fallback: false,
+  name: 'the live background hint',
+  fallbackName: 'not seen',
+};
+export const loadLiveHintSeen = (storage: SaveStorage, log: Logger): boolean =>
+  load(storage, log, LIVE_HINT_SEEN);
+export const saveLiveHintSeen = (storage: SaveStorage, log: Logger): void =>
+  save(storage, log, LIVE_HINT_SEEN, true);
 
 /** Look sensitivity steps (× the configured mouse sensitivity): the mouse, a finger's drag, a pad. */
 export const LOOK_SENSITIVITIES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3] as const;

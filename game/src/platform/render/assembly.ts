@@ -1,4 +1,32 @@
 import * as THREE from 'three';
+import { SharedMaterials } from './sharedMaterials';
+
+/** Every assembly's materials that never change, one per key (`lookKey`). */
+const looks = new SharedMaterials<THREE.Material>();
+/** The key each shared material was taken under (tests: it never changes). */
+const keys = new WeakMap<THREE.Material, string>();
+
+/**
+ * Everything `material` is, as text (colours exact, not as hex): the same text, the same picture.
+ * Null when it cannot be shared: a texture (a rig's own drawing), a function of its own (a shader
+ * hook), clipping planes or a shader's uniforms (changed from outside).
+ */
+export function lookKey(material: THREE.Material): string | null {
+  if (material.clippingPlanes || (material as Partial<THREE.ShaderMaterial>).isShaderMaterial)
+    return null;
+  const values = Object.entries(material).filter(([key]) => key !== 'uuid' && key !== 'version');
+  for (const [, value] of values as [string, unknown][]) {
+    if (typeof value === 'function' || (value as Partial<THREE.Texture> | null)?.isTexture)
+      return null;
+  }
+  return JSON.stringify(Object.fromEntries(values), function (key, value: unknown) {
+    const own = (this as Record<string, unknown>)[key];
+    return own instanceof THREE.Color ? [own.r, own.g, own.b] : value;
+  });
+}
+
+/** The key a shared material was taken under, or undefined (tests). */
+export const sharedKey = (material: THREE.Material): string | undefined => keys.get(material);
 
 /**
  * Building blocks for apparatus drawn as assemblies (launcherModel, pendulumModel): one owner for
@@ -11,6 +39,7 @@ export class Assembly {
   readonly group = new THREE.Group();
   private readonly geometries: THREE.BufferGeometry[] = [];
   private readonly materials: THREE.Material[] = [];
+  private readonly shared: string[] = [];
   private readonly instanced: THREE.InstancedMesh[] = [];
 
   /** Takes ownership of a geometry: freed with the assembly. */
@@ -19,8 +48,23 @@ export class Assembly {
     return geometry;
   };
 
-  /** Takes ownership of a material: freed with the assembly. */
+  /**
+   * A material the model never changes after (nor anything else): the one every assembly with
+   * the same shares (one material switch fewer a frame for each), freed with the last of them.
+   * Use what it returns, not `material`. A material changed later (a glow, a liquid, a fade) is
+   * `mine`.
+   */
   readonly own = <T extends THREE.Material>(material: T): T => {
+    const key = lookKey(material);
+    if (key === null) return this.mine(material);
+    this.shared.push(key);
+    const kept = looks.take(key, () => material) as T;
+    keys.set(kept, key);
+    return kept;
+  };
+
+  /** Takes ownership of a material the model changes later: its own, freed with the assembly. */
+  readonly mine = <T extends THREE.Material>(material: T): T => {
     this.materials.push(material);
     return material;
   };
@@ -58,6 +102,7 @@ export class Assembly {
   dispose(): void {
     for (const g of this.geometries) g.dispose();
     for (const m of this.materials) m.dispose();
+    for (const key of this.shared.splice(0)) looks.release(key); // once, if disposed again
     for (const m of this.instanced) m.dispose();
   }
 }

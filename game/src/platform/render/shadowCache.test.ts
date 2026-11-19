@@ -157,6 +157,29 @@ describe('ShadowCache', () => {
     expect(at(t + 1 + 2 / 120)).toBe(true);
   });
 
+  it('no light casting (Low): no caster is compared; a light casting again draws, then as before', () => {
+    const { light, near, frame } = room();
+    frame();
+    light.castShadow = false;
+    let reads = 0;
+    Object.defineProperty(near, 'castShadow', {
+      get: () => {
+        reads++;
+        return true;
+      },
+      configurable: true,
+    });
+    expect(frame()).toBe(false);
+    near.position.x = 0.3;
+    expect(frame()).toBe(false);
+    expect(reads).toBe(0); // the scene was not walked
+    light.castShadow = true;
+    expect(frame()).toBe(true); // the whole map, at once
+    expect(frame()).toBe(false);
+    near.position.x = 0.1;
+    expect(frame()).toBe(true); // its casters compared again
+  });
+
   it('invalidate draws every lit map again (a warm-up draw wrote over them)', () => {
     const { frame, cache } = room();
     frame();

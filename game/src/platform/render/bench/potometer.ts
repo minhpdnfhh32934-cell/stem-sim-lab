@@ -166,7 +166,7 @@ function rig(item: ItemDefinition): BenchRig {
   const air = own(new THREE.MeshStandardMaterial({ color: '#f4f7f9', ...LOOKS.satin }));
   const shade = own(new THREE.MeshStandardMaterial({ color: '#2b2f36', ...LOOKS.plastic }));
   const off = own(new THREE.MeshStandardMaterial({ color: '#d8d4c8', ...LOOKS.satin }));
-  const on = own(
+  const on = kit.mine(
     new THREE.MeshStandardMaterial({ color: '#fff4d6', emissive: '#fff1c4', emissiveIntensity: 1 }),
   );
   const blade = own(

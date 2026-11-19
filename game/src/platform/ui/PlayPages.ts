@@ -148,7 +148,6 @@ export class PlayPage {
       button.addEventListener('click', go);
       return button;
     };
-    const embedded = import.meta.env.VITE_SIMLAB_EMBED === '1';
     choices.append(
       card(
         'solo',
@@ -165,29 +164,25 @@ export class PlayPage {
         () => t.ui('play.soloGo', 'Play alone'),
         onSolo,
       ),
-      ...(embedded
-        ? []
-        : [
-            card(
-              'multi',
-              '02',
-              multiArt(),
-              () => t.ui('play.multi', 'Multiplayer'),
-              () =>
-                t.ui(
-                  'play.multiHint',
-                  'Rooms on this network: make one, join one, or play on in a room you played.',
-                ),
-              [
-                () => t.ui('play.multiF1', 'Rooms on your network, found by themselves'),
-                () => t.ui('play.multiF2', 'Chat with Enter, talk by holding V'),
-                () => t.ui('play.multiF3', 'Experiments done together, each room its own progress'),
-              ],
-              this.multiStatus,
-              () => t.ui('play.multiGo', 'Play together'),
-              onMulti,
-            ),
-          ]),
+      card(
+        'multi',
+        '02',
+        multiArt(),
+        () => t.ui('play.multi', 'Multiplayer'),
+        () =>
+          t.ui(
+            'play.multiHint',
+            'Rooms on this network: make one, join one, or play on in a room you played.',
+          ),
+        [
+          () => t.ui('play.multiF1', 'Rooms on your network, found by themselves'),
+          () => t.ui('play.multiF2', 'Chat with Enter, talk by holding V'),
+          () => t.ui('play.multiF3', 'Experiments done together, each room its own progress'),
+        ],
+        this.multiStatus,
+        () => t.ui('play.multiGo', 'Play together'),
+        onMulti,
+      ),
     );
     this.root.append(
       stageHead(

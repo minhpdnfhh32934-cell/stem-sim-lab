@@ -1445,7 +1445,20 @@ export class PhysicsSystem
   private moveCharacter(h: number): void {
     const { player, controller, rapier } = this;
     if (!player || !controller || !rapier) return;
-    const intent = this.deps.state.player.moveIntent;
+    const state = this.deps.state.player;
+    const intent = state.moveIntent;
+    // A jump (asked for since the last step) leaves the ground at the jump speed; asked for in
+    // the air, it is dropped.
+    if (state.jump) {
+      state.jump = false;
+      if (this.grounded) {
+        this.grounded = false;
+        // The mid-step speed (gravity's half step added back): each step's rise is then exact,
+        // y = v t − g t²/2 at every step, so the top is v²/2g, not v²/2g + v h/2.
+        this.verticalSpeed =
+          this.deps.config.player.jumpSpeed + (this.deps.config.physics.gravity * h) / 2;
+      }
+    }
     // Gravity only while airborne: pushing into the floor every step made the controller lose
     // 1–6 % of horizontal speed in measurements; snap-to-ground keeps the capsule down instead.
     this.verticalSpeed = this.grounded
@@ -1461,7 +1474,11 @@ export class PhysicsSystem
       PLAYER_GROUPS, // the held object is not an obstacle for its carrier
     );
     controller.computedMovement(this.movement);
-    this.grounded = controller.computedGrounded();
+    // Still rising from a jump: not on the ground, though it is still within the controller's
+    // reach of it (else the next step would take the rise away and snap the capsule back down).
+    this.grounded = this.verticalSpeed > 0 ? false : controller.computedGrounded();
+    // Rising into a ceiling (or a shelf): the rise ends there, the fall begins.
+    if (this.desired.y > 0 && this.movement.y < this.desired.y * 0.5) this.verticalSpeed = 0;
     const t = player.body.translation(this.t);
     this.next.x = t.x + this.movement.x;
     this.next.y = t.y + this.movement.y;

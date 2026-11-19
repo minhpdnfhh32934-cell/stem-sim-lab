@@ -5,6 +5,7 @@
     "vi": { "title": "Thầy Quang" },
     "character": {
       "id": "teacher-quang",
+      "realBody": "rocketbox-male-adult-07",
       "displayName": "Quang",
       "role": "Teacher",
       "trait": "An engineer who would rather build it than talk about it — then explains it with a grin.",

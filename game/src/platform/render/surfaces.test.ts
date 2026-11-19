@@ -32,8 +32,8 @@ describe('Ultra surface sets', () => {
   });
 
   it('is Ultra only', () => {
-    expect(QUALITY.ultra.surfaces).toBe(true);
-    for (const q of ['low', 'medium', 'high'] as const) expect(QUALITY[q].surfaces).toBe(false);
+    expect(QUALITY.high.surfaces).toBe(true);
+    for (const q of ['low', 'medium'] as const) expect(QUALITY[q].surfaces).toBe(false);
   });
 });
 
@@ -100,7 +100,8 @@ describe('the patch', () => {
       new THREE.Mesh(new THREE.BoxGeometry(), floor),
       new THREE.Mesh(new THREE.BoxGeometry(), plain),
     );
-    surfaces.adopt(root);
+    expect(surfaces.adopt(root)).toBe(1); // the floor (plain has no surface)
+    expect(surfaces.adopt(root)).toBe(0); // once: nothing new to compile (WebGPU)
     expect(Object.hasOwn(floor, 'onBeforeCompile')).toBe(true);
     expect(floor.customProgramCacheKey()).toBe('ultra-surface:floor-concrete');
     expect(Object.hasOwn(plain, 'onBeforeCompile')).toBe(false);
@@ -112,6 +113,30 @@ describe('the patch', () => {
     }
     expect(shader.defines.TRI_AO).toBe(''); // concrete has an AO map
     expect(shader.uniforms.uTriScale?.value).toBe(SURFACE_SETS['floor-concrete'].scale);
+  });
+
+  it('wears glossy surfaces under Max only: its own program, smudges, prints and scratches', async () => {
+    const surfaces = loadedSurfaces();
+    const top = new THREE.MeshStandardMaterial();
+    top.userData.surface = 'plastic-glossy';
+    surfaces.adopt(new THREE.Mesh(new THREE.BoxGeometry(), top));
+    expect(compiled(top).defines.WEAR).toBeUndefined(); // Ultra: no wear
+    // Max: the wear texture "loaded" (no fetch in a unit test), its program keyed apart.
+    (surfaces as unknown as { loadWear: () => Promise<void> }).loadWear = () => {
+      (surfaces as unknown as { wearTexture: THREE.Texture }).wearTexture = new THREE.Texture();
+      return Promise.resolve();
+    };
+    const version = top.version;
+    await surfaces.setWear(true, () => undefined);
+    expect(top.version).toBeGreaterThan(version); // compiled again
+    expect(top.customProgramCacheKey()).toBe('ultra-surface:plastic-glossy|wear');
+    const shader = compiled(top);
+    expect(shader.defines.WEAR).toBe('');
+    expect(shader.fragmentShader).toContain('triSample( tWear, vTriPos / 0.45 + 0.37, triWt )');
+    expect(shader.uniforms.uWear?.value).toBe(SURFACE_SETS['plastic-glossy'].wear);
+    await surfaces.setWear(false, () => undefined);
+    expect(top.customProgramCacheKey()).toBe('ultra-surface:plastic-glossy');
+    expect(compiled(top).defines.WEAR).toBeUndefined();
   });
 
   it('takes every patch off when Ultra is left', () => {

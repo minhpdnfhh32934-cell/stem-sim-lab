@@ -116,6 +116,24 @@ describe('decor batches', () => {
     expect(decor.remove('simlab-hub/nothing')).toBe(false);
   });
 
+  it('hide a copy where it stands and show it again, hidden through a rebuild (Phú 2026-11-13)', () => {
+    const { scene, decor } = renderer();
+    const [a, b] = [copy(column, -3.5), copy(column, 3.5)];
+    for (const e of [a, b]) decor.add('simlab-hub', e);
+    decor.build('simlab-hub');
+    const scale = (m: THREE.Matrix4) => new THREE.Vector3().setFromMatrixScale(m).x;
+    expect(decor.hide(a.id, true)).toBe(true);
+    for (const mesh of drawn(scene)) {
+      expect(scale(matrixAt(mesh, 0))).toBe(0);
+      expectMatrix(matrixAt(mesh, 1), pose(b)); // the other copy as it was
+    }
+    decor.build('simlab-hub'); // rebuilt (a preset changed): still hidden
+    for (const mesh of drawn(scene)) expect(scale(matrixAt(mesh, 0))).toBe(0);
+    expect(decor.hide(a.id, false)).toBe(true);
+    for (const mesh of drawn(scene)) expectMatrix(matrixAt(mesh, 0), pose(a));
+    expect(decor.hide('simlab-hub/nothing', true)).toBe(false);
+  });
+
   it('redraw an item when a copy is added after the build, freeing the old meshes', () => {
     const { scene, palette, decor } = renderer();
     decor.add('simlab-hub', copy(beam, 0));

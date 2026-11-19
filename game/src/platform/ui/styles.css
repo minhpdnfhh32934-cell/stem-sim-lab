@@ -2368,6 +2368,74 @@ button.slot:focus-visible {
   padding: 6px var(--space-4);
 }
 
+/* The promo video (Phú 2026-11-19): a small button under the name, the player in its own dialog. */
+.menu-promo-open {
+  margin: 14px auto 0;
+  padding: 5px 12px;
+  border: 1px solid rgb(var(--accent-rgb) / 45%);
+  border-radius: var(--radius-lg);
+  background: rgb(var(--surface-bottom-rgb) / 70%);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast);
+}
+
+.menu-promo-open:hover {
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 16%);
+}
+
+.promo-dialog {
+  width: min(1280px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-frame);
+  border-radius: var(--radius-lg);
+  background: rgb(var(--surface-bottom-rgb));
+  color: var(--ink);
+  box-shadow: var(--shadow-dialog);
+}
+
+.promo-dialog::backdrop {
+  background: rgb(4 8 14 / 82%);
+}
+
+.promo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.promo-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.promo-close {
+  min-height: 36px;
+  padding: 6px var(--space-4);
+}
+
+.promo-video {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 110px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
 .controls-groups {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -4470,6 +4538,79 @@ label.test-setup-field {
   margin-bottom: 2px;
 }
 
+/* An emergency call answered (Phú 2026-11-13): the squad's lines, a strip of their colour (the
+   fire brigade's red, the police's blue; a person of the world answering them: none), above the
+   overheard line. The blast: the screen white for a moment, as strong as it is near. */
+.emergency-caption {
+  position: absolute;
+  left: 50%;
+  bottom: 222px;
+  transform: translateX(-50%);
+  max-width: min(760px, calc(100vw - 32px));
+  padding: 9px 16px 10px;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  background: rgba(12, 16, 24, 0.72);
+  color: #f2f5f9;
+  font-size: 16px;
+  line-height: 1.4;
+  pointer-events: none;
+  text-align: center;
+  animation: emergency-caption-in 0.18s ease-out;
+}
+.emergency-caption[hidden] {
+  display: none;
+}
+.emergency-caption[data-speaker='squad'][data-squad='fire-rescue'] {
+  border-left-color: #e5392e;
+}
+.emergency-caption[data-speaker='squad'][data-squad='police-check'] {
+  border-left-color: #2f7bff;
+}
+.emergency-caption-who {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffd27a;
+  margin-bottom: 2px;
+}
+.emergency-caption[data-squad='police-check'] .emergency-caption-who {
+  color: #9cc4ff;
+}
+.emergency-caption[data-speaker='person'] .emergency-caption-who {
+  color: #b9c6d6;
+}
+@keyframes emergency-caption-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+}
+.emergency-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #fff8ea;
+  opacity: 0;
+}
+.emergency-flash.on {
+  animation: emergency-flash 0.9s ease-out;
+}
+@keyframes emergency-flash {
+  0% {
+    opacity: var(--strength, 1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .emergency-flash.on {
+    animation-duration: 0.3s;
+  }
+}
+
 /* Touch controls (phones and tablets, 2026-11-12): a stick on the left, a drag elsewhere looks,
    buttons on the right and along the top. A computer never has them. */
 .touch-controls {
@@ -5084,5 +5225,109 @@ html[data-device='tablet'] .hud-hint {
 @media (prefers-reduced-motion: reduce) {
   .laptop-orbit-spin {
     animation: none;
+  }
+}
+
+/* A red dot on what a first-time player should look at (hintDot.ts): Settings, then Graphics, then
+   Menu background, to find the live background (Phú 2026-11-18). */
+.has-hint {
+  position: relative;
+}
+
+.hint-dot {
+  position: absolute;
+  top: 7px;
+  right: 9px;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e5383b;
+  box-shadow: 0 0 0 2px #ffffff;
+  pointer-events: none;
+  animation: hint-dot-pulse 1.6s ease-in-out infinite;
+}
+
+.hint-dot.inline {
+  position: relative;
+  top: -1px;
+  right: auto;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+@keyframes hint-dot-pulse {
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint-dot {
+    animation: none;
+  }
+}
+
+/* The cover over the page while the live menu builds the rocket opening (AppIntro.ts): the late
+   afternoon's sky, the name inked, a loading line. Transforms and opacity only: the page's thread
+   is busy building meanwhile. */
+.app-intro.app-intro-cover {
+  display: block;
+}
+
+.app-intro-cover-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#4f86c4, #8fb6dc 45%, #d9c9ba 80%, #ecd3b6);
+}
+
+.app-intro-cover-word {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  color: #ffffff;
+  font: 900 italic clamp(64px, 9vw, 150px) / 1 var(--font-sans);
+  letter-spacing: 0.04em;
+  text-shadow: 8px 8px 0 #111417;
+  -webkit-text-stroke: 3px #111417;
+  transform: translate(-50%, -50%) skewX(-8deg);
+  animation: app-intro-cover-pulse 2.4s ease-in-out infinite;
+}
+
+.app-intro-cover-bar {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  width: min(320px, 40vw);
+  height: 10px;
+  overflow: hidden;
+  border: 3px solid #111417;
+  background: #ffffff;
+  box-shadow: 4px 4px 0 #111417;
+  transform: translateX(-50%) skewX(-12deg);
+}
+
+.app-intro-cover-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: #ffd23f;
+  animation: app-intro-cover-load 1.2s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+}
+
+@keyframes app-intro-cover-load {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes app-intro-cover-pulse {
+  50% {
+    transform: translate(-50%, -50%) skewX(-8deg) scale(1.03);
   }
 }

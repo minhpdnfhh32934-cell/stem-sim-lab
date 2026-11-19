@@ -3,7 +3,8 @@ import type { GraphicsQuality } from '../../persistence/settings';
 /**
  * Graphics built into the processor (a laptop's Intel HD/UHD/Iris, an AMD APU's Radeon Graphics or
  * Vega): Low is their default (quality.ts), unless the player picked a preset. Not Intel Arc, nor
- * the larger APUs (Radeon 680M/780M), which hold Medium.
+ * the larger APUs (Radeon 680M/780M), which hold Medium
+ * (the former High since 2026-11-18; the frame-rate watch steps down from it when too slow).
  */
 export const INTEGRATED_GPU =
   /Intel\(R\) (HD|UHD|Iris)|Intel.*\b(HD|UHD|Iris)\b.*Graphics|Radeon\(TM\) (Vega \d+ )?Graphics|Radeon Vega|Mali|Adreno|PowerVR/i;
@@ -40,9 +41,12 @@ export class QualityWatch {
   private count = 0;
   private time = 0;
   private settle = SETTLE_S;
+  /** The last window's median frame rate (frames a second), 0 before one ended. */
+  lastFps = 0;
 
   /** Starts over, settling first (a scene came in, the preset changed, play paused). */
   reset(): void {
+    this.lastFps = 0;
     this.count = 0;
     this.time = 0;
     this.settle = SETTLE_S;
@@ -59,6 +63,7 @@ export class QualityWatch {
     if (this.time < WINDOW_S) return false;
     const window = this.frames.subarray(0, this.count).sort();
     const median = window[window.length >> 1] ?? 0;
+    if (median > 0) this.lastFps = 1 / median;
     this.count = 0;
     this.time = 0;
     return median > 1 / SLOW_FPS;

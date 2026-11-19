@@ -41,6 +41,9 @@ test('menu sky and emblem: slow motion behind the panel, still under reduced mot
   });
   page.on('pageerror', (e) => errors.push(e.message));
 
+  // The default background (the live one, the default since Phase W, hides the sky, the emblem
+  // and the trail, and plays its own opening).
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.menuBackground', 'default'));
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'SIMLAB', exact: true })).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(1); // no second canvas: all of it is CSS and SVG
@@ -216,6 +219,9 @@ test('menu cursor trail: one faint tapering line behind the mouse, out when stil
   });
   page.on('pageerror', (e) => errors.push(e.message));
 
+  // The default background (the live one, the default since Phase W, hides the sky, the emblem
+  // and the trail, and plays its own opening).
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.menuBackground', 'default'));
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'SIMLAB', exact: true })).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(1);
@@ -307,4 +313,47 @@ test.describe('on a touch screen', () => {
     await page.waitForTimeout(300);
     expect((await trailState(page)).opacity).toBe(0);
   });
+});
+
+test('the promo video: a small button under the name opens it, it plays, Esc stops it', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.menuBackground', 'default'));
+  // Nothing of it fetched until it is opened.
+  const fetched: string[] = [];
+  page.on('request', (r) => {
+    if (r.url().includes('/video/')) fetched.push(r.url());
+  });
+  await page.goto('/');
+  const button = page.locator('.menu-brand .menu-promo-open');
+  await expect(button).toBeVisible();
+  await expect(button).toHaveText(/Watch the trailer/);
+  await page.waitForTimeout(1000);
+  expect(fetched).toEqual([]);
+
+  await button.click();
+  const dialog = page.getByRole('dialog', { name: 'SimLab 3D trailer' });
+  await expect(dialog).toBeVisible();
+  // By its class: a closed dialog has no role in the accessibility tree.
+  const video = page.locator('.promo-dialog video');
+  await expect(video).toHaveAttribute('src', /video\/simlab3d-gioi-thieu\.mp4$/);
+  // It plays on its own (a click opened it): its time goes on.
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 20_000 })
+    .toBeGreaterThan(1);
+  const length = await video.evaluate((v: HTMLVideoElement) => v.duration);
+  expect(length).toBeGreaterThan(170);
+
+  // Esc closes it, stopped where it was; the focus back on the button.
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  // The dialog's close event comes a moment after it is hidden.
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await expect(button).toBeFocused();
+  expect(errors).toEqual([]);
 });

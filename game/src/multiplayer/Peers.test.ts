@@ -72,6 +72,29 @@ describe('Peers (LAN rooms, Phase M)', () => {
     expect(peers.players).toEqual([]);
   });
 
+  it('draws a walking player led by their walk until the next pose, at most 0.25 s ahead', async () => {
+    const { game } = await inRoom();
+    const peers = game.peers;
+    const an = peers.players[0]!;
+    peers.pose('p2', { scene: 'physics-lab', x: 0, y: 0, z: 0, yaw: 0, speed: 2 });
+    peers.update(1 / 15);
+    // 1/15 s later, 0.133 m on: 2 m/s along x.
+    peers.pose('p2', { scene: 'physics-lab', x: 2 / 15, y: 0, z: 0, yaw: 0, speed: 2 });
+    for (let i = 0; i < 60; i++) peers.update(1 / 60); // a second with no newer pose
+    // Led 0.25 s on at most (0.5 m), never further: 0.133 + 0.5.
+    expect(an.x).toBeGreaterThan(0.55);
+    expect(an.x).toBeLessThan(2 / 15 + 0.5 + 1e-3);
+    // Stopped (a pose at rest): drawn at it, no lead.
+    peers.pose('p2', { scene: 'physics-lab', x: 0.2, y: 0, z: 0, yaw: 0, speed: 0 });
+    for (let i = 0; i < 60; i++) peers.update(1 / 60);
+    expect(an.x).toBeCloseTo(0.2, 3);
+    // The round trip's numbers: the last, and the most of the last ten.
+    peers.roundTrip(20);
+    peers.roundTrip(140);
+    peers.roundTrip(30);
+    expect([peers.rtt, peers.rttMax]).toEqual([30, 140]);
+  });
+
   it('refuses the player a station another player works, with whose it is', async () => {
     const { game, blocked } = await inRoom();
     game.peers.setLocks({ [BOARD]: 'p2' });

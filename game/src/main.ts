@@ -3,7 +3,7 @@ import { FrameClock } from './core/FrameClock';
 import { AudioLoader } from './platform/audio/AudioLoader';
 import { BootError, Game } from './game/Game';
 import { BrowserInput } from './platform/BrowserInput';
-import { AppIntro } from './platform/ui/AppIntro';
+import { AppIntro, type IntroPhases } from './platform/ui/AppIntro';
 import { detectDevice } from './platform/device';
 import { GamepadInput } from './platform/gamepad';
 import { TiltLook } from './platform/tilt';
@@ -18,6 +18,7 @@ import { Hud } from './platform/ui/Hud';
 import { InventoryView } from './platform/ui/InventoryView';
 import { LaptopView } from './platform/ui/LaptopView';
 import { OverheardView } from './platform/ui/OverheardView';
+import { EmergencyCaptions } from './platform/ui/EmergencyCaptions';
 import { TaskPanel } from './platform/ui/TaskPanel';
 import { TouchControls } from './platform/ui/TouchControls';
 import { DialogueView } from './platform/ui/DialogueView';
@@ -35,7 +36,7 @@ import { ChatView } from './platform/ui/ChatView';
 /** Longest frame step; after a stall (tab hidden, breakpoint) the game slows instead of jumping. */
 const MAX_FRAME_S = 0.1;
 
-async function start(app: HTMLElement): Promise<void> {
+async function start(app: HTMLElement, opening: IntroPhases): Promise<void> {
   // A computer plays with keyboard and mouse; a phone or tablet gets touch controls (2026-11-12).
   const device = detectDevice();
   document.documentElement.dataset.device = device;
@@ -124,6 +125,8 @@ async function start(app: HTMLElement): Promise<void> {
         dialogue,
         // Phase F-3: the teacher heard teaching another player of the room nearby.
         new OverheardView(app, g),
+        // An emergency call answered (Phú 2026-11-13): the squad's lines, the blast's flash.
+        new EmergencyCaptions(app, g),
         ...(device === 'computer'
           ? []
           : [new TouchControls(app, g, device, panelHasMouse), new TiltLook(g)]),
@@ -135,7 +138,7 @@ async function start(app: HTMLElement): Promise<void> {
         rooms,
         chat,
         voice,
-        new MainMenu(app, g, enterWorld, !persistent, settings, rooms),
+        new MainMenu(app, g, enterWorld, !persistent, settings, rooms, opening),
         new PauseMenu(app, g, settings, () => input.lockPointer(), panelHasMouse),
         // Dev only: in a production build this is false at compile time and the panel is not
         // shipped; there, F3 shows the frame rate alone (PerfOverlay).
@@ -172,7 +175,7 @@ const app = document.getElementById('app');
 // The app's opening, over the page while the game loads; it ends into the menu once it is ready.
 const intro = new AppIntro(document.body);
 if (app) {
-  start(app)
+  start(app, intro.phases)
     .then(() => intro.done())
     .catch((error: unknown) => {
       intro.fail();

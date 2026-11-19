@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { PrepareReal } from './body/realBody';
 import type { Game } from '../../game/Game';
 import type { CharacterDefinition } from '../../gameplay/character';
 import type { WornOn } from '../../gameplay/item';
@@ -17,6 +18,7 @@ const DOING_GESTURE: Readonly<Record<Doing, Gesture>> = {
   hands: 'hands',
 };
 import type { ContactShadows } from './contactShadows';
+import { QUALITY } from './quality';
 
 const CONTACT_RADIUS = 0.42;
 /** The name over a player's head: its height (m) and the gap over the head. */
@@ -58,6 +60,10 @@ interface Entry {
  * "z"s over them, rising, growing and fading); what they throw flies here too.
  */
 export class RemotePlayers {
+  /** Where a real person that did not load is reported (Max). */
+  private readonly warn = (message: string) => this.game.log.warn(message);
+  /** Makes a real person ready before it is shown (WorldRenderer), or none. */
+  prepareReal: PrepareReal | null = null;
   private readonly actors = new Map<string, Entry>();
   private readonly shadow = new THREE.MeshBasicMaterial({ colorWrite: false });
   private readonly seen = new Set<string>();
@@ -137,6 +143,8 @@ export class RemotePlayers {
       point.y = player.y + offset[1] + 1.2;
       point.z = person.z - Math.cos(person.heading) * 0.45;
     }
+    entry.actor.setMotion(QUALITY[this.game.graphicsQuality].motion);
+    entry.actor.setReal(QUALITY[this.game.graphicsQuality].realPeople, this.warn, this.prepareReal);
     entry.actor.update(person, dt, this.time, null, point);
     const group = entry.actor.group;
     let headY = player.character.appearance.heightM + TAG_GAP;

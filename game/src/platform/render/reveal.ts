@@ -59,6 +59,11 @@ interface Reveal {
  */
 export class Reveals {
   private readonly entries = new Map<string, Reveal>();
+  /** Every slot's material: one, so the slots draw without a material change between them. */
+  private readonly housingMaterial = new THREE.MeshStandardMaterial({
+    color: HOUSING,
+    roughness: 0.5,
+  });
 
   /**
    * Makes `group` (an entity's view, fully built: body, label, screen) a reveal: its parts on a
@@ -105,7 +110,7 @@ export class Reveals {
       for (const child of lift.children) child.position.y += h / 2;
       housing = new THREE.Mesh(
         new THREE.BoxGeometry(w + 0.04, 0.035, d + 0.03),
-        new THREE.MeshStandardMaterial({ color: HOUSING, roughness: 0.5 }),
+        this.housingMaterial,
       );
       housing.position.y = -h / 2 - 0.0175;
       housing.castShadow = false;
@@ -135,8 +140,7 @@ export class Reveals {
     for (const fade of entry.fades) if (fade.own) fade.material.dispose();
     if (entry.housing) {
       entry.housing.removeFromParent();
-      entry.housing.geometry.dispose();
-      (entry.housing.material as THREE.Material).dispose();
+      entry.housing.geometry.dispose(); // its material is the slots' own: freed with them
     }
     this.entries.delete(entityId);
   }
@@ -155,6 +159,7 @@ export class Reveals {
 
   dispose(): void {
     for (const id of [...this.entries.keys()]) this.remove(id);
+    this.housingMaterial.dispose();
   }
 
   private draw(entry: Reveal): void {

@@ -64,7 +64,7 @@ function frame(item: ItemDefinition, painted: THREE.MeshStandardMaterial): Bench
 function rig(item: ItemDefinition): BenchRig {
   const kit = new Assembly();
   kit.group.position.copy(topOf(item));
-  const glow = kit.own(
+  const glow = kit.mine(
     new THREE.MeshStandardMaterial({ color: '#5a1d16', emissive: '#ff4a2e', emissiveIntensity: 0 }),
   );
   const lamp = kit.mesh(kit.keep(new THREE.SphereGeometry(0.008, 12, 8)), glow);

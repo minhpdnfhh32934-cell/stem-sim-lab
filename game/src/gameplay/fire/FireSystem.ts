@@ -21,8 +21,6 @@ const BURNT_AT = 0.5;
 const KNOCK_PER_S = 0.45;
 /** How far beside the jet's line (m) a fire is still reached, past its own size. */
 const JET_WIDTH = 0.35;
-/** Seconds the fire brigade takes after a 114 call (shortened for play). */
-export const BRIGADE_S = 30;
 /** Seconds between warnings to step back. */
 const WARN_EVERY_S = 6;
 /** Seconds between saves of a fire's size. */
@@ -63,8 +61,8 @@ export interface FireSystemDeps {
  * grows to its full size in GROW_S, and sets alight what can burn near it (items with `burns`,
  * after their `ignitionS` of exposure weighted by the fire's size) — the board, the bench, parts
  * lying about, the bench beside. It never goes out by itself: a CO₂ extinguisher held and sprayed
- * at it (the left mouse button) knocks it down, or the fire brigade called on 114 puts every fire
- * out when it arrives. A fire past half its size ruins what it is on (`EntityBurnt`) and blackens
+ * at it (the left mouse button) knocks it down, or the fire brigade called on 114 comes and puts
+ * them out with their hoses (`EmergencySystem`). A fire past half its size ruins what it is on (`EntityBurnt`) and blackens
  * it (`charred`, saved). Fires are kept in their objects' entity states, so a reload brings them
  * back. Illustrative: the spread and growth times are chosen for play, not a fire model.
  */
@@ -81,8 +79,6 @@ export class FireSystem implements GameSystem {
   spraying = false;
   readonly sprayFrom: Vec3 = [0, 0, 0];
   readonly sprayDir: Vec3 = [0, 0, 0];
-  /** Seconds until the fire brigade arrives; null when none is called. */
-  brigadeIn: number | null = null;
   private sinceWarned = Infinity;
   private sinceSaved = 0;
   private emptyTold = false;
@@ -145,24 +141,16 @@ export class FireSystem implements GameSystem {
   }
 
   /**
-   * A call on the player's phone (Phase E-2). 114 (fire and rescue) sends the brigade when
-   * something burns; with nothing burning it is a false alarm. 113 and 115 are other emergency
-   * services, any other number does not answer here.
+   * Water on a fire (Phú 2026-11-13: the fire brigade's hoses, `EmergencySystem`): its size knocked
+   * down by `amount` (1 = a whole fire); out at nothing.
    */
-  call(number: string): GameEvents['EmergencyCall']['outcome'] {
-    const digits = number.replace(/\D/g, '');
-    let outcome: GameEvents['EmergencyCall']['outcome'];
-    if (digits === '114') {
-      if (this.fires.size === 0) outcome = 'false-alarm';
-      else if (this.brigadeIn !== null) outcome = 'already-coming';
-      else {
-        this.brigadeIn = BRIGADE_S;
-        outcome = 'dispatched';
-      }
-    } else if (digits === '113' || digits === '115') outcome = 'other-service';
-    else outcome = 'no-answer';
-    this.deps.events.publish('EmergencyCall', { number: digits, outcome });
-    return outcome;
+  douse(entityId: string, amount: number): void {
+    const fire = this.fires.get(entityId);
+    if (!fire || amount <= 0) return;
+    fire.size -= amount;
+    if (fire.size > 0) return;
+    this.out(fire);
+    if (this.fires.size === 0) this.deps.events.publish('FireNotice', { what: 'out' });
   }
 
   update(dt: number): void {
@@ -172,7 +160,6 @@ export class FireSystem implements GameSystem {
     this.spray(dt);
     for (const fire of this.list) this.grow(fire, dt);
     this.spread(dt);
-    this.brigade(dt);
     this.warn(dt);
     this.sinceSaved += dt;
     if (this.sinceSaved >= SAVE_EVERY_S) {
@@ -342,15 +329,6 @@ export class FireSystem implements GameSystem {
       this.out(fire);
       if (this.fires.size === 0) events.publish('FireNotice', { what: 'out' });
     }
-  }
-
-  private brigade(dt: number): void {
-    if (this.brigadeIn === null) return;
-    this.brigadeIn -= dt;
-    if (this.brigadeIn > 0) return;
-    this.brigadeIn = null;
-    for (const fire of [...this.list]) this.out(fire);
-    this.deps.events.publish('FireNotice', { what: 'brigade-arrived' });
   }
 
   /** Too close to a fire: a warning, now and then. */

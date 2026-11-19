@@ -275,11 +275,11 @@ async function prepare(page: Page, stand: Vec3, look: Vec3, entityStates: object
   await fullscreenWindow(page, test.info().project.name);
   await page.addInitScript(installRecorder);
   // BENCH_FRAME_CAP=30|60|90|120 measures under the game's frame-rate cap (Settings); unset: none.
-  // BENCH_GRAPHICS=low|medium|high measures under that graphics quality (Settings); unset: default.
+  // BENCH_GRAPHICS=low|medium|high|ultra measures under that graphics quality (Settings); unset: default.
   const quality = process.env.BENCH_GRAPHICS;
   if (quality) {
     await page.addInitScript(
-      (value) => localStorage.setItem('simlab.settings.graphicsQuality', value),
+      (value) => localStorage.setItem('simlab.settings.graphics', value),
       quality,
     );
   }

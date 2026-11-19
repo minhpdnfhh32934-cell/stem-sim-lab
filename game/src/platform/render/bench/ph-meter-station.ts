@@ -671,7 +671,7 @@ function rig(item: ItemDefinition): BenchRig {
   const [wx = 0, wz = 0] = WELLS[0] ?? [];
   const drop = mesh(
     keep(new THREE.CylinderGeometry(SPOT.well - 0.0015, SPOT.well - 0.0015, 0.0008, 16)),
-    own(new THREE.MeshStandardMaterial({ roughness: 0.15, metalness: 0 })),
+    kit.mine(new THREE.MeshStandardMaterial({ roughness: 0.15, metalness: 0 })),
   );
   drop.name = 'drop';
   drop.castShadow = false;

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "SIMLAB — 3D first-person scientific laboratory simulation game (TypeScript + Three.js)",
   "type": "module",
+  "main": "electron/main.mjs",
   "engines": {
     "node": ">=22.12"
   },
@@ -13,6 +14,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "preview:lan": "vite preview --host",
+    "app": "electron .",
+    "app:dev": "electron . --dev",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -20,7 +23,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:app": "playwright test -c playwright.app.config.ts",
     "bench": "playwright test -c playwright.bench.config.ts",
+    "wallpaper": "node scripts/wallpaper-pack.mjs",
+    "live-still": "node scripts/live-still.mjs",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {
@@ -34,6 +40,7 @@
     "@playwright/test": "1.63",
     "@types/node": "^26.6.3",
     "@types/three": "^0.186.0",
+    "electron": "^44.7.0",
     "eslint": "^10.11.0",
     "globals": "^17.12.0",
     "prettier": "^3.9.9",

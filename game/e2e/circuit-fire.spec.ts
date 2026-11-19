@@ -15,8 +15,8 @@ import {
 
 // Phase E-2 in the real app: a 0.25 W resistor of 10 Ω led straight across the supply at 12 V
 // (14 W) smokes, then catches fire on the board; the CO₂ extinguisher is taken (E) and sprayed at
-// it (the left button held) until the fire is out. Then the phone (P): 114 with nothing burning is
-// a false alarm.
+// it (the left button held) until the fire is out. Then the phone (P): 114 sends the fire brigade
+// (Phú 2026-11-13: they come by helicopter through the hub's ceiling, `emergency.spec.ts`).
 
 const BOARD = 'physics-lab/circuit-trainer';
 const EXTINGUISHER = 'physics-lab/co2-extinguisher';
@@ -56,7 +56,7 @@ function extinguisherAt(): Vec3 {
   return [p.position[0], 0.3, p.position[2]];
 }
 
-test('circuit fire: an overloaded resistor burns, the CO₂ extinguisher puts it out; 114 with no fire is a false alarm', async ({
+test('circuit fire: an overloaded resistor burns, the CO₂ extinguisher puts it out; 114 sends the brigade', async ({
   page,
 }) => {
   test.setTimeout(240_000);
@@ -103,8 +103,9 @@ test('circuit fire: an overloaded resistor burns, the CO₂ extinguisher puts it
   await expectDebug(page, 'Phone', 'out 114 idle');
   await page.keyboard.press('e');
   await expectDebug(page, 'Phone', 'out 114 ringing');
-  // Nothing burns now: 114 answers that this is a false call.
-  await expectDebug(page, 'Phone', 'out 114 talking false-alarm');
+  // The brigade is sent (with nothing burning they will tell the caller off).
+  await expectDebug(page, 'Phone', 'out 114 talking dispatched');
+  await expectDebug(page, 'Fire', '.*fire-squad inbound');
   await shot(page, 'circuit-fire-phone');
   await page.keyboard.press('q');
   await expectDebug(page, 'Phone', 'away');

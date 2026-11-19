@@ -21,8 +21,11 @@ async function recordWebGLContexts(page: Page) {
       id: string,
       options?: unknown,
     ) {
-      // The menu's character picture draws on a canvas of its own, never in the page: left out.
-      if (id.startsWith('webgl') && this.dataset.role !== 'portrait')
+      // The menu's character picture draws on a canvas of its own, never in the page, and the
+      // character page's room is made ahead on its own off the page once the menu is used (in
+      // the page only while that page is open): both left out.
+      const role = this.dataset.role;
+      if (id.startsWith('webgl') && role !== 'portrait' && role !== 'character-room')
         made.push(`${id} on ${this.parentElement?.className ?? 'none'}`);
       return getContext.call(this, id, options);
     } as typeof HTMLCanvasElement.prototype.getContext;
