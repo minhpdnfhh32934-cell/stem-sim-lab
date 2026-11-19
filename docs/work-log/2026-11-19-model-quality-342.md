@@ -75,3 +75,35 @@ Lệnh đã chạy (kết quả thật):
 - `npx vitest run`: 510 tệp, 5 837 bài đạt, 3 bỏ qua có sẵn.
 - `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check` các tệp đã đổi: đạt.
 - `npx playwright test` teacher, post198-teacher, board, local-ai, qwen-builtin (chromium): 51 đạt.
+
+## Lượt 3: máy bàn thử lại #344 (20/11/2026)
+
+Bằng chứng ở `D:\Projects\simlab-work\issue-342-2026-11-19\retest-344\` trên máy bàn (main 13570d4b,
+RTX 4080, chỉ model có sẵn).
+
+Kết quả thử lại: V1 ĐẠT (không còn "GHI CHÚ", không chữ số Bengal), tiến độ ĐẠT (phần trăm không lùi
+lần nào), KaTeX ĐẠT. Viết tiếp còn LỖI ở ba chỗ:
+
+- 1B mở bằng "Tuyệt vời! Chúng ta cần tiếp tục phân tích về…": "phân tích" chưa có trong danh sách.
+- 1B chép nguyên văn khối "Định nghĩa" ở giữa phần trước (khoảng 370 kí tự).
+- E2B viết lại mục 20 bằng lời khác ("Để kéo vật đó" → "để đạt được", bỏ "**"): giống dưới 85 %, nên
+  dòng dở cũ vẫn còn.
+
+Đã sửa (`memory.ts`):
+
+- Sau một lời khen ("Tuyệt vời!"), câu "chúng ta … tiếp tục …" luôn là câu dẫn; danh sách thêm
+  "phân tích", "mở rộng", "tìm hiểu", "thảo luận".
+- Phần viết tiếp mở bằng các dòng chép nguyên văn, cùng thứ tự, từ phần trước (tổng ≥ 80 kí tự):
+  bỏ các dòng đó (`withoutCopiedBlock`); nếu chỉ có phần chép thì giữ nguyên.
+- Dòng bị cắt là mục có số ("20.") và dòng đầu phần viết tiếp cùng số, 30 kí tự đầu giống ≥ 85 %:
+  bản viết lại thay dòng cũ (`sameStart`). Mục 21 sau mục 20 không bị gộp.
+
+Còn lại là chất lượng mô hình, không phải bộ lọc: E2B trả lời lạc đề (câu 2 nói về định luật II thay
+vì ném ngang), câu 4 không có công thức, 1B viết lại gần nguyên ví dụ 1 ở giữa phần viết tiếp, mục bị
+bỏ trống ("4. … :" rồi sang ý khác). Cần đổi lời nhắc và đo bằng `eval-gemma.mjs` trên card rời.
+
+Lệnh đã chạy (kết quả thật):
+
+- `npx vitest run`: 510 tệp, 5 841 bài đạt, 3 bỏ qua có sẵn.
+- `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
+- `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.

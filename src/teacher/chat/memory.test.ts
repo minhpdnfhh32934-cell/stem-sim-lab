@@ -348,6 +348,17 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation('Ví dụ trước đã xong.', cut)).toBe(`Ví dụ trước đã xong. ${kept}`);
   });
 
+  // Machine B's retest of #344 (20/11/2026), Gemma 1B: "phân tích" after "tiếp tục", after a praise.
+  it.each([
+    ' Tuyệt vời! Chúng ta cần tiếp tục phân tích về Định luật II Newton, đặc biệt là khi liên quan đến các hệ thống phức tạp hơn.\n\nLực càng lớn thì gia tốc càng lớn.',
+    // Its second opening; the end of the sentence is shortened here.
+    ' Tuyệt vời! Chúng ta cần tiếp tục phân tích và mở rộng về Định luật II Newton.\n\nLực càng lớn thì gia tốc càng lớn.',
+  ])("Gemma 1B's praise and 'tiếp tục phân tích' go (retest of #344)", (cut) => {
+    expect(joinContinuation('Ví dụ trước đã xong.', cut)).toBe(
+      'Ví dụ trước đã xong. Lực càng lớn thì gia tốc càng lớn.',
+    );
+  });
+
   it('a rest that only goes on with the physics keeps its first sentence', () => {
     // "tiếp tục" about the body, not about the writing.
     expect(
@@ -365,6 +376,32 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     const rest =
       '\n2. **Định luật I Newton (Quán tính):**\n    *   **Ví dụ 2:** Khi bạn đang ngồi trên xe buýt đang chạy và xe đột ngột phanh gấp, bạn sẽ bị ngả về phía trước.\n    *   **Giải thích:** Cơ thể bạn có xu hướng giữ nguyên trạng thái chuyển động ban đầu vì không có lực nào giữ bạn lại.';
     expect(joinContinuation(previous, rest)).toBe(`${before}${rest.trimStart()}`);
+  });
+
+  it('E2B starting the cut item again in other words replaces it (retest of #344)', () => {
+    const before = '19. **Khi bạn đẩy xe hàng:** Xe nặng hơn cần lực lớn hơn.\n';
+    const previous = `${before}20. **Khi bạn cố gắng kéo một vật nặng:** Để kéo vật đó với cùng một gia tốc ($a$), bạn`;
+    const rest =
+      '\n20. Khi bạn cố gắng kéo một vật nặng, để đạt được cùng một gia tốc ($a$), bạn cần phải tạo ra một lực ($F$) lớn hơn.';
+    expect(joinContinuation(previous, rest)).toBe(`${before}${rest.trimStart()}`);
+    // The next item, alike at its start, is not the same item.
+    const done = `${before}20. **Khi bạn cố gắng kéo một vật nặng:** Bạn cần một lực lớn hơn.`;
+    const next = '21. **Khi bạn cố gắng kéo một vật nhẹ:** Bạn cần một lực nhỏ hơn.';
+    expect(joinContinuation(done, next)).toBe(`${done}\n${next}`);
+  });
+
+  it('a block copied word for word from earlier in the answer goes (1B, retest of #344)', () => {
+    // The first line is machine B's; the four bullets stand for the ones it reported (v₀, v, t, a).
+    const definition =
+      'Khi bỏ qua lực cản không khí, chuyển động của vật được mô tả bằng các công thức sau:\n*   v₀: vận tốc ban đầu (m/s)\n*   v: vận tốc tại thời điểm t (m/s)\n*   t: thời gian (s)\n*   a: gia tốc (m/s²)';
+    const previous = `**1. Định nghĩa**\n\n${definition}\n\n**2. Ví dụ**\n\n*   Sau 2 giây, quả bóng đạt vận tốc cuối cùng là 30 m/s.\n    *   v = 20 + (2 * 9.8) =`;
+    const rest = ` ${definition}\n\n**3. Bài tập**\n\nMột vật được ném ngang từ độ cao 20 m.`;
+    expect(joinContinuation(previous, rest)).toBe(
+      `${previous} **3. Bài tập**\n\nMột vật được ném ngang từ độ cao 20 m.`,
+    );
+    // A short line that happens to be there already stays.
+    const short = '**2. Ví dụ**\n\nQuả bóng thứ hai rơi chậm hơn.';
+    expect(joinContinuation(previous, short)).toBe(`${previous} ${short}`);
   });
 
   it('a next item that only looks like the last one is not a rewrite', () => {
