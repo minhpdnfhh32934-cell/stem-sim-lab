@@ -5,6 +5,7 @@ import type { Game } from '../../game/Game';
 import { CHAT_MAX } from '../../multiplayer/protocol';
 import type { LanRooms } from '../net/LanRooms';
 import { listen } from '../BrowserInput';
+import { EMBEDDED, chatAllowed, chatShown, reportChat } from '../net/simlabHost';
 import { el, keyLabel } from './dom';
 
 /** A line stays on screen this long (s) after it came, then fades (all show while typing). */
@@ -90,7 +91,16 @@ export class ChatView implements GameSystem {
       } else if (event.key === 'Enter' && !event.isComposing) {
         event.preventDefault();
         const text = this.entry.value.trim();
-        if (text) this.rooms.chat(text);
+        // Inside SimLab every line goes through its safety checks first (simlabHost.ts).
+        if (text && !chatAllowed(text)) {
+          this.line(
+            'chat-line system',
+            this.game.texts.ui(
+              'chat.blocked',
+              'Not sent: personal details (phone, address…) or unsuitable words stay off the room chat.',
+            ),
+          );
+        } else if (text) this.rooms.chat(text);
         this.close(true);
       }
     });
@@ -151,14 +161,19 @@ export class ChatView implements GameSystem {
     const t = this.game.texts;
     this.line(
       'chat-line system',
-      t.ui(
-        'chat.howTo',
-        'In this room: {chat} to chat, hold {talk} to talk (players near you hear you).',
-        {
-          chat: keyLabel(bindings.chat[0], t),
-          talk: keyLabel(bindings.talk[0], t),
-        },
-      ),
+      // Inside SimLab there is no voice (user decision 19/11/2026): chat only.
+      EMBEDDED
+        ? t.ui('chat.howToText', 'In this room: {chat} to chat.', {
+            chat: keyLabel(bindings.chat[0], t),
+          })
+        : t.ui(
+            'chat.howTo',
+            'In this room: {chat} to chat, hold {talk} to talk (players near you hear you).',
+            {
+              chat: keyLabel(bindings.chat[0], t),
+              talk: keyLabel(bindings.talk[0], t),
+            },
+          ),
     );
   }
 
@@ -171,8 +186,25 @@ export class ChatView implements GameSystem {
   }
 
   private add(name: string, text: string, own: boolean): void {
+    const t = this.game.texts;
+    // Inside SimLab another player's line is shown only when it passes SimLab's checks.
+    if (!own && !chatShown(text)) {
+      this.line('chat-line system', t.ui('chat.hidden', 'A message was hidden.'));
+      return;
+    }
     const root = el('li', own ? 'chat-line own' : 'chat-line');
     root.append(el('span', 'chat-name', `<${name}>`), ' ', el('span', 'chat-text', text));
+    if (EMBEDDED && !own) {
+      // "Báo cáo": the line goes, SimLab's incident log keeps the kind and the time (no content).
+      const report = el('button', 'chat-report', t.ui('chat.report', 'Report'));
+      report.type = 'button';
+      report.addEventListener('click', () => {
+        reportChat();
+        root.replaceChildren(t.ui('chat.reported', 'Reported. The message was hidden.'));
+        root.className = 'chat-line system';
+      });
+      root.append(' ', report);
+    }
     this.list.append(root);
     this.lines.push({ root, left: SHOW_S });
     while (this.lines.length > KEEP) this.lines.shift()?.root.remove();
