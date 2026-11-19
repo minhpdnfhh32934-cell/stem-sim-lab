@@ -5,6 +5,7 @@
  * and also reads photos.
  */
 /// <reference lib="webworker" />
+import { downloadTotals, type ProgressInfo } from './downloadProgress';
 import { modelStore, opfsAvailable } from './modelStore';
 import {
   AutoModelForCausalLM,
@@ -36,14 +37,6 @@ env.useWasmCache = false;
 interface TextMessage {
   role: string;
   content: string;
-}
-
-interface ProgressInfo {
-  status?: string;
-  name?: string;
-  file?: string;
-  loaded?: number;
-  total?: number;
 }
 
 type InMessage =
@@ -289,24 +282,10 @@ async function disposeEngine(): Promise<void> {
 }
 
 function progressFor(modelId: string, post: (out: OutMessage) => void) {
-  const files = new Map<string, { loaded: number; total: number }>();
+  const totals = downloadTotals();
   return (info: ProgressInfo) => {
-    const file = info.file ?? info.name ?? '';
-    if (!file) return;
-    if (info.status === 'progress') {
-      files.set(file, { loaded: info.loaded ?? 0, total: info.total ?? 0 });
-    } else if (info.status === 'done') {
-      files.set(file, { loaded: info.total ?? 0, total: info.total ?? 0 });
-    } else {
-      return;
-    }
-    let loaded = 0;
-    let total = 0;
-    for (const f of files.values()) {
-      loaded += f.loaded;
-      total += f.total;
-    }
-    post({ kind: 'load-progress', modelId, loaded, total: total > 0 ? total : null });
+    const now = totals(info);
+    if (now) post({ kind: 'load-progress', modelId, ...now });
   };
 }
 
