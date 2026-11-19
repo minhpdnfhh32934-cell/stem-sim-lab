@@ -358,7 +358,8 @@ pub struct Network {
     pub broadcast: Ipv4Addr,
 }
 
-/// 192.168.1.5 / 24 → 192.168.1.255.
+/// 192.168.1.5 / 24 → 192.168.1.255. (Elsewhere than Windows the limited broadcast is used.)
+#[cfg_attr(not(windows), allow(dead_code))]
 pub fn broadcast_of(address: Ipv4Addr, prefix: u8) -> Ipv4Addr {
     let mask = if prefix == 0 {
         0
