@@ -170,7 +170,7 @@ function rig(item: ItemDefinition): BenchRig {
   mesh(keep(new THREE.SphereGeometry(0.008, 10, 8)), cap, dropper);
   dropper.position.set(TUBE.x, BASE + TUBE.foot + TUBE.height + 0.05, TUBE.z);
   // The boiling tube's liquid, its cloud of precipitate and the settled solid.
-  const liquidMaterial = own(
+  const liquidMaterial = kit.mine(
     new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.55, color: CLEAR }),
   );
   const liquid = mesh(
@@ -180,7 +180,7 @@ function rig(item: ItemDefinition): BenchRig {
   liquid.name = 'liquid';
   liquid.castShadow = false;
   liquid.position.set(TUBE.x, BASE + TUBE.foot, TUBE.z);
-  const cloudMaterial = own(
+  const cloudMaterial = kit.mine(
     new THREE.MeshStandardMaterial({
       ...LOOKS.matte,
       transparent: true,
@@ -195,7 +195,7 @@ function rig(item: ItemDefinition): BenchRig {
   cloud.name = 'precipitate';
   cloud.castShadow = false;
   cloud.position.copy(liquid.position);
-  const solidMaterial = own(new THREE.MeshStandardMaterial({ ...LOOKS.matte }));
+  const solidMaterial = kit.mine(new THREE.MeshStandardMaterial({ ...LOOKS.matte }));
   const solid = mesh(
     keep(new THREE.CylinderGeometry(INNER - 0.0005, INNER - 0.0005, 1, 20).translate(0, 0.5, 0)),
     solidMaterial,

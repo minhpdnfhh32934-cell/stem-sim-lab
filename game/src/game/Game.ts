@@ -16,12 +16,14 @@ import { WorkspaceSystem } from '../gameplay/experiment/WorkspaceSystem';
 import { ExplainSystem } from '../gameplay/experiment/ExplainSystem';
 import { Peers } from '../multiplayer/Peers';
 import { NpcSystem } from '../gameplay/npc/NpcSystem';
+import { EmergencySystem } from '../gameplay/emergency/EmergencySystem';
 import { PaperSystem } from '../gameplay/papers/PaperSystem';
 import { BUILT_IN_BEHAVIORS } from '../gameplay/interaction/behaviors';
 import { InteractionSystem } from '../gameplay/interaction/InteractionSystem';
 import { InventorySystem } from '../gameplay/inventory/InventorySystem';
 import { CircuitSystem } from '../gameplay/circuit/CircuitSystem';
 import { FireSystem } from '../gameplay/fire/FireSystem';
+import { PeriodicTableSystem } from '../gameplay/periodic/PeriodicTableSystem';
 import { HitSystem } from '../gameplay/player/HitSystem';
 import { RestSystem } from '../gameplay/player/RestSystem';
 import { PHONE_ID, PHONE_ITEM, PhoneSystem } from '../gameplay/phone/PhoneSystem';
@@ -59,17 +61,22 @@ import {
   loadLanguage,
   loadMuted,
   loadLookSensitivity,
+  loadLiveHintSeen,
+  loadMenuBackground,
   loadRoomSleep,
   loadTiltInvert,
   loadTiltLook,
   loadTiltSensitivity,
   loadVolumes,
   type LookSensitivity,
+  type MenuBackground,
   saveFrameCap,
   saveGraphicsQuality,
+  saveLiveHintSeen,
   saveLanguage,
   saveMuted,
   saveLookSensitivity,
+  saveMenuBackground,
   saveRoomSleep,
   saveTiltInvert,
   saveTiltLook,
@@ -198,6 +205,8 @@ export class Game {
   readonly circuits: CircuitSystem;
   /** Fire (Phase E-2): where it burns and spreads, the extinguisher, the brigade on 114. */
   readonly fires: FireSystem;
+  /** The hub's periodic table display: the element looked up on it (Phú, 2026-11-14). */
+  readonly periodic: PeriodicTableSystem;
   /** The player's phone (Phase E-2b): out of the bag into the hand, the number dialled, its call. */
   readonly phone: PhoneSystem;
   /** Sitting and lying on furniture, asleep (Phase F-1). */
@@ -220,6 +229,8 @@ export class Game {
   /** The Explain view at a station (its parts, its principle; the hub teacher's door). */
   readonly explain: ExplainSystem;
   readonly npcs: NpcSystem;
+  /** Emergency calls answered (Phú 2026-11-13): the squad by helicopter, through the hub's ceiling. */
+  readonly emergency: EmergencySystem;
   /** The LAN room this game is in and the other players in it (Phase M), never saved. */
   readonly peers: Peers;
   /** The hub teacher's tests (Phase Y-5). */
@@ -257,6 +268,8 @@ export class Game {
   private readonly currentVolumes: Record<AudioBus, number>;
   private currentlyMuted: boolean;
   private currentRoomSleep: boolean;
+  private currentMenuBackground: MenuBackground;
+  private liveHintWasSeen: boolean;
   private readonly currentControls: ControlSettings;
   /** The player picked a preset (now or on an earlier visit): no default is suggested over it. */
   private qualityChosen: boolean;
@@ -279,6 +292,8 @@ export class Game {
     this.currentVolumes = loadVolumes(core.storage, log.child('Settings'));
     this.currentlyMuted = loadMuted(core.storage, log.child('Settings'));
     this.currentRoomSleep = loadRoomSleep(core.storage, log.child('Settings'));
+    this.currentMenuBackground = loadMenuBackground(core.storage, log.child('Settings'));
+    this.liveHintWasSeen = loadLiveHintSeen(core.storage, log.child('Settings'));
     const settingsLog = log.child('Settings');
     this.currentControls = {
       lookSensitivity: loadLookSensitivity(core.storage, settingsLog),
@@ -466,8 +481,9 @@ export class Game {
       events,
       selected: () => this.inventory.at(this.inventory.selected)?.placements.at(-1) ?? null,
       handsFull: () => this.interaction.heldId !== null,
-      call: (number) => this.fires.call(number),
+      call: (number) => this.emergency.call(number),
     });
+    this.periodic = new PeriodicTableSystem({ state, events, world: this.world });
     this.fires = new FireSystem({
       state,
       events,
@@ -573,6 +589,8 @@ export class Game {
       interaction: this.interaction,
       agents: this.physics,
       drivenBy: (npcId) => this.peers.holder(`npc:${npcId}`),
+      dayFromRoom: (npcId) =>
+        this.peers.dayDriver() !== null && this.peers.holder(`npc:${npcId}`) === null,
       offsetOf: (id) => this.scenes.offsetOf(id),
       doorPairs: this.scenes.doorPairs,
       doors: this.doors,
@@ -582,6 +600,23 @@ export class Game {
       // The clean area's entrance is the player's own way in, by its steps: people do not take it.
       barred: new Set(content.procedures.all().map((p) => p.entrance)),
       models: (id) => core.code.models.tryGet(id),
+    });
+    this.emergency = new EmergencySystem({
+      state,
+      events,
+      texts: this.texts,
+      squads: content.responders,
+      scenes: content.scenes,
+      rooms: content.rooms,
+      itemOf: (id) => content.items.tryGet(id),
+      offsetOf: (id) => this.scenes.offsetOf(id),
+      doorPairs: this.scenes.doorPairs,
+      doors: this.doors,
+      world: this.world,
+      barred: new Set(content.procedures.all().map((p) => p.entrance)),
+      fires: this.fires,
+      people: this.npcs,
+      others: () => this.peers.players,
     });
     this.papers = new PaperSystem({
       actions: this.actions,
@@ -634,6 +669,7 @@ export class Game {
       this.physics,
       this.gait,
       this.interaction,
+      this.periodic,
       this.actions,
       this.liquids,
       this.doors,
@@ -646,6 +682,8 @@ export class Game {
       this.hits,
       this.circuits,
       this.fires,
+      // After the fires (the hoses read where they burn), before the frame is drawn.
+      this.emergency,
       this.procedures,
       this.experiments,
       this.stations,
@@ -1057,6 +1095,11 @@ export class Game {
   softwareRenderer = false;
   /** The GPU drawing the world (WEBGL_debug_renderer_info), for the F3 overlay; '' until known. */
   gpuName = '';
+  /**
+   * Ultra's frame rate measured here while playing (frames a second, the median of a few seconds),
+   * for the settings' "experience" line; null until measured, and when another preset is drawn.
+   */
+  ultraFps: number | null = null;
 
   /** The graphics quality preset; only the renderer reads what it means (render/quality.ts). */
   get graphicsQuality(): GraphicsQuality {
@@ -1084,6 +1127,38 @@ export class Game {
     this.currentRoomSleep = on;
     saveRoomSleep(this.storage, on, this.log.child('Settings'));
     this.events.publish('RoomSleepChanged', { on });
+  }
+
+  /** The main menu's background (a browser preference): the game's own, or the live wallpaper. */
+  get menuBackground(): MenuBackground {
+    return this.currentMenuBackground;
+  }
+
+  /**
+   * Whether the red dots leading to the live menu background still show: not yet seen, the menu
+   * still the default one, and the live one on offer (not at Low).
+   */
+  get liveHint(): boolean {
+    return (
+      !this.liveHintWasSeen &&
+      this.currentMenuBackground === 'default' &&
+      this.currentGraphicsQuality !== 'low'
+    );
+  }
+
+  /** The way to the live background has been shown: its dots go, for good. */
+  seeLiveHint(): void {
+    if (this.liveHintWasSeen) return;
+    this.liveHintWasSeen = true;
+    saveLiveHintSeen(this.storage, this.log.child('Settings'));
+    this.events.publish('LiveHintSeen', {});
+  }
+
+  /** Changes it at once (the menu follows) and remembers it, apart from the rest. */
+  setMenuBackground(background: MenuBackground): void {
+    this.currentMenuBackground = background;
+    saveMenuBackground(this.storage, background, this.log.child('Settings'));
+    this.events.publish('MenuBackgroundChanged', { background });
   }
 
   /**

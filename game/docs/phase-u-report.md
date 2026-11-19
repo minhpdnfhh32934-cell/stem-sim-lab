@@ -179,3 +179,41 @@ Built overnight on Phú's word ("cứ thay đổi và làm tiếp"), not yet see
 Phú looks at the three styles on the 300 Hz display (the Physics ceiling: 5 m, Phú 2026-11-06). Nothing
 is committed: U-2, the styles and the new experiments are separate steps, each to be committed on
 Phú's word (checkpoint patches of each step are kept outside the repository).
+
+## Chemistry's and Biology's annex doors (2026-11-14)
+
+Phú: the Chemistry and Biology labs get doors "with the style discussed at the beginning" — this
+contract's §2: Chemistry and Biology get the starship door when their own rooms come, Biology's in
+its own look, wood and glass, leaf-etched, the same mechanism (D2 a). Their annexes (T-5, T-6,
+Phase X's practice rooms) had only the 2 × 2.6 m openings.
+
+- **Chemistry** (`lab-placements.json`, chemistry-lab): the Physics wing's starship door as it is
+  — frame and two leaves (`door-annex-frame`, `-leaf-a`, `-leaf-b`) in the west wall's opening,
+  across the 0.25 m gap to the annex (x −10.125, z −4.2).
+- **Biology**: new items `greenhouse-door-leaf` and `greenhouse-door-frame` (`items.json`, the
+  starship items' `slider` and sizes, its own props), at x −15.125, z 3.5.
+  `props/greenhouse.ts`: a leaf of wooden stiles and rails round two clear panes, a vine of leaves
+  etched up each pane on both faces, a darker astragal at the meeting edge, a brass pull plate set
+  in on both faces; a frame of wooden jambs and header, a pale wood inlay up each jamb, a garland of
+  leaves along the header's top, a warm light bar over the opening, the starship door's sill and
+  track. New finishes `pane-glass` and `etched-glass` (see-through). The same `SlidingSystem`
+  (opens by itself within 2.2 m, never shuts on the player) and the same hiss.
+- Seen on the real GPU (RTX 5070, ANGLE D3D11, headless Edge): both doors shut, then open as the
+  player walks at them; Biology's panes show the annex through the etched vines.
+- Counts updated: chemistry-lab 111 bodies / 136 colliders (+2 leaves), biology-lab 74 / 90; their
+  placements 298 and 254 (+3).
+
+Tests: `props/greenhouse.test.ts` (the frame keeps out of the wall faces round the opening, as
+the starship frame's test; frame and leaf inside their boxes; the vines etched on both faces).
+
+Left: the wooden door hisses like the starship door (one sound for the mechanism); not seen on
+Phú's 300 Hz display.
+
+Checks (both, 2026-11-14):
+
+| Check                                                                                                                                                                                                                                                                                                                                                                                                                          | Result                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx tsc --noEmit -p .`, `npx eslint .`, `npx prettier --check src e2e docs scripts CLAUDE.md package.json`                                                                                                                                                                                                                                                                                                                    | PASS                                                                                                                                                                                                                    |
+| `npx vitest run --maxWorkers=4`                                                                                                                                                                                                                                                                                                                                                                                                | PASS — 327 files, 4158 tests                                                                                                                                                                                            |
+| `SIMLAB_DEV_PORT=5197 npx playwright test e2e/practice-rooms.spec.ts e2e/progress-board.spec.ts e2e/draw-calls.spec.ts e2e/resources.spec.ts e2e/hub-city-walk.spec.ts e2e/world.spec.ts e2e/doors.spec.ts e2e/teacher.spec.ts e2e/room-sleep.spec.ts e2e/canvas.spec.ts e2e/shadows.spec.ts e2e/game.spec.ts e2e/sound.spec.ts e2e/transitions.spec.ts e2e/multiplayer-world.spec.ts --project=dev --workers=1` (SwiftShader) | 67 PASS, 1 FAIL `resources.spec.ts`: the pre-existing +1 buffer and +1 vertex array a lab trip (lab[2] 3539 → lab[3] 3540 buffers, 880 → 881 vertex arrays; textures 87 every trip: the print is freed and drawn again) |
+| Screenshots on the real GPU (a scratch probe, deleted: RTX 5070, ANGLE D3D11, headless Edge, High)                                                                                                                                                                                                                                                                                                                             | the print in English and Vietnamese, iron looked up (its tile lit, its card), both annex doors shut and opening                                                                                                         |

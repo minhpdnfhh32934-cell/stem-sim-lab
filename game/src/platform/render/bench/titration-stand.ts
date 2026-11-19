@@ -608,7 +608,7 @@ function rig(item: ItemDefinition): BenchRig {
   s.position.y = -TILE_TOP;
   kit.group.add(s);
   const naoh = own(clearLiquid());
-  const solution = own(filterLiquid()); // the flask's: its colour follows the indicator
+  const solution = kit.mine(filterLiquid()); // the flask's: its colour follows the indicator
 
   // The column: a unit-high cylinder standing on the tube's foot, scaled to the meniscus.
   const column = seeThrough(

@@ -5,7 +5,7 @@ import type { Game } from '../../game/Game';
 import { CHAT_MAX } from '../../multiplayer/protocol';
 import type { LanRooms } from '../net/LanRooms';
 import { listen } from '../BrowserInput';
-import { el } from './dom';
+import { el, keyLabel } from './dom';
 
 /** A line stays on screen this long (s) after it came, then fades (all show while typing). */
 const SHOW_S = 10;
@@ -31,6 +31,8 @@ export class ChatView implements GameSystem {
   private readonly lines: Line[] = [];
   private readonly subscriptions = new Disposables();
   private open = false;
+  /** The room whose how-to line was shown (once per room, as the world first shows in it). */
+  private told: string | null = null;
 
   constructor(
     private readonly parent: HTMLElement,
@@ -75,6 +77,7 @@ export class ChatView implements GameSystem {
       events.subscribe('SceneLoaded', ({ kind }) => {
         this.root.classList.toggle('hidden', kind === 'menu');
         if (kind === 'menu') this.close(false);
+        else this.tell();
       }),
     );
     listen(s, document, 'keydown', (event) => this.key(event));
@@ -134,6 +137,37 @@ export class ChatView implements GameSystem {
     this.entry.blur();
     this.list.scrollTop = this.list.scrollHeight;
     if (capture) this.capture().catch(() => undefined); // refused: the HUD says to click
+  }
+
+  /**
+   * In a room for the first time (as its world shows): how to chat and talk, a line in the chat
+   * as Minecraft's own messages are (Phú 2026-11-13: the guide had to say it).
+   */
+  private tell(): void {
+    const room = this.game.peers.room;
+    if (!room || this.told === room.id) return;
+    this.told = room.id;
+    const { bindings } = this.game.config.input;
+    const t = this.game.texts;
+    this.line(
+      'chat-line system',
+      t.ui(
+        'chat.howTo',
+        'In this room: {chat} to chat, hold {talk} to talk (players near you hear you).',
+        {
+          chat: keyLabel(bindings.chat[0], t),
+          talk: keyLabel(bindings.talk[0], t),
+        },
+      ),
+    );
+  }
+
+  private line(cls: string, text: string): void {
+    const root = el('li', cls, text);
+    this.list.append(root);
+    this.lines.push({ root, left: SHOW_S * 1.5 });
+    while (this.lines.length > KEEP) this.lines.shift()?.root.remove();
+    this.list.scrollTop = this.list.scrollHeight;
   }
 
   private add(name: string, text: string, own: boolean): void {

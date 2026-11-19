@@ -4,7 +4,17 @@ import { IdSchema } from '../../core/schema';
 import { CharacterDefinitionSchema } from '../character';
 
 /** What a person does with their hands and head where they are (the renderer's actor plays it). */
-export const NPC_GESTURES = ['idle', 'read', 'drink', 'wait', 'talk', 'listen', 'write'] as const;
+/** `guard`: startled, both arms up before the face (a ceiling blown open, Phú 2026-11-14). */
+export const NPC_GESTURES = [
+  'idle',
+  'read',
+  'drink',
+  'wait',
+  'talk',
+  'listen',
+  'write',
+  'guard',
+] as const;
 export type NpcGesture = (typeof NPC_GESTURES)[number];
 
 /**
@@ -40,7 +50,6 @@ export type NpcOption = z.infer<typeof OptionSchema>;
 
 /** A choice's words (what the player says), in English with its Vietnamese beside it. */
 const ChoiceSchema = z.object({ label: z.string().min(1), ...localized('label') });
-export type NpcChoiceText = z.infer<typeof ChoiceSchema>;
 
 /**
  * What a teacher says around explaining a simulation (Phase Y-2): asking which, while the player
@@ -69,7 +78,6 @@ const LessonSchema = z.object({
     enough: ChoiceSchema,
   }),
 });
-export type NpcLesson = z.infer<typeof LessonSchema>;
 
 /**
  * What a teacher says around a test (Phase Y-5): asking what it should cover, no questions for

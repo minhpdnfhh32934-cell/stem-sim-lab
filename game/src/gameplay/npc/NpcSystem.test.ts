@@ -20,6 +20,13 @@ const stage = (game: Game): string | undefined => game.state.session.conversatio
 const frames = (game: Game, n: number, dt = 1 / 60) => {
   for (let i = 0; i < n; i++) game.update(dt);
 };
+/** Frames with the loads under way let through: a door he asks open brings its far scene in. */
+async function walk(game: Game, n: number) {
+  for (let i = 0; i < n; i++) {
+    game.update(1 / 60);
+    if (i % 15 === 0) await flush();
+  }
+}
 
 /** Stands the player 1.5 m in front of the teacher, looking at his chest, and lets a frame pass. */
 function faceTeacher(game: Game) {
@@ -220,9 +227,9 @@ describe('the hub teacher (NpcSystem)', () => {
     expect(near()).toBeGreaterThan(1.2);
     expect(near()).toBeLessThan(2.2);
 
-    // Into the Physics Lab (the hall out of residence): he comes in through its door.
+    // Into the Physics Lab (the hall out of residence): he comes in through its door, opened for him.
     await game.scenes.load('physics-lab');
-    frames(game, 60 * 10);
+    await walk(game, 60 * 10);
     expect(view?.sceneId).toBe('physics-lab');
     expect(near()).toBeLessThan(2.2);
     expect(game.npcs.mode('teacher')).toBe('follow');
@@ -291,8 +298,11 @@ describe('the hub teacher (NpcSystem)', () => {
     expect(game.state.session.conversation ?? null).toBeNull();
     expect(game.npcs.mode('teacher')).toBe('return');
 
-    // Back to his day in the hall.
-    for (let i = 0; i < 60 * 60 && game.npcs.mode('teacher') !== 'day'; i++) game.update(1 / 60);
+    // Back to his day in the hall, through the door once it has opened (the hall loaded).
+    for (let i = 0; i < 60 * 60 && game.npcs.mode('teacher') !== 'day'; i++) {
+      game.update(1 / 60);
+      if (i % 15 === 0) await flush();
+    }
     expect(game.npcs.mode('teacher')).toBe('day');
     expect(view?.sceneId).toBe('simlab-hub');
     expect(logs.filter((l) => l.level === 'error' || l.level === 'warn')).toEqual([]);
@@ -327,9 +337,14 @@ describe('the hub teacher (NpcSystem)', () => {
     const view = game.npcs.view('teacher');
     const door = 'physics-lab/door-hub';
     expect(game.doors.state(door)).toBe('closed');
-    // Walking back from a lecture in the lab (the player stays there).
+    // Walking back from a lecture in the lab (the player stays there, in the room, away from the
+    // door); there from the hall through the door, opened for him, which shuts again behind him.
+    const o = game.scenes.offsetOf('physics-lab')!;
+    placePlayer(game, [o[0] + 1, 0, o[2]]);
     game.npcs.lectureAt('teacher', 'physics-lab/tower');
-    frames(game, 60 * 5);
+    await walk(game, 60 * 20);
+    expect(view?.sceneId).toBe('physics-lab');
+    expect(game.doors.state(door)).toBe('closed');
     game.explain.close();
     expect(game.npcs.mode('teacher')).toBe('return');
     const asked: string[] = [];
@@ -445,8 +460,9 @@ describe('the hub teacher (NpcSystem)', () => {
     // He walks to the board and writes the title, his hand at the pen on the board's face.
     const whiteboard = game.world.entity('physics-lab/whiteboard')!;
     let reached = 0;
-    for (let i = 0; i < 60 * 12 && (board.shown[0] ?? 0) < board.lines[0]!.length; i++) {
+    for (let i = 0; i < 60 * 25 && (board.shown[0] ?? 0) < board.lines[0]!.length; i++) {
       game.update(1 / 60);
+      if (i % 15 === 0) await flush(); // in from the hall through the door, opened for him
       if (view.reaching) {
         reached++;
         // On its writing face: the board hangs on the wall at x −4.97 facing +x; the white board is

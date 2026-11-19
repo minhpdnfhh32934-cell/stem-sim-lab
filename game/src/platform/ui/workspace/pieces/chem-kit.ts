@@ -117,16 +117,6 @@ export function putText(node: Node): Put<string> {
   };
 }
 
-/** Text from a number, formatted only when the number changes. */
-export function putNumber(node: Node, format: (value: number) => string): Put<number> {
-  let last: number | undefined;
-  return (value) => {
-    if (Object.is(value, last)) return;
-    last = value;
-    node.textContent = format(value);
-  };
-}
-
 /** Whether any of three numbers differs from the last call (the first call: yes); allocates nothing. */
 export function changes(): (a: number, b: number, c: number) => boolean {
   let la: number | undefined;

@@ -1,0 +1,751 @@
+/* Every page and control of the menu over the live background (Phú 2026-11-18: "tất cả thành phần
+   tương tác ngoài trang chủ cũng làm theo thiết kế của nó"): Play, Single player, Multiplayer,
+   the experiment catalog, Settings, Controls, the character page and the dialogs, drawn as the
+   home page is — ink borders, square corners, hard shadows, glass, solid colours, slanted
+   buttons — in the hour's palette (liveMenu.css, on the body). Two layers:
+
+   1. The game's own design tokens re-pointed at the hour's palette, inside the live menu and its
+      dialogs only: every part of every page that reads a token (text, accents, surfaces, lines,
+      the primary button, corners, focus) follows at once.
+   2. The kinds of control drawn in ink: buttons, fields, sliders, switches, tabs, selectors, cards,
+      lists, keys; and whatever the pages paint in fixed colours, flattened onto the glass.
+
+   Motion as on the home page: a lift and a deeper shadow under the pointer, a press, cards and
+   rows arriving one after another; transforms and opacity only; still when less motion is asked
+   for. */
+
+/* ---- 1. The tokens ------------------------------------------------------------------------- */
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) {
+  --ink: var(--l-text);
+  --ink-strong: var(--l-text-strong);
+  --ink-dim: var(--l-text-dim);
+  --accent-rgb: var(--l-accent-rgb);
+  --accent: rgb(var(--l-accent-rgb));
+  --accent-bright: rgb(var(--l-accent-rgb));
+  --surface-top-rgb: var(--l-glass-rgb);
+  --surface-bottom-rgb: var(--l-glass-rgb);
+  --surface-raised: var(--l-glass);
+  --surface-hover: var(--l-glass-hover);
+  --surface-pressed: var(--l-glass-strong);
+  --panel: var(--l-glass-strong);
+  --line: color-mix(in srgb, var(--l-ink) 30%, transparent);
+  --line-frame: var(--l-ink);
+  --line-strong: var(--l-ink);
+  --primary-top: var(--l-play);
+  --primary-bottom: var(--l-play);
+  --primary-border: var(--l-ink);
+  --radius-frame: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --glow-frame: var(--l-glow);
+  --shadow-dialog: 10px 10px 0 var(--l-shadow);
+  --focus-ring: 3px solid var(--l-accent);
+  --focus-offset: 4px;
+  --focus-halo: 5px 5px 0 var(--l-shadow);
+}
+
+.menu.live .play-stage {
+  --glass: var(--l-glass);
+  --glass-line: var(--l-ink);
+  --solo-rgb: var(--l-solo-rgb);
+  --multi-rgb: var(--l-multi-rgb);
+}
+
+/* Settings' sections each had a colour of their own; here the hour's accent for all of them. */
+.menu.live .settings-shell {
+  --section-rgb: var(--l-accent-rgb);
+}
+
+/* ---- 2. Buttons ---------------------------------------------------------------------------- */
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(.menu-button, .char-arrow, .settings-selector-arrow, .stage-back) {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  box-shadow:
+    5px 5px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew));
+  transition:
+    transform 0.26s var(--l-spring),
+    box-shadow 0.26s var(--l-ease),
+    background-color var(--l-fade),
+    color var(--l-fade),
+    border-color var(--l-fade);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(.menu-button, .char-arrow, .settings-selector-arrow, .stage-back):hover:not(:disabled),
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(.menu-button, .char-arrow, .settings-selector-arrow, .stage-back):focus-visible {
+  border-color: var(--l-ink);
+  background: var(--l-glass-strong);
+  box-shadow:
+    9px 9px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew)) translate(-3px, -3px);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(.menu-button, .char-arrow, .settings-selector-arrow, .stage-back):active:not(:disabled) {
+  box-shadow:
+    1px 1px 0 var(--l-shadow),
+    var(--l-glow);
+  transform: skewX(var(--l-skew)) translate(4px, 4px);
+  transition-duration: 0.07s;
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) .menu-button.primary,
+.menu.live .char-choose {
+  background: var(--l-play);
+  color: var(--l-play-text);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) .menu-button.primary:hover:not(:disabled),
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) .menu-button.primary:focus-visible,
+.menu.live .char-choose:hover:not(:disabled) {
+  background: var(--l-play);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) .menu-button.caution {
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop) .menu-button:disabled {
+  box-shadow: none;
+  opacity: 0.45;
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(.menu-button, .char-arrow, .settings-selector-arrow, .stage-back):focus-visible {
+  outline: 3px solid var(--l-accent);
+  outline-offset: 5px;
+}
+
+/* The play cards' own calls to action (pill shapes) as small slanted buttons. */
+.menu.live .play-choice-cta {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-play);
+  color: var(--l-play-text);
+  font-weight: 800;
+  box-shadow: 4px 4px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+}
+
+.menu.live .play-choice.multi .play-choice-cta {
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+}
+
+/* ---- 3. Fields ----------------------------------------------------------------------------- */
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(input:not([type='range'], [type='checkbox'], [type='radio']), select, textarea) {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 700;
+  box-shadow: 4px 4px 0 var(--l-shadow);
+  transition:
+    box-shadow 0.2s var(--l-ease),
+    transform 0.2s var(--l-ease);
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(input:not([type='range'], [type='checkbox'], [type='radio']), select, textarea)::placeholder {
+  color: var(--l-text-dim);
+  opacity: 1;
+}
+
+:is(.menu.live, body.live-ui .menu-dialog-backdrop)
+  :is(input:not([type='range'], [type='checkbox'], [type='radio']), select, textarea):focus {
+  outline: 3px solid var(--l-accent);
+  outline-offset: 2px;
+  box-shadow: 7px 7px 0 var(--l-shadow);
+  transform: translate(-2px, -2px);
+}
+
+/* ---- 4. Sliders: an inked track filled to the value (--fill, liveMenu.ts), a slanted thumb ---- */
+.menu.live input[type='range'] {
+  appearance: none;
+  height: 22px;
+  background: none;
+  cursor: pointer;
+}
+
+.menu.live input[type='range']::-webkit-slider-runnable-track {
+  height: 12px;
+  border: 2px solid var(--l-ink);
+  background:
+    linear-gradient(var(--l-play), var(--l-play)) left / var(--fill, 50%) 100% no-repeat,
+    var(--l-glass-strong);
+  box-shadow: 3px 3px 0 var(--l-shadow);
+}
+
+.menu.live input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 26px;
+  margin-top: -9px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-accent);
+  box-shadow: 3px 3px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+  transition: transform 0.2s var(--l-spring);
+}
+
+.menu.live input[type='range']:hover::-webkit-slider-thumb,
+.menu.live input[type='range']:focus-visible::-webkit-slider-thumb {
+  transform: skewX(var(--l-skew)) scale(1.18);
+}
+
+.menu.live input[type='range']::-moz-range-track {
+  height: 10px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-glass-strong);
+}
+
+.menu.live input[type='range']::-moz-range-progress {
+  height: 10px;
+  background: var(--l-play);
+}
+
+.menu.live input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 24px;
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-accent);
+}
+
+.menu.live .menu-volume-value {
+  color: var(--l-text);
+  font-weight: 800;
+}
+
+/* ---- 5. Switches: a slanted inked box, the knob a solid block that snaps across -------------- */
+.menu.live .settings-pane input[type='checkbox'] {
+  width: 52px;
+  height: 28px;
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  box-shadow: 3px 3px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+}
+
+.menu.live .settings-pane input[type='checkbox']::before {
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: var(--l-text-dim);
+}
+
+.menu.live .settings-pane input[type='checkbox']:checked {
+  border-color: var(--l-ink);
+  background: var(--l-play);
+}
+
+.menu.live .settings-pane input[type='checkbox']:checked::before {
+  transform: translateX(24px);
+  background: var(--l-accent);
+  box-shadow: 0 0 0 2px var(--l-ink);
+}
+
+/* ---- 6. Settings: the frame, the tabs as slanted labels, the selectors inked ----------------- */
+.menu.live .settings-shell {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass);
+  backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow: 10px 10px 0 var(--l-shadow);
+}
+
+.menu.live .settings-tabs {
+  border-right: 2px solid var(--l-ink);
+  background: color-mix(in srgb, var(--l-glass-strong) 60%, transparent);
+}
+
+.menu.live .settings-tab-indicator {
+  display: none;
+}
+
+.menu.live .settings-tab {
+  border: 2px solid transparent;
+  border-radius: 0;
+  color: var(--l-text);
+  font-weight: 800;
+  transform: skewX(var(--l-skew));
+  transition:
+    transform 0.26s var(--l-spring),
+    background-color 0.2s ease,
+    box-shadow 0.26s var(--l-ease);
+}
+
+.menu.live .settings-tab:hover {
+  border-color: var(--l-ink);
+  background: var(--l-glass-strong);
+  transform: skewX(var(--l-skew)) translateX(6px);
+}
+
+.menu.live .settings-tab.active {
+  border-color: var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+  box-shadow: 4px 4px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew)) translateX(10px);
+}
+
+.menu.live .settings-tab-icon {
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.menu.live .settings-heading {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+  border-color: var(--l-ink);
+}
+
+.menu.live .settings-selector {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  box-shadow: 4px 4px 0 var(--l-shadow);
+}
+
+.menu.live .settings-selector-track > .menu-option {
+  color: var(--l-text);
+  font-weight: 800;
+}
+
+.menu.live .settings-selector-arrow {
+  width: 34px;
+  height: 30px;
+  margin: 4px;
+  padding: 0;
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--l-shadow);
+}
+
+.menu.live .settings-describe {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+}
+
+.menu.live .settings-pane .menu-volume-row,
+.menu.live .settings-pane label.menu-option:has(> input[type='checkbox']) {
+  border-radius: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--l-ink) 25%, transparent);
+}
+
+.menu.live .settings-pane .menu-volume-row:hover,
+.menu.live .settings-pane label.menu-option:has(> input[type='checkbox']):hover {
+  background: color-mix(in srgb, var(--l-accent) 18%, transparent);
+}
+
+/* ---- 7. Cards and panels of the pages: glass, ink, hard shadows (no gradients) -------------- */
+.menu.live
+  :is(
+    .play-choice,
+    .solo-hero,
+    .solo-fresh,
+    .play-row,
+    .play-empty-card,
+    .mp-card,
+    .mp-browser,
+    .multiplayer-selected,
+    .mp-identity,
+    .menu-catalog
+  ) {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass);
+  backdrop-filter: blur(16px) saturate(1.15);
+  color: var(--l-text);
+  box-shadow: 9px 9px 0 var(--l-shadow);
+  transition:
+    transform 0.3s var(--l-spring),
+    box-shadow 0.3s var(--l-ease),
+    background-color var(--l-fade),
+    border-color var(--l-fade);
+}
+
+.menu.live :is(.play-choice, .play-row):hover,
+.menu.live :is(.play-choice, .play-row):focus-visible,
+.menu.live :is(.play-choice, .play-row):focus-within {
+  border-color: var(--l-ink);
+  box-shadow: 14px 14px 0 var(--l-shadow);
+  transform: translate(-4px, -4px);
+}
+
+/* The card art's backdrop as one flat tint of the mode (its drawing kept). */
+.menu.live .play-choice-scene {
+  background: rgb(var(--mode-rgb) / 16%);
+  border-bottom: 3px solid var(--l-ink);
+}
+
+.menu.live .play-choice::after {
+  background: rgb(255 255 255 / 30%);
+}
+
+.menu.live :is(.play-choice-name, .solo-hero-name, .solo-fresh-title) {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+}
+
+.menu.live :is(.play-choice-hint, .solo-fresh-text, .stage-lead, .menu-help) {
+  color: var(--l-text-dim);
+}
+
+.menu.live :is(.play-choice-index, .stage-count) {
+  color: var(--l-ink);
+}
+
+/* Small marks (counts, statuses, facts) as slanted labels. */
+.menu.live :is(.play-choice-status, .solo-fact, .stage-count, .menu-catalog-status) {
+  padding: 3px 10px;
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 700;
+}
+
+.menu.live :is(.stage-section-title, .menu-catalog-progress) {
+  color: var(--l-text);
+  font-weight: 800;
+}
+
+/* ---- 8. The experiment catalog: a framed list, its folds as small inked tags --------------- */
+.menu.live .menu-catalog {
+  background: var(--l-glass-strong);
+}
+
+.menu.live .menu-catalog-head {
+  border-bottom: 3px solid var(--l-ink);
+}
+
+.menu.live .menu-catalog-title {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+}
+
+.menu.live .menu-catalog-item {
+  border-left: 4px solid var(--l-ink);
+  transition: transform 0.26s var(--l-spring);
+}
+
+.menu.live .menu-catalog-item:hover {
+  transform: translateX(6px);
+}
+
+.menu.live .menu-catalog summary {
+  width: max-content;
+  padding: 2px 10px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+  font-weight: 800;
+  transform: skewX(var(--l-skew));
+  cursor: pointer;
+  transition: transform 0.22s var(--l-spring);
+}
+
+.menu.live .menu-catalog summary:hover {
+  transform: skewX(var(--l-skew)) translate(-2px, -2px);
+}
+
+.menu.live .menu-catalog :is(h3, h4) {
+  color: var(--l-text-strong);
+}
+
+/* ---- 9. Controls: the dialog framed in ink, the keys as inked keycaps ----------------------- */
+.menu.live .controls-dialog {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  backdrop-filter: blur(16px);
+  color: var(--l-text);
+  box-shadow: 12px 12px 0 var(--l-shadow);
+}
+
+.menu.live .controls-dialog[open] {
+  animation: live-pop 0.45s var(--l-spring);
+}
+
+.menu.live .controls-dialog::backdrop {
+  background: rgb(0 0 0 / 35%);
+}
+
+.menu.live .controls-head {
+  border-bottom: 3px solid var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+}
+
+.menu.live .controls-title {
+  color: var(--l-on-accent);
+  font-style: italic;
+  font-weight: 900;
+}
+
+.menu.live .controls-group-title {
+  color: var(--l-text);
+  font-weight: 900;
+  border-color: var(--l-ink);
+}
+
+.menu.live .controls-keys kbd {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--l-shadow);
+}
+
+/* ---- 10. The character page (its own 3D room behind) and the customiser ------------------- */
+.menu.live .char-title {
+  color: var(--l-title);
+  font-style: italic;
+  font-weight: 900;
+  -webkit-text-stroke: 2px var(--l-ink);
+  paint-order: stroke fill;
+  text-shadow: 4px 4px 0 var(--l-shadow);
+}
+
+.menu.live .char-arrow {
+  border-radius: 0;
+}
+
+.menu.live .char-card {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  box-shadow: 9px 9px 0 var(--l-shadow);
+}
+
+.menu.live .char-name {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+}
+
+.menu.live .char-role {
+  color: rgb(var(--l-accent-rgb));
+  font-weight: 800;
+}
+
+.menu.live .char-page.open .char-card {
+  animation: live-pop 0.5s var(--l-spring) 0.15s both;
+}
+
+/* ---- 11. Dialogs (Ultra's consent and its warning, on the page's body) --------------------- */
+body.live-ui .menu-dialog-backdrop .menu-dialog {
+  border: 3px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  backdrop-filter: blur(16px);
+  color: var(--l-text);
+  box-shadow: 12px 12px 0 var(--l-shadow);
+  animation: live-pop 0.45s var(--l-spring);
+}
+
+body.live-ui .menu-dialog-backdrop .menu-dialog-title {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* ---- 12. Arrivals: the pages' parts come in one after another ---------------------------- */
+.menu.live .play-stage:not(.hidden) > * {
+  animation: live-rise 0.55s var(--l-ease) both;
+}
+
+.menu.live .play-stage:not(.hidden) > :nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.menu.live .play-stage:not(.hidden) > :nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.menu.live .play-stage:not(.hidden) > :nth-child(n + 4) {
+  animation-delay: 0.18s;
+}
+
+.menu.live .menu-catalog:not(.hidden) {
+  animation: live-pop 0.5s var(--l-spring);
+}
+
+@keyframes live-rise {
+  from {
+    opacity: 0;
+    translate: 0 36px;
+  }
+}
+
+@keyframes live-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu.live :is(.play-stage, .menu-catalog, .controls-dialog, .char-card) *,
+  .menu.live :is(.play-stage, .menu-catalog, .controls-dialog, .char-card),
+  body.live-ui .menu-dialog {
+    animation: none !important;
+  }
+}
+
+/* ---- 13. Fixes: parts placed by a transform keep it under the slant ------------------------ */
+/* Choose is centred by its own translate: the slant and the moves are added to it. */
+.menu.live .char-page .char-choose {
+  transform: translateX(-50%) skewX(var(--l-skew));
+}
+
+.menu.live .char-page .char-choose:hover:not(:disabled),
+.menu.live .char-page .char-choose:focus-visible {
+  transform: translateX(-50%) skewX(var(--l-skew)) translate(-3px, -3px);
+}
+
+.menu.live .char-page .char-choose:active:not(:disabled) {
+  transform: translateX(-50%) skewX(var(--l-skew)) translate(4px, 4px);
+}
+
+/* Labels standing on the scene itself (a list's title, the network's state): on glass, inked. */
+.menu.live :is(.stage-section-title, .mp-lan) {
+  width: max-content;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+}
+
+.menu.live :is(.solo-plus, .mp-card-icon) {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+}
+
+/* ---- 14. The customiser: its side as the menu's glass, its tabs and options as labels ------ */
+.menu.live .custom-page {
+  background: color-mix(in srgb, rgb(var(--l-glass-rgb)) 75%, var(--l-accent));
+}
+
+.menu.live .custom-side {
+  border-left: 3px solid var(--l-ink);
+  background: var(--l-glass-strong);
+  backdrop-filter: blur(16px);
+  color: var(--l-text);
+}
+
+.menu.live .custom-title {
+  color: var(--l-text-strong);
+  font-style: italic;
+  font-weight: 900;
+}
+
+.menu.live :is(.custom-tab, .custom-option) {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+  transition:
+    transform 0.24s var(--l-spring),
+    box-shadow 0.24s var(--l-ease),
+    background-color 0.2s ease;
+}
+
+.menu.live :is(.custom-tab, .custom-option):hover {
+  box-shadow: 5px 5px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew)) translate(-2px, -2px);
+}
+
+.menu.live :is(.custom-tab, .custom-option).active {
+  border-color: var(--l-ink);
+  background: var(--l-accent);
+  color: var(--l-on-accent);
+}
+
+.menu.live .custom-swatch {
+  border: 2px solid var(--l-ink);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 var(--l-shadow);
+  transform: skewX(var(--l-skew));
+  transition: transform 0.22s var(--l-spring);
+}
+
+.menu.live .custom-swatch:hover {
+  transform: skewX(var(--l-skew)) scale(1.15);
+}
+
+.menu.live .custom-swatch.active {
+  border-color: var(--l-ink);
+  box-shadow:
+    0 0 0 2px var(--l-accent),
+    3px 3px 0 4px var(--l-shadow);
+}
+
+.menu.live .custom-value {
+  color: var(--l-text);
+  font-weight: 800;
+  opacity: 1;
+}
+
+.menu.live .custom-page:not(.hidden) .custom-side {
+  animation: live-side-in 0.5s var(--l-ease);
+}
+
+@keyframes live-side-in {
+  from {
+    translate: 60px 0;
+    opacity: 0;
+  }
+}
+
+/* An empty list's line standing on the scene: on glass too. */
+.menu.live :is(.multiplayer-empty, .play-empty) {
+  width: max-content;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 2px solid var(--l-ink);
+  background: var(--l-glass-strong);
+  color: var(--l-text);
+  font-weight: 700;
+}

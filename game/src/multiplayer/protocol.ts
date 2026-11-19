@@ -19,6 +19,8 @@ export const PLAYER_NAME_MAX = 20;
 export const ROOM_NAME_MAX = 32;
 /** A chat line, at most (characters). */
 export const CHAT_MAX = 200;
+/** Messages one POST may carry (sent together while the one before is on its way). */
+export const BATCH_MAX = 64;
 /** A message longer than this (JSON characters) is dropped unread. */
 export const MESSAGE_MAX_CHARS = 16_000;
 /** Poses a browser sends per second while in a world. */
@@ -93,7 +95,6 @@ export const CommandSchema = z.object({
   step: id.optional(),
   params: z.record(id, finite).optional(),
 });
-export type SharedCommand = z.infer<typeof CommandSchema>;
 
 const Vec = z.tuple([
   finite.min(-1000).max(1000),
@@ -148,6 +149,70 @@ export const RoomEventSchema = z.discriminatedUnion('k', [
       .nullable(),
   }),
   z.object({ k: z.literal('npcFree'), npc: id }),
+  /**
+   * An emergency call answered (Phú 2026-11-13), as the caller's game has it: the squad, the phase,
+   * the helicopter, the ceiling, the four responders and the line said (`EmergencySnapshot`).
+   * Relayed as it is; each game checks it here and draws it.
+   */
+  z.object({
+    k: z.literal('emergency'),
+    squad: id,
+    phase: z.enum([
+      'idle',
+      'inbound',
+      'breach',
+      'rappel',
+      'mission',
+      'regroup',
+      'ascend',
+      'outbound',
+      'repair',
+    ]),
+    t: finite.min(0).max(1e4),
+    breach: finite.min(0).max(1),
+    blast: finite.min(-1).max(1e4),
+    ropes: finite.min(0).max(1),
+    shake: finite.min(0).max(1),
+    heli: z.tuple([finite, finite, finite, finite, finite, finite, finite]),
+    people: z
+      .array(
+        z.tuple([
+          id,
+          finite,
+          finite,
+          finite,
+          finite,
+          finite,
+          z.enum(['none', 'rappel', 'land', 'walk', 'look', 'spray', 'talk', 'hit', 'climb']),
+          z.boolean(),
+          finite,
+          finite,
+          finite,
+          z.enum(['idle', 'read', 'drink', 'wait', 'talk', 'listen', 'write']),
+        ]),
+      )
+      .max(8),
+    line: z
+      .object({
+        who: z.string().max(80),
+        text: z.string().max(400),
+        n: z.number().int().min(0).max(1e9),
+        sceneId: id,
+        x: finite,
+        z: finite,
+      })
+      .nullable(),
+  }),
+  /**
+   * A person of the world on their own day (no one has them), as the room's day driver draws them
+   * (`Peers.dayDriver`): the others draw them the same, so all see them in one place doing one
+   * thing (Phú 2026-11-13). Takes no lock: anyone may still go and talk to them.
+   */
+  z.object({
+    k: z.literal('npcDay'),
+    npc: id,
+    view: z.record(id, z.union([z.boolean(), finite, z.string().max(200), z.null()])),
+  }),
 ]);
 export type RoomEvent = z.infer<typeof RoomEventSchema>;
 
@@ -177,6 +242,8 @@ const Join = { player: PlayerNameSchema, character: CharacterData };
 
 export const ClientMessageSchema = z.discriminatedUnion('t', [
   z.object({ t: z.literal('list') }),
+  /** A round-trip probe (POST up, the stream down): answered with its number to the sender. */
+  z.object({ t: z.literal('ping'), n: z.number().int().min(0).max(1e9) }),
   z.object({ t: z.literal('create'), room: RoomNameSchema, ...Join }),
   z.object({ t: z.literal('join'), roomId: RoomIdSchema, ...Join }),
   z.object({ t: z.literal('leave') }),
@@ -216,6 +283,7 @@ export type Refusal = (typeof REFUSALS)[number];
 
 export const ServerMessageSchema = z.discriminatedUnion('t', [
   z.object({ t: z.literal('rooms'), rooms: z.array(RoomSummarySchema) }),
+  z.object({ t: z.literal('pong'), n: z.number().int().min(0).max(1e9) }),
   z.object({
     t: z.literal('joined'),
     room: RoomSummarySchema,

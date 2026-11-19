@@ -11,15 +11,19 @@ import {
 } from '../../../gameplay/action/action';
 import type { PlayingAction } from '../../../gameplay/action/ActionSystem';
 import { handPoint } from '../../../gameplay/action/handPoint';
-import type { ItemDefinition, WornOn } from '../../../gameplay/item';
+import { type ItemDefinition, WORN_ON, type WornOn } from '../../../gameplay/item';
 import { leanDirection } from '../../../gameplay/player/lean';
+import { QUALITY } from '../quality';
 import { Cloth } from './cloth';
+import { type PrepareReal, RealBody, realPerson } from './realBody';
 import { blushColour, lipColour } from './head';
 import {
   type BodyModel,
   bodyShapeOf,
   buildBody,
   clothMaterial,
+  hairMaterial,
+  skinMaterial,
   DIGITS,
   EYE_FORWARD,
   outlineMaterial,
@@ -288,6 +292,16 @@ export class BodyView {
   private readonly actionCurl = DIGITS.map((): [number, number] => [0, 0]);
   /** What is worn changed (or the scene): its look waits for the playing action's `swap`. */
   private stale = false;
+  /** Max: the character as its real person (realBody.ts), built for this body once loaded. */
+  private real: RealBody | null = null;
+  /** The real person the character names (`realBody`), and the one being loaded. */
+  private realId: string | undefined;
+  private realLoading: string | null = null;
+  private realShown = false;
+  /** Makes the real person ready before it is shown (the renderer's), or none. */
+  prepare: PrepareReal | null = null;
+  /** What is worn now, by slot (the real person dresses as this). */
+  private worn: Partial<Record<WornOn, string>> = {};
   /** The worn item carried in the right hand during an action (`carry`): one box, recoloured. */
   private readonly carried = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
@@ -299,9 +313,9 @@ export class BodyView {
     const m = (color: string) => clothMaterial(color, this.gradient);
     // Colours from the character (refresh); these are the looks.
     this.materials = {
-      skin: new THREE.MeshToonMaterial({ color: '#e0b899', gradientMap: this.skinGradient }),
-      hands: new THREE.MeshToonMaterial({ color: '#e0b899', gradientMap: this.skinGradient }),
-      hair: m('#2b2118'),
+      skin: skinMaterial('#e0b899', this.skinGradient),
+      hands: skinMaterial('#e0b899', this.skinGradient),
+      hair: hairMaterial('#2b2118', this.gradient),
       // The drawn eyes keep their colours in any light, as an anime's do.
       eyeWhite: new THREE.MeshBasicMaterial({ color: '#fbfbfb' }),
       iris: new THREE.MeshBasicMaterial({ color: '#4a3426' }),
@@ -354,10 +368,80 @@ export class BodyView {
   /** Shadows on or off (the preset's). */
   set castShadow(on: boolean) {
     this.casts = on;
+    this.applyCasts();
+  }
+
+  /** The drawn body's shadow or the real person's, whichever is shown, while shadows are on. */
+  private applyCasts(): void {
     const shadows = this.model?.shadows;
-    if (!shadows) return;
-    shadows.body.castShadow = on;
-    shadows.coat.castShadow = on;
+    if (shadows) {
+      shadows.body.castShadow = this.casts && !this.realShown;
+      shadows.coat.castShadow = this.casts && !this.realShown;
+    }
+    for (const shadow of this.real?.shadows ?? []) shadow.castShadow = this.casts && this.realShown;
+  }
+
+  /**
+   * Max's real person (quality.ts `realPeople`) for a character that names one: loaded the first
+   * time and built on this body's skeleton; the drawn body's materials, outline and shadow hidden
+   * while it is shown.
+   */
+  private syncReal(model: BodyModel): void {
+    const id = this.realId;
+    const on = id !== undefined && QUALITY[this.game.graphicsQuality].realPeople;
+    if (on && !this.real && this.realLoading !== id) {
+      this.realLoading = id;
+      const warn = (message: string) => this.game.log.warn(message);
+      void realPerson(id, warn).then(async (asset) => {
+        if (this.realLoading !== id) return; // another body or person since
+        if (!asset || this.model !== model) {
+          this.realLoading = null;
+          return;
+        }
+        let real: RealBody;
+        try {
+          real = new RealBody(asset, model, this.heightM, { shadow: this.shadowMaterial });
+        } catch (error) {
+          this.realLoading = null;
+          warn(`Ultra: the real person ${id} could not be built (${String(error)})`);
+          return;
+        }
+        // Ready to draw before it is shown: the drawn body stays meanwhile.
+        if (this.prepare) {
+          await this.prepare(real.group, asset.maps).catch((error: unknown) =>
+            warn(`Ultra: the real person ${id} was not prepared (${String(error)})`),
+          );
+        }
+        if (this.realLoading !== id || this.model !== model) {
+          real.dispose();
+          return;
+        }
+        this.realLoading = null;
+        this.real = real;
+        real.wear(this.worn);
+        model.group.add(real.group);
+      });
+    }
+    const shown = on && this.real !== null;
+    if (shown === this.realShown) return;
+    this.realShown = shown;
+    if (this.real) this.real.group.visible = shown;
+    for (const material of Object.values(this.materials)) material.visible = !shown;
+    this.outline.visible = !shown;
+    this.applyCasts();
+  }
+
+  /** No real person (the drawn body back): when the body is built again or goes. */
+  private dropReal(): void {
+    this.real?.dispose();
+    this.real = null;
+    this.realLoading = null;
+    if (this.realShown) {
+      this.realShown = false;
+      for (const material of Object.values(this.materials)) material.visible = true;
+      this.outline.visible = true;
+      this.applyCasts();
+    }
   }
 
   /**
@@ -489,6 +573,8 @@ export class BodyView {
       this.reach(model, side, weight);
     }
     this.cloth?.step(dt);
+    this.syncReal(model);
+    if (this.realShown) this.real?.drive(dt);
   }
 
   /**
@@ -782,6 +868,10 @@ export class BodyView {
       return;
     }
     const a = character.appearance;
+    if (character.realBody !== this.realId) {
+      this.dropReal();
+      this.realId = character.realBody;
+    }
     const shape = bodyShapeOf(a);
     const key = JSON.stringify(shape);
     if (key !== this.shapeKey) {
@@ -818,6 +908,13 @@ export class BodyView {
     }
     const gloves = this.wornOn('hands');
     this.materials.hands.color.set(gloves ?? a.skinTone);
+    const worn: Partial<Record<WornOn, string>> = {};
+    for (const slot of WORN_ON) {
+      const colour = this.wornOn(slot);
+      if (colour !== undefined) worn[slot] = colour;
+    }
+    this.worn = worn;
+    this.real?.wear(worn);
     for (const mesh of this.model?.meshes ?? []) {
       const slot = SHOWN_BY[mesh.userData.surface as Surface];
       if (!slot) continue;
@@ -834,6 +931,7 @@ export class BodyView {
   }
 
   private drop(): void {
+    this.dropReal();
     if (!this.model) return;
     this.model.group.removeFromParent();
     for (const mesh of this.model.meshes) mesh.geometry.dispose();

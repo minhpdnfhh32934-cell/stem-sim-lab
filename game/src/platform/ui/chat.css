@@ -53,6 +53,11 @@
   font-weight: 600;
 }
 
+.chat-line.system {
+  color: #ffe08a;
+  font-style: italic;
+}
+
 .chat-line.own .chat-name {
   color: #ffd27a;
 }

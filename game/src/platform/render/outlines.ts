@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from './nodeLooks';
 
 /**
  * The outline round what the held object can act on, and round a task step's object (Phase A
@@ -116,6 +117,7 @@ function shellMaterial(color: THREE.Color, opacity: number, uniforms: Uniforms) 
     stencilZPass: THREE.KeepStencilOp,
   });
   material.onBeforeCompile = shell(uniforms);
+  setNodeLook(material, { kind: 'outline-shell', width: uniforms.width, glow: uniforms.glow });
   return material;
 }
 
@@ -167,6 +169,7 @@ export class Outlines {
   private readonly active = new Map<string, Pair>();
   private readonly free: Pair[] = [];
   private clock = 0;
+  private stencil = true;
   /**
    * A pair kept in the scene, hidden, from the start: the renderer compiles hidden objects with
    * the scene (`compileHidden`), so the first outline costs no shader compile in its frame.
@@ -300,6 +303,25 @@ export class Outlines {
     this.seen.count = n;
     this.hidden.count = n;
     this.seen.instanceMatrix.needsUpdate = true;
+  }
+
+  /**
+   * With the device's stencil (WebGL), or without one (Ultra's WebGPU, whose frame's depth the
+   * ambient occlusion reads: three cannot read a depth that has a stencil with it): the mask then
+   * writes depth instead, and the shells draw only their far side, which the object hides within
+   * its own silhouette (a see-through vessel too: the mask's depth is its own).
+   */
+  useStencil(on: boolean): void {
+    if (on === this.stencil) return;
+    this.stencil = on;
+    for (const m of [this.amberMaterial, this.darkMaterial]) {
+      m.stencilWrite = on;
+      m.side = on ? THREE.FrontSide : THREE.BackSide;
+      m.needsUpdate = true;
+    }
+    this.maskMaterial.stencilWrite = on;
+    this.maskMaterial.depthWrite = !on;
+    this.maskMaterial.needsUpdate = true;
   }
 
   /** An entity's view went away: its pair goes back to the pool (its mesh is being freed). */

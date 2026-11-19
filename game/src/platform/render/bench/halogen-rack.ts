@@ -74,8 +74,10 @@ function rig(item: ItemDefinition): BenchRig {
   const kit = new Assembly();
   const { keep, own, mesh } = kit;
   kit.group.position.copy(originOf(item));
-  const water = own(new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.6, color: CLEAR }));
-  const organic = own(
+  const water = kit.mine(
+    new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.6, color: CLEAR }),
+  );
+  const organic = kit.mine(
     new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.75, color: CLEAR }),
   );
   const cap = own(new THREE.MeshStandardMaterial({ color: '#2b2f36', ...LOOKS.rubber }));

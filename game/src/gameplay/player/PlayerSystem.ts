@@ -98,6 +98,10 @@ export class PlayerSystem implements GameSystem {
       MAX_PITCH,
     );
 
+    // Space: a jump, taken by the physics at its next step if the player stands on something.
+    // Not while seated or lying (getting up is its own action).
+    if (input.wasPressed('jump') && player.rest === null) player.jump = true;
+
     // An analog stick (touch, gamepad) walks as far as it is pushed; else the walking keys.
     const analog = Math.hypot(input.stickX, input.stickY);
     const forward =

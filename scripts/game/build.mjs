@@ -29,6 +29,7 @@ function run(cmd, args, env = {}) {
 // never built with old ones); no install scripts are run.
 run('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund']);
 run('npx', ['vite', 'build', '--base', './', '--outDir', out, '--emptyOutDir'], { VITE_SIMLAB_EMBED: '1' });
-// Not shipped in SimLab: the Ultra textures (107 MB) and the MediaPipe models (no in-app model).
-for (const dir of ['ultra', 'models']) rmSync(join(out, dir), { recursive: true, force: true });
+// Not shipped in SimLab: the Ultra textures (107 MB), Ultra's real people and cloth (`max`, 94 MB;
+// the embedded build offers no Ultra) and the MediaPipe models (no in-app model).
+for (const dir of ['ultra', 'max', 'models']) rmSync(join(out, dir), { recursive: true, force: true });
 console.log(`SimLab 3D built into ${out}`);

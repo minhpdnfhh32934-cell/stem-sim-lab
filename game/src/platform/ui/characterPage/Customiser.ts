@@ -603,6 +603,7 @@ export class Customiser {
         this.previewHost,
         QUALITY[this.game.graphicsQuality],
         () => this.game.frameCap,
+        (message) => this.game.log.warn(message),
       );
       this.preview.show(this.draft);
       this.root.dataset.ready = 'true';

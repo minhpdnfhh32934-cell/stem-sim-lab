@@ -103,10 +103,10 @@ function rig(item: ItemDefinition): BenchRig {
   const { keep, own, mesh } = kit;
   kit.group.position.copy(originOf(item));
   const metal = [0, 1].map(() =>
-    own(new THREE.MeshStandardMaterial({ ...LOOKS.metal, color: '#aaaaaa' })),
+    kit.mine(new THREE.MeshStandardMaterial({ ...LOOKS.metal, color: '#aaaaaa' })),
   );
   const liquid = [0, 1].map(() =>
-    own(new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.6, color: '#d4ecf2' })),
+    kit.mine(new THREE.MeshStandardMaterial({ ...LOOKS.glass, opacity: 0.6, color: '#d4ecf2' })),
   );
   const needleMaterial = own(new THREE.MeshBasicMaterial({ color: '#c0392b' }));
   [-1, 1].forEach((s, i) => {

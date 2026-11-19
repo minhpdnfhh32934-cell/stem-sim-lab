@@ -298,6 +298,7 @@ export class DoorSystem implements GameSystem, DoorState {
     const { events } = this.deps;
     const s = this.subscriptions;
     s.add(events.subscribe('DoorRequested', ({ entityId }) => this.request(entityId)));
+    s.add(events.subscribe('DoorPassing', ({ entityId }) => this.passing(entityId)));
     // Not on SceneLoading: a load that fails keeps the scene, and a leaf must not snap shut onto
     // a player standing in a doorway.
     s.add(events.subscribe('SceneUnloaded', () => this.reset()));
@@ -383,6 +384,17 @@ export class DoorSystem implements GameSystem, DoorState {
         door.manual = true;
         door.gap = 0;
         this.set(door, 'closing');
+    }
+  }
+
+  /** Someone going through it now (`DoorPassing`): open, it waits; closing, it opens again. */
+  private passing(entityId: string): void {
+    const door = this.byLeaf.get(entityId);
+    if (!door) return;
+    door.away = 0;
+    if (door.state === 'closing') {
+      door.gap = 0;
+      this.set(door, 'opening');
     }
   }
 

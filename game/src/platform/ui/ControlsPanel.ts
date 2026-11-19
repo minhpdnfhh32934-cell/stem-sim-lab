@@ -27,6 +27,7 @@ const GROUPS: readonly { title: (t: Texts) => string; rows: readonly Row[] }[] =
         does: (t) => t.ui('controls.move', 'Walk (or the arrow keys)'),
       },
       { keys: (b, t) => [first(b.run, t)], does: (t) => t.ui('controls.run', 'Run, held') },
+      { keys: (b, t) => [first(b.jump, t)], does: (t) => t.ui('controls.jump', 'Jump') },
       {
         keys: (_, t) => [t.ui('key.mouse', 'Mouse')],
         does: (t) => t.ui('controls.look', 'Look around (click the view first)'),

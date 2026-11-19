@@ -87,6 +87,11 @@ export interface PlayerState {
   moveIntent: Vec3;
   /** Standing on something, as reported by the physics character controller. */
   grounded: boolean;
+  /**
+   * A jump asked for (Space), kept until the physics' next step takes it (it jumps only from the
+   * ground): at 300 frames a second most frames have no physics step to see a one-frame press.
+   */
+  jump: boolean;
   /** Item ids the player is wearing (lab coat, goggles, gloves, ...). Saved. */
   equipment: string[];
   /** What the player carries (InventorySystem is its only writer). Saved. */
@@ -209,6 +214,8 @@ export interface ProgressionState {
   /** Test papers the player has (v11), and the marks of every paper handed in. Saved. */
   papers: PaperRecord[];
   scores: ScoreRecord[];
+  /** Calls made to each emergency squad (v12), by squad id. Saved. */
+  calls: Record<string, number>;
 }
 
 /**
@@ -245,6 +252,7 @@ export function createGameState(): GameState {
       roomId: null,
       moveIntent: [0, 0, 0],
       grounded: false,
+      jump: false,
       equipment: [],
       inventory: { stacks: [], selected: 0 },
     },
@@ -255,6 +263,7 @@ export function createGameState(): GameState {
       tasks: { active: null, done: [] },
       papers: [],
       scores: [],
+      calls: {},
     },
   };
 }
@@ -270,6 +279,7 @@ export function resetPlaythrough(state: GameState): void {
   state.progression.tasks = { active: null, done: [] };
   state.progression.papers = [];
   state.progression.scores = [];
+  state.progression.calls = {};
   state.player.equipment = [];
   state.player.inventory = { stacks: [], selected: 0 };
   state.player.roomId = null;

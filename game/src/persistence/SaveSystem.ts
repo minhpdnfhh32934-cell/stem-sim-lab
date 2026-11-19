@@ -94,6 +94,7 @@ export class SaveSystem {
         tasks: structuredClone(progression.tasks),
         papers: structuredClone(progression.papers),
         scores: structuredClone(progression.scores),
+        calls: { ...progression.calls },
       },
     };
   }
@@ -169,4 +170,5 @@ export function applySave(state: GameState, data: SaveData): void {
   state.progression.tasks = structuredClone(data.progression.tasks);
   state.progression.papers = structuredClone(data.progression.papers);
   state.progression.scores = structuredClone(data.progression.scores);
+  state.progression.calls = { ...data.progression.calls };
 }

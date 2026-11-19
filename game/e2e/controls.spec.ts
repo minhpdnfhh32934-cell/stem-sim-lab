@@ -23,7 +23,7 @@ test('controls dialog: the real bindings, Esc closes it, the menu stays; the pro
   expect(keys).toEqual(
     expect.arrayContaining(['W', 'A', 'S', 'D', 'Shift', 'E', 'F', 'LMB', 'Q', '1–9', 'I', 'Esc']),
   );
-  expect(keys).not.toContain('Space'); // there is no jump
+  expect(keys).toContain('Space'); // jump (Phú 2026-11-13)
   await expect(dialog).toContainText('Put away what you hold');
   // Inside the window, no page scroll.
   const box = await dialog.boundingBox();

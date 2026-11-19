@@ -3,7 +3,7 @@ import type { BenchPose } from '../../../gameplay/experiment/StationSystem';
 import type { ItemDefinition } from '../../../gameplay/item';
 import { BOILING } from '../../../simulation/models/heating';
 import { arc, Assembly, loft, type Outline, slab, swaps } from '../assembly';
-import { GLASSWARE_LOOK, LOOKS } from '../looks';
+import { GLASSWARE_LOOK, LOOKS, STEAM } from '../looks';
 import {
   BEAKER_250,
   ICE_SUBMERGED,
@@ -225,9 +225,13 @@ function frame(item: ItemDefinition, _painted: THREE.MeshStandardMaterial): Benc
   const dark = own(new THREE.MeshStandardMaterial({ color: '#2c333b', ...LOOKS.painted }));
   const steel = own(new THREE.MeshStandardMaterial({ color: '#b4bcc4', ...LOOKS.metal }));
   const glass = own(
-    new THREE.MeshStandardMaterial({ color: '#d8eef5', ...GLASSWARE_LOOK, opacity: 0.28 }),
+    new THREE.MeshStandardMaterial({
+      color: '#d8eef5',
+      ...GLASSWARE_LOOK,
+      opacity: 0.28,
+      depthWrite: false, // see-through: what is inside (ice, water, the column) shows
+    }),
   );
-  glass.depthWrite = false; // see-through: what is inside (ice, water, the column) shows
   const marks = own(new THREE.MeshStandardMaterial({ color: '#ffffff', ...LOOKS.matte }));
   const floor = A.y - FLOOR;
 
@@ -449,7 +453,7 @@ function rig(item: ItemDefinition): BenchRig {
 
   // The heating plate: dark ceramic, a faint dull-red warmth while on (below ~500 °C a real plate
   // does not glow; the pilot light is the clear "on" cue).
-  const hot = own(
+  const hot = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#4a4f55',
       ...LOOKS.satin,
@@ -579,6 +583,7 @@ function rig(item: ItemDefinition): BenchRig {
   // Steam is haze, not a solid: unlit, and rounder than the small bubbles' sphere.
   const vapour = own(
     new THREE.MeshBasicMaterial({
+      name: STEAM, // soft and torn on Ultra (finishes.ts)
       color: '#f4f7f9',
       transparent: true,
       opacity: 0.16,

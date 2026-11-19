@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from '../nodeLooks';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { daylight, sunDirection, twilight } from '../../../world/clock';
 import { cityPlan, type Kind, lampPlan, type Lane, lanePlan, PERIOD, type Placed } from './layout';
@@ -67,6 +68,10 @@ export class CityView {
   private readonly fog = new THREE.FogExp2('#a9c6df', 0.0022);
   private readonly background = new THREE.Color();
   private readonly owned: { dispose(): void }[] = [];
+  /** Each kind's model as loaded (its own frame; its parts' geometry is the copies'). */
+  readonly models = new Map<Kind, THREE.Object3D>();
+  /** Where each piece stands (the city's frame). */
+  plan: readonly Placed[] = [];
   private paintedAt = -Infinity;
   /** The sun's direction its shadows were last drawn for: drawn again once it has moved. */
   private readonly shadowSun = new THREE.Vector3();
@@ -104,15 +109,33 @@ export class CityView {
     }
   }
 
-  /** Loads the city's models from `base` (the site's root) and lays out the city. */
-  static async load(base: string, detail: CityDetail): Promise<CityView> {
+  /**
+   * Loads the city's models from `base` (the site's root) and lays out the city. `manager`: how
+   * their files are found (the live wallpaper's are packed into its script: no fetch from disk).
+   * `fullAt`: buildings in full detail besides the inner rings', by where they stand (the city's
+   * frame; the wallpaper's, seen close from its roof).
+   */
+  static async load(
+    base: string,
+    detail: CityDetail,
+    manager?: THREE.LoadingManager,
+    fullAt?: (x: number, z: number) => boolean,
+  ): Promise<CityView> {
     const view = new CityView(detail);
-    const loader = new GLTFLoader();
+    const loader = new GLTFLoader(manager);
     const models = await Promise.all(
       KINDS.map((kind) => loader.loadAsync(`${base}hub-city/${kind}.gltf`)),
     );
+    shareTextures(models);
+    KINDS.forEach((kind, i) => {
+      const scene = models[i]?.scene;
+      if (scene) view.models.set(kind, scene);
+    });
     const { rings, full } = CITY_RINGS[detail];
-    const plan = cityPlan(rings, full);
+    const plan = cityPlan(rings, full).map((p) =>
+      fullAt && !p.full && fullAt(p.x, p.z) ? { ...p, full: true } : p,
+    );
+    view.plan = plan;
     KINDS.forEach((kind, i) =>
       view.lay(
         models[i]?.scene,
@@ -185,10 +208,9 @@ export class CityView {
     this.carLamps.color.setScalar(0.35 + 1.8 * night);
   }
 
-  /** Uploads its textures now, so the first look down does not stall on them. */
-  upload(renderer: THREE.WebGLRenderer): void {
-    for (const thing of this.owned)
-      if (thing instanceof THREE.Texture) renderer.initTexture(thing as THREE.Texture);
+  /** Its textures, uploaded before it is first drawn (WorldRenderer.loadCity: one a frame). */
+  get textures(): THREE.Texture[] {
+    return this.owned.filter((thing) => thing instanceof THREE.Texture);
   }
 
   dispose(): void {
@@ -208,6 +230,7 @@ export class CityView {
         '#include <emissivemap_fragment>\n#ifdef USE_INSTANCING_COLOR\n  totalEmissiveRadiance *= vColor;\n#endif',
       );
     };
+    setNodeLook(material, { kind: 'city-window' });
     this.windows.push(material);
   }
 
@@ -322,11 +345,62 @@ export class CityView {
       mesh.castShadow = this.detail === 'full' && !SIMPLE_DROPS.has(material.name);
       mesh.receiveShadow = this.detail === 'full';
       this.owned.push(object.geometry as THREE.BufferGeometry, material);
-      for (const map of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap'] as const) {
+      for (const map of MAPS) {
         const texture = material[map];
-        if (texture) this.owned.push(texture);
+        if (texture && !this.owned.includes(texture)) this.owned.push(texture);
       }
       this.scene.add(mesh);
+    });
+  }
+}
+
+/** The maps a city material may have (and keeps: `lay`). */
+const MAPS = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap'] as const;
+
+/** What `shareTextures` reads of a loaded glTF (GLTFLoader's result). */
+interface LoadedModel {
+  scene: THREE.Object3D;
+  parser: {
+    json: { textures?: { source?: number }[]; images?: { uri?: string }[] };
+    associations: Map<unknown, { textures?: number }>;
+  };
+}
+
+/**
+ * One texture per picture for the whole city: each model's loader made its own of the pictures the
+ * models share (a picture in up to five models: ~70 textures of 20 pictures, each uploaded,
+ * 2026-11-14). Only a texture the same in every setting is shared.
+ */
+export function shareTextures(models: readonly LoadedModel[]): void {
+  const kept = new Map<string, THREE.Texture>();
+  for (const { scene, parser } of models) {
+    scene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const material = object.material as THREE.MeshStandardMaterial;
+      for (const slot of MAPS) {
+        const texture = material[slot];
+        const index = texture ? parser.associations.get(texture)?.textures : undefined;
+        const source = index === undefined ? undefined : parser.json.textures?.[index]?.source;
+        const uri = source === undefined ? undefined : parser.json.images?.[source]?.uri;
+        if (!texture || !uri) continue;
+        const t = texture;
+        const key = [
+          uri,
+          t.colorSpace,
+          t.channel,
+          t.flipY,
+          t.wrapS,
+          t.wrapT,
+          t.magFilter,
+          t.minFilter,
+          t.offset.toArray(),
+          t.repeat.toArray(),
+          t.rotation,
+        ].join('|');
+        const one = kept.get(key);
+        if (one) material[slot] = one;
+        else kept.set(key, texture);
+      }
     });
   }
 }

@@ -48,7 +48,8 @@ test('character page: everyone left to right, Esc keeps the choice, Choose and N
   await page.keyboard.press('ArrowRight');
   await expect(page.locator('.char-name')).toHaveText('Huy');
   await expect(page.locator('.char-count')).toHaveText('1 of 9');
-  // Esc: back to the menu, the choice unchanged, the page's canvas freed.
+  // Esc: back to the menu, the choice unchanged; the room kept unseen for the next opening, its
+  // canvas out of the page (freed when the menu goes).
   await page.keyboard.press('Escape');
   await expect(page.locator('.char-page')).toBeHidden();
   await expect(page.locator('.menu-character-name')).toHaveText('Khoa');
@@ -90,5 +91,7 @@ test('character page: everyone left to right, Esc keeps the choice, Choose and N
   await menuNewGame(page);
   await expectDebug(page, 'Phase', 'playing');
   await expectDebug(page, 'Character', 'custom');
+  // The menu gone, its room is freed.
+  await expect(page.locator('.char-page canvas')).toHaveCount(0);
   expect(errors).toEqual([]);
 });

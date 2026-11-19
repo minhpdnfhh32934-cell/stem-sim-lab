@@ -11,6 +11,7 @@ import { BUILT_IN_BEHAVIORS } from '../../gameplay/interaction/behaviors';
 import { type ItemDefinition, ItemDefinitionSchema } from '../../gameplay/item';
 import { BUILT_IN_MODELS } from '../../simulation/models';
 import type { WorldEntity } from '../../world/World';
+import type { ControlShapes } from './consoleModel';
 import { DecorBatches } from './decorBatches';
 import type { Palette } from './palette';
 import { castsShadow, partMaterial, type PropCache, type PropPart } from './props';
@@ -129,10 +130,20 @@ interface Wiring {
   followEntities(s: Disposables): void;
   partsOf(item: ItemDefinition): readonly PropPart[];
   readonly scene: THREE.Scene;
-  readonly views: ReadonlyMap<string, { readonly group: THREE.Group; readonly mesh: StandardMesh }>;
+  readonly views: ReadonlyMap<
+    string,
+    {
+      readonly group: THREE.Group;
+      readonly mesh: StandardMesh;
+      readonly bodyKey: string | null;
+      readonly shared: THREE.Material | null;
+    }
+  >;
   readonly geometries: ReadonlyMap<string, THREE.BufferGeometry>;
   readonly palette: Palette;
   readonly props: PropCache;
+  readonly controls: ReadonlyMap<string, ControlShapes>;
+  readonly trim: THREE.Material;
 }
 
 type Disposable = THREE.EventDispatcher<{ dispose: object }>;
@@ -202,6 +213,10 @@ async function withRenderer() {
 const instancedIn = (scene: THREE.Scene) =>
   scene.children.filter((c): c is THREE.InstancedMesh => c instanceof THREE.InstancedMesh);
 
+/** The decor items' batches alone (not the viewed entities' parts: trims, bodies). */
+const decorIn = (scene: THREE.Scene) =>
+  instancedIn(scene).filter((m) => m.name.startsWith('decor:'));
+
 const poseMatrix = ({ pose }: WorldEntity) =>
   new THREE.Matrix4().compose(
     new THREE.Vector3(...pose.position),
@@ -250,6 +265,35 @@ function expectedBatches(game: Game, view: Wiring): string[] {
         keys.push(batchKey(part.geometry, material, castsShadow(part, item), matrices));
       }
     }
+    // The controls' trims: per room and shape, every still control's, at its pose (addPart).
+    const trims = new Map<string, { trim: THREE.BufferGeometry; list: WorldEntity[] }>();
+    for (const entity of game.world.allEntities()) {
+      const { model, size } = entity.item.visual;
+      if (!rooms.has(entity.roomId) || !model || entity.item.physical.body === 'dynamic') continue;
+      const trim = view.controls.get(`${model}:${size.join(',')}`)?.trim;
+      if (!trim) continue;
+      const key = `${entity.roomId}|${trim.uuid}`;
+      const batch = trims.get(key) ?? { trim, list: [] };
+      batch.list.push(entity);
+      trims.set(key, batch);
+    }
+    for (const { trim, list } of trims.values()) {
+      const matrices = list.map((copy) => stored(poseMatrix(copy)));
+      keys.push(batchKey(trim, view.trim, false, matrices));
+    }
+    // The bodies drawn by their shared look (addPart): per room and key, every copy at its pose.
+    const bodies = new Map<string, WorldEntity[]>();
+    for (const entity of game.world.allEntities()) {
+      const own = view.views.get(entity.id);
+      if (!rooms.has(entity.roomId) || !own?.bodyKey) continue;
+      const key = `${entity.roomId}|${own.bodyKey}`;
+      bodies.set(key, [...(bodies.get(key) ?? []), entity]);
+    }
+    for (const list of bodies.values()) {
+      const own = view.views.get(list[0]!.id)!;
+      const matrices = list.map((copy) => stored(poseMatrix(copy)));
+      keys.push(batchKey(own.mesh.geometry, own.shared!, own.mesh.castShadow, matrices));
+    }
   }
   return keys.sort();
 }
@@ -268,14 +312,14 @@ describe('decor in the renderer', () => {
     const { game, view, drawn } = await withRenderer();
     // The preparation room was there before the renderer: its one light panel, one batch.
     expect(drawnBatches(view)).toEqual(expectedBatches(game, view));
-    expect(drawnBatches(view)).toHaveLength(1);
-    const [early] = instancedIn(view.scene);
+    expect(decorIn(view.scene)).toHaveLength(1);
+    const [early] = decorIn(view.scene);
 
     await game.scenes.load('simlab-hub');
     expect(drawn.freed.get(early!)).toBe(1); // went with its scene
     expect(drawnBatches(view)).toEqual(expectedBatches(game, view));
     // Columns (body, stone), planters (body, foliage), light panels (the body alone).
-    expect(instancedIn(view.scene).map((m) => m.count)).toEqual([3, 3, 2, 2, 2]);
+    expect(decorIn(view.scene).map((m) => m.count)).toEqual([3, 3, 2, 2, 2]);
     // No view for a batched copy; the reception desk and the labelled sign keep theirs.
     for (const entity of game.world.allEntities()) {
       expect(view.views.has(entity.id), entity.id).toBe(!DecorBatches.accepts(entity.item));
@@ -286,12 +330,12 @@ describe('decor in the renderer', () => {
   it('takes a despawned copy out of its batch at once, and a despawned view as before', async () => {
     const { game, view } = await withRenderer();
     await game.scenes.load('simlab-hub');
-    const before = instancedIn(view.scene);
+    const before = decorIn(view.scene);
     const [second, third] = ['test-column-2', 'test-column-3'].map((id) =>
       game.world.entity(`simlab-hub/${id}`)!,
     );
     game.world.despawn('simlab-hub/test-column-1');
-    expect(instancedIn(view.scene)).toEqual(before); // the same meshes, nothing rebuilt
+    expect(decorIn(view.scene)).toEqual(before); // the same meshes, nothing rebuilt
     for (const mesh of before.slice(0, 2)) {
       // The columns' body and stone: the last copy moved into the first one's place.
       expect(mesh.count).toBe(2);
@@ -307,17 +351,21 @@ describe('decor in the renderer', () => {
     const { game, view, drawn } = await withRenderer();
     await game.scenes.load('simlab-hub');
     const hub = instancedIn(view.scene);
+    const hubDecor = decorIn(view.scene);
     expect(await game.scenes.attach('biology-lab')).toBeNull();
-    const lab = instancedIn(view.scene).filter((m) => !hub.includes(m));
+    const added = instancedIn(view.scene).filter((m) => !hub.includes(m));
     expect(drawnBatches(view)).toEqual(expectedBatches(game, view));
+    // Its controls' trims and bodies too (expectedBatches checks them): the decor here.
+    const lab = added.filter((m) => m.name.startsWith('decor:'));
+    expect(added.filter((m) => m.material === view.trim)).toHaveLength(6);
     expect(lab.map((m) => m.count)).toEqual([2, 2, 1]); // planters (2 parts), light panel
     // The same planter as the hub's, drawn in the lab's own batch, at the lab's place (x < −13).
-    expect(lab[0]?.geometry).toBe(hub[2]?.geometry);
+    expect(lab[0]?.geometry).toBe(hubDecor[2]?.geometry);
     expect(lab[0]?.getMatrixAt(0, new THREE.Matrix4()).elements[12]).toBeLessThan(-13);
 
     expect(game.scenes.release('biology-lab')).toBe(true);
     expect(instancedIn(view.scene)).toEqual(hub);
-    for (const mesh of lab) expect(drawn.freed.get(mesh)).toBe(1);
+    for (const mesh of added) expect(drawn.freed.get(mesh)).toBe(1);
     for (const mesh of hub) expect(drawn.freed.get(mesh)).toBe(0);
     // The prop parts and materials they were drawn with are shared: they stay with the renderer.
     expect(drawn.freed.get(lab[0]!.geometry as Disposable)).toBe(0);
@@ -342,12 +390,15 @@ describe('decor in the renderer', () => {
     expect(sizes[2]).toEqual(sizes[0]);
     // Every batch ever made is drawn now (not freed) or was freed exactly once.
     const live = new Set(instancedIn(view.scene));
-    expect(live.size).toBe(5);
-    // prep 1, hub 5; then per round: lab 3 batches and the 20 instanced parts of its nine bench
-    // apparatus (their `copies`; the potometer's leaves and scale ticks since T-6, the
-    // respirometer's ticks and seeds, the seed tray's four heaps and its pods, the bean jar's marked and unmarked beans since T-6b) and the practice room's twelve (Phase X: chromatids, the gene board's four rows, beetles, yeast cells, rabbits and foxes, bubbles, DNA strands, chromosomes), prep 1,
-    // hub 5.
-    expect(drawn.instanced.size).toBe(1 + 5 + 3 * (3 + 20 + 12 + 1 + 5));
+    expect(live.size).toBe(5 + 6); // the hub's decor and its bodies batched by look
+    // prep 1 decor and 3 bodies, hub 5 and 6; then per round: lab 3 decor batches, its parts' 23
+    // (its controls' 6 trims and 17 bodies, per room and shape: decorBatches.ts addPart) and the
+    // 20 instanced parts of its nine bench apparatus (their `copies`; the potometer's leaves and
+    // scale ticks since T-6, the respirometer's ticks and seeds, the seed tray's four heaps and
+    // its pods, the bean jar's marked and unmarked beans since T-6b) and the practice room's
+    // twelve (Phase X: chromatids, the gene board's four rows, beetles, yeast cells, rabbits and
+    // foxes, bubbles, DNA strands, chromosomes), prep 1 + 3, hub 5 + 6.
+    expect(drawn.instanced.size).toBe(1 + 3 + 5 + 6 + 3 * (3 + 23 + 20 + 12 + 1 + 3 + 5 + 6));
     for (const mesh of drawn.instanced) expect(drawn.freed.get(mesh)).toBe(live.has(mesh) ? 0 : 1);
 
     dispose();
@@ -355,6 +406,52 @@ describe('decor in the renderer', () => {
     const kept = [...drawn.freed].filter(([, times]) => times === 0);
     expect(kept.map(([thing]) => (thing as { type?: string }).type ?? 'texture')).toEqual([]);
     for (const mesh of drawn.instanced) expect(drawn.freed.get(mesh)).toBe(1);
+  });
+});
+
+describe('bodies batched by their look', () => {
+  /** The size its copy is drawn at in `batch` (the copy at the entity's place), or null. */
+  const sizeIn = (batch: THREE.InstancedMesh, entity: WorldEntity): number | null => {
+    const at = new THREE.Vector3(...entity.pose.position);
+    const m = new THREE.Matrix4();
+    const p = new THREE.Vector3();
+    for (let i = 0; i < batch.count; i++) {
+      batch.getMatrixAt(i, m);
+      // Its first column's length (decompose calls a matrix of no size one of size 1).
+      if (p.setFromMatrixPosition(m).distanceTo(at) < 1e-6)
+        return Math.round(p.setFromMatrixColumn(m, 0).length() * 1e6) / 1e6;
+    }
+    return null;
+  };
+
+  it('draws a still body in its room’s batch, and by its own mesh while it is focused', async () => {
+    const { game, view } = await withRenderer();
+    await game.scenes.load('simlab-hub');
+    // Its room's batch of its look (one per room: named `part:<key>@<room>`).
+    const batchOf = (key: string, v: { bodyKey: string | null }) => {
+      const { roomId } = game.world.entity(key)!;
+      return instancedIn(view.scene).find((m) => m.name === `part:${v.bodyKey}@${roomId}`)!;
+    };
+    const [id, own] = [...view.views].find(([, v]) => v.bodyKey !== null)!;
+    const entity = game.world.entity(id)!;
+    const batch = batchOf(id, own);
+    expect(batch.material).toBe(own.shared);
+    expect(own.mesh.visible).toBe(false);
+    expect(sizeIn(batch, entity)).toBe(1);
+
+    game.events.publish('InteractionFocusChanged', { entityId: id });
+    expect(own.mesh.visible).toBe(true); // its own glow, on its own copy of the look
+    expect(own.mesh.material).not.toBe(own.shared);
+    expect(sizeIn(batch, entity)).toBe(0);
+
+    game.events.publish('InteractionFocusChanged', { entityId: null });
+    expect(own.mesh.visible).toBe(false);
+    expect(own.mesh.material).toBe(own.shared);
+    expect(sizeIn(batch, entity)).toBe(1);
+
+    // Hidden with its view (taken, an emergency): no size in the batch either.
+    game.world.despawn(id);
+    expect(batch.count === 0 || sizeIn(batch, entity) === null).toBe(true);
   });
 });
 

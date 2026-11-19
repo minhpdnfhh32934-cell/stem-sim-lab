@@ -5,6 +5,8 @@ import type { CharacterDefinition } from '../../gameplay/character';
 import {
   CommandSchema,
   POSE_HZ,
+  BATCH_MAX,
+  MESSAGE_MAX_CHARS,
   ROOM_CLIENT_HEADER,
   ROOM_PATH,
   RoomEventSchema,
@@ -92,8 +94,13 @@ export class LanRooms implements GameSystem {
   private source: EventSource | null = null;
   /** This connection's name in the POSTs (the stream's `hello`). */
   private clientId: string | null = null;
-  /** The POSTs, one after another. */
-  private sending: Promise<unknown> = Promise.resolve();
+  /**
+   * What waits to be sent (each with its server's address), and whether a POST is on its way.
+   * While one is, the next ones gather and go together, the newest pose and person replacing an
+   * older unsent one (Phú 2026-11-13: one POST after another fell behind on a slow network).
+   */
+  private readonly queue: { message: ClientMessage; url: string }[] = [];
+  private posting = false;
   private readonly subscriptions = new Disposables();
   private readonly listeners = new Set<() => void>();
   /** Voice set-up from another player (`VoiceChat`). */
@@ -101,6 +108,10 @@ export class LanRooms implements GameSystem {
   /** Stations this player works: seconds since their last command. */
   private readonly mine = new Map<string, number>();
   private poseClock = 0;
+  /** The round-trip probe: its clock, the one on its way (number, sent at), the last ones. */
+  private pingClock = 0;
+  private ping: { n: number; at: number } | null = null;
+  private pings = 0;
   private keepClock = 0;
   /** The last pose sent, as JSON; undefined: none yet (the first is always sent). */
   private last: string | undefined = undefined;
@@ -109,6 +120,8 @@ export class LanRooms implements GameSystem {
   /** Entities whose fire the others were last told burns (sizes are each game's own). */
   private readonly alight = new Set<string>();
   private npcClock = 0;
+  /** This game's emergency call was going on at the last send (an end is sent once). */
+  private calling = false;
   /** People of the world this game drives now, and the board version the others last got. */
   private readonly driving = new Set<string>();
   private boardSent = -1;
@@ -249,6 +262,13 @@ export class LanRooms implements GameSystem {
       void this.askLan();
     }
     if (!peers.room) return;
+    // Every 2 s, a probe: its round trip (up as a POST, back on the stream) is what moves take.
+    this.pingClock += dt;
+    if (this.pingClock >= 2 && this.ping === null) {
+      this.pingClock = 0;
+      this.ping = { n: ++this.pings, at: performance.now() };
+      this.send({ t: 'ping', n: this.ping.n });
+    }
     this.poseClock += dt;
     this.keepClock += dt;
     if (this.poseClock >= 1 / POSE_HZ) {
@@ -297,6 +317,7 @@ export class LanRooms implements GameSystem {
     if (this.npcClock >= 1 / NPC_HZ) {
       this.npcClock = 0;
       this.sendPeople();
+      this.sendEmergency();
     }
     this.idleClock += dt;
     if (this.idleClock >= 1 && this.mine.size > 0) {
@@ -451,6 +472,12 @@ export class LanRooms implements GameSystem {
       case 'gone':
         peers.gone(message.id);
         break;
+      case 'pong':
+        if (this.ping?.n === message.n) {
+          peers.roundTrip(performance.now() - this.ping.at);
+          this.ping = null;
+        }
+        return;
       case 'pose':
         peers.pose(message.id, message.pose);
         return; // 15 a second from each: nothing for the menu
@@ -511,11 +538,18 @@ export class LanRooms implements GameSystem {
    * they are and what they do, the line they say, the board as written. Done: freed for the others.
    */
   private sendPeople(): void {
-    const { npcs } = this.game;
+    const { npcs, peers } = this.game;
     for (const view of npcs.views) {
       const id = view.npc.id;
       if (!npcs.engaged(id)) {
         if (this.driving.delete(id)) this.event({ k: 'npcFree', npc: id });
+        // No one has them: the room's day driver tells the others where they are and what they
+        // do (Phú 2026-11-13: each game ran its own day, so each saw them elsewhere).
+        if (peers.dayDriver() === null && peers.holder(`npc:${id}`) === null) {
+          const day = npcs.snapshot(id);
+          const shared = day && RoomEventSchema.safeParse({ k: 'npcDay', npc: id, view: day });
+          if (shared && shared.success) this.event(shared.data);
+        }
         continue;
       }
       const snapshot = npcs.snapshot(id);
@@ -540,6 +574,36 @@ export class LanRooms implements GameSystem {
     }
   }
 
+  /**
+   * This game's emergency call (its squad, helicopter, ceiling…), for the others to draw; its end
+   * once. A call another player made is theirs to send.
+   */
+  private sendEmergency(): void {
+    const e = this.game.emergency;
+    const mine = e.active && e.drivenBy === null;
+    if (mine) {
+      const snapshot = e.snapshot();
+      const shared = snapshot && RoomEventSchema.safeParse({ k: 'emergency', ...snapshot });
+      if (shared && shared.success) this.event(shared.data);
+    } else if (this.calling && e.drivenBy === null) {
+      const shared = RoomEventSchema.safeParse({
+        k: 'emergency',
+        squad: 'none',
+        phase: 'idle',
+        t: 0,
+        breach: 0,
+        blast: -1,
+        ropes: 0,
+        shake: 0,
+        heli: [0, 0, 0, 0, 0, 0, 0],
+        people: [],
+        line: null,
+      });
+      if (shared.success) this.event(shared.data);
+    }
+    this.calling = mine;
+  }
+
   private event(event: RoomEvent): void {
     if (this.game.peers.room) this.send({ t: 'event', event });
   }
@@ -559,6 +623,18 @@ export class LanRooms implements GameSystem {
     }
     if (event.k === 'npcFree') {
       this.heard.delete(event.npc);
+      return;
+    }
+    if (event.k === 'emergency') {
+      this.game.emergency.mirror(event, from); // the snapshot's fields (and its kind, unread)
+      return;
+    }
+    if (event.k === 'npcDay') {
+      // Their day as the room's day driver has it: drawn so, unless this player has them.
+      const { npcs, peers } = this.game;
+      if (!npcs.engaged(event.npc) && peers.holder(`npc:${event.npc}`) === null) {
+        npcs.mirror(event.npc, event.view);
+      }
       return;
     }
     if (event.k !== 'state') {
@@ -589,22 +665,52 @@ export class LanRooms implements GameSystem {
     for (const stationId of [...this.mine.keys()]) this.release(stationId);
   }
 
-  /** One message to the server, after the ones before it (a POST each; lost ones are dropped). */
+  /**
+   * One message to the server, after the ones before it. A pose, or a person's state, not yet
+   * sent is replaced by the newer one (only where they are now matters); everything else goes in
+   * order. Lost ones are dropped.
+   */
   private send(message: ClientMessage): void {
-    const id = this.clientId;
-    if (id === null) return;
-    const body = JSON.stringify(message);
+    if (this.clientId === null) return;
     const url = `${this.base()}/send`;
-    this.sending = this.sending
-      .then(() =>
-        fetch(url, {
-          method: 'POST',
-          headers: { 'content-type': 'application/json', [ROOM_CLIENT_HEADER]: id },
-          body,
-          keepalive: true, // a leave as the page closes still goes
-        }),
-      )
-      .catch(() => undefined);
+    const at = this.queue.findIndex(
+      ({ message: queued, url: to }) => to === url && same(queued, message),
+    );
+    const old = at >= 0 ? this.queue[at] : undefined;
+    if (old) old.message = merged(old.message, message);
+    else this.queue.push({ message, url });
+    this.flush();
+  }
+
+  /** Sends what waits, in one POST (up to its size), when none is on its way. */
+  private flush(): void {
+    const id = this.clientId;
+    if (this.posting || id === null || this.queue.length === 0) return;
+    const url = this.queue[0]?.url ?? '';
+    const batch: ClientMessage[] = [];
+    let size = 2;
+    while (this.queue.length > 0 && batch.length < BATCH_MAX) {
+      const next = this.queue[0];
+      if (!next || next.url !== url) break;
+      const length = JSON.stringify(next.message).length + 1;
+      if (batch.length > 0 && size + length > MESSAGE_MAX_CHARS) break;
+      batch.push(next.message);
+      size += length;
+      this.queue.shift();
+    }
+    this.posting = true;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', [ROOM_CLIENT_HEADER]: id },
+      body: JSON.stringify(batch.length === 1 ? batch[0] : batch),
+      // Only a leave needs to outlive the page (keepalive requests go their own, slower way).
+      keepalive: batch.some((message) => message.t === 'leave'),
+    })
+      .catch(() => undefined)
+      .finally(() => {
+        this.posting = false;
+        this.flush();
+      });
   }
 
   private changed(): void {
@@ -613,3 +719,25 @@ export class LanRooms implements GameSystem {
 }
 
 const r3 = (n: number) => Math.round(n * 1000) / 1000;
+
+/** A newer one of these replaces an unsent older one: a pose, a person's state (by person). */
+function same(a: ClientMessage, b: ClientMessage): boolean {
+  if (a.t === 'pose' && b.t === 'pose') return true;
+  if (a.t !== 'event' || b.t !== 'event') return false;
+  const x = a.event;
+  const y = b.event;
+  if (x.k === 'emergency' && y.k === 'emergency') return true;
+  return (x.k === 'npc' || x.k === 'npcDay') && x.k === y.k && x.npc === y.npc;
+}
+
+/** The newer message, keeping a board the older one carried if the newer has none to send. */
+function merged(older: ClientMessage, newer: ClientMessage): ClientMessage {
+  if (older.t === 'event' && newer.t === 'event') {
+    const a = older.event;
+    const b = newer.event;
+    if (a.k === 'npc' && b.k === 'npc' && b.board === null && a.board !== null) {
+      return { t: 'event', event: { ...b, board: a.board } };
+    }
+  }
+  return newer;
+}

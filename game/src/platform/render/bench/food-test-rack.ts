@@ -147,7 +147,7 @@ function rig(item: ItemDefinition): BenchRig {
   for (const [code, list] of Object.entries(STOPS)) {
     stops[Number(code)] = list.map((c) => new THREE.Color(c));
   }
-  const tint = own(new THREE.MeshStandardMaterial({ color: REAGENT[0], ...LOOKS.satin }));
+  const tint = kit.mine(new THREE.MeshStandardMaterial({ color: REAGENT[0], ...LOOKS.satin }));
   const liquid = mesh(
     keep(new THREE.CylinderGeometry(TUBE.radius - 0.0015, TUBE.radius - 0.0015, TUBE.liquid, 14)),
     tint,

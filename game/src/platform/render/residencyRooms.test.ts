@@ -6,6 +6,7 @@ import type { Game } from '../../game/Game';
 import { bootTestGame, placePlayer } from '../../game/testing';
 import { roomSlabs, WALL_THICKNESS } from '../../world/roomGeometry';
 import { dressRoom } from './dress';
+import { QUALITY } from './quality';
 import { WorldRenderer } from './WorldRenderer';
 
 // The renderer's side of residency, without WebGL (init() is never called): the room shells of
@@ -71,16 +72,17 @@ async function hubWithRenderer(): Promise<{ game: Game; view: Rooms }> {
 /** A scene's shell meshes: each room's slabs and, enhanced, its skirting (one more mesh). */
 /** A scene's shell meshes: each room's slabs, its skirting and its style's dressing (a draw per finish). */
 const slabs = (game: Game, sceneId: string) =>
-  game.world
-    .roomsOf(sceneId)
-    .reduce(
-      (n, room) =>
-        n +
-        roomSlabs(room, WALL_THICKNESS / 2).length +
-        1 +
-        dressRoom(room, (id) => game.content.items.tryGet(id)?.visual.size).length,
-      0,
-    );
+  game.world.roomsOf(sceneId).reduce(
+    (n, room) =>
+      n +
+      roomSlabs(room, WALL_THICKNESS / 2).length +
+      1 +
+      dressRoom(room, (id) => game.content.items.tryGet(id)?.visual.size).length +
+      // A glass floor over the city (a level that draws one): its slab in four pieces round the
+      // hole, the pane and its grid — five more.
+      (room.glassFloor && QUALITY[game.graphicsQuality].city !== 'none' ? 5 : 0),
+    0,
+  );
 
 /** Spies on the disposal of every geometry and material of a scene's shells. */
 function spyOnShells(view: Rooms, sceneId: string) {

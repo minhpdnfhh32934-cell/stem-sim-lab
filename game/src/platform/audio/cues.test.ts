@@ -24,10 +24,12 @@ async function heard() {
   if (!('bank' in parsed)) throw new Error(parsed.problems);
   const played: Played[] = [];
   const rooms: { roomId: string; ambience: string | null; rt60: number }[] = [];
+  const prepared: string[] = [];
   const out: SoundOut = {
     play: (id, at, delay = 0, gain = 1) =>
       played.push({ id, at: at ? [at[0], at[1], at[2]] : null, delay, gain }),
     room: (roomId, ambience, rt60) => rooms.push({ roomId, ambience, rt60 }),
+    prepare: (some) => prepared.push(...some.map((r) => r.roomId)),
   };
   const cues = new SoundCues(game, parsed.bank, out);
   const subscriptions = new Disposables();
@@ -39,8 +41,23 @@ async function heard() {
     }
   };
   const ids = () => played.map((p) => p.id);
-  return { game, cues, played, rooms, frame, ids, subscriptions };
+  return { game, cues, played, rooms, prepared, frame, ids, subscriptions };
 }
+
+describe('a scene coming in through a door', () => {
+  it('has its rooms’ air and reverb made ahead, before the player walks in', async () => {
+    const { game, prepared } = await heard();
+    await game.newGame('researcher-male');
+    const here = game.scenes.currentSceneId;
+    const pair = game.scenes.doorPairs.find((p) => p.a.sceneId === here || p.b.sceneId === here);
+    const next = pair?.a.sceneId === here ? pair.b.sceneId : pair?.a.sceneId;
+    expect(next).toBeDefined();
+    expect(await game.scenes.attach(next!)).toBeNull();
+    const rooms = game.world.roomsOf(next!).map((room) => room.id);
+    expect(rooms.length).toBeGreaterThan(0);
+    expect(prepared).toEqual(rooms);
+  });
+});
 
 describe('when the game makes which sound, and where (SoundCues)', () => {
   it('a new game: silent while the scene loads, then the room’s air and its reverb', async () => {
@@ -132,16 +149,26 @@ describe('when the game makes which sound, and where (SoundCues)', () => {
     frame(2);
     const door = 'physics-lab/door-hub';
     const reader = handPoint(game.world.entity(door)!, game.world, [0, 0, 0]);
-    // A lecture at the drop tower, ended: he walks back to the hall through the shut door.
+    // A lecture at the drop tower, ended: he walks back to the hall through the shut door. He
+    // comes in through it first, opened for him (the hall loaded), shut behind him; the player in
+    // the room, away from it.
+    const o = game.scenes.offsetOf('physics-lab')!;
+    game.state.player.position = [o[0] + 1, 0, o[2]];
     game.npcs.lectureAt('teacher', 'physics-lab/tower');
-    frame(60 * 5);
+    const view = game.npcs.view('teacher')!;
+    for (let i = 0; i < 60 * 25; i++) {
+      frame();
+      if (i % 15 === 0) await new Promise((resolve) => setTimeout(resolve, 0));
+      if (i > 60 * 5 && view.sceneId === 'physics-lab' && game.doors.state(door) === 'closed')
+        break;
+    }
+    expect(view.sceneId).toBe('physics-lab');
     game.explain.close();
     played.length = 0;
     for (let i = 0; i < 60 * 30 && game.doors.state(door) === 'closed'; i++) frame();
     // Each foot heard on the lab's floor, where he walks; then the card on his side's reader.
     const steps = played.filter((p) => p.id.startsWith('step-'));
     expect(steps.length).toBeGreaterThan(4);
-    const view = game.npcs.view('teacher')!;
     const last = steps.at(-1)?.at ?? [0, 0, 0];
     expect(Math.hypot(last[0] - view.x, last[2] - view.z)).toBeLessThan(0.6);
     const beep = played.find((p) => p.id === 'card-accepted');
@@ -162,6 +189,95 @@ describe('when the game makes which sound, and where (SoundCues)', () => {
     game.events.publish('TaskCompleted', { taskId: 't' });
     cues.click();
     expect(ids()).toEqual(['ui-step', 'ui-task', 'ui-click']);
+  });
+
+  it('a call rings in the ear as it starts to ring, once', async () => {
+    const { game, ids } = await heard();
+    game.events.publish('PhoneChanged', { out: true, call: 'ringing' });
+    game.events.publish('PhoneChanged', { out: true, call: 'ringing' });
+    game.events.publish('PhoneChanged', { out: true, call: 'talking' });
+    expect(ids()).toEqual(['phone-ring']);
+  });
+
+  it('the squad’s siren comes with its helicopter (a wail, a yelp), its rotor swelling as it nears', async () => {
+    for (const [number, siren] of [
+      ['114', 'siren-wail'],
+      ['113', 'siren-yelp'],
+    ] as const) {
+      const { game, played, frame } = await heard();
+      await game.newGame('researcher-male');
+      await game.scenes.load('simlab-hub');
+      frame(30);
+      played.length = 0;
+      expect(game.emergency.call(number)).toBe('dispatched');
+      let frames = 0;
+      while (game.emergency.phase === 'inbound') {
+        frame();
+        frames++;
+      }
+      const sirens = played.filter((p) => p.id.startsWith('siren'));
+      expect(sirens.length).toBeGreaterThan(0);
+      // One cycle after another, never two at once (Phú 2026-11-18: on a call to the police two
+      // sirens overlapped — the fire's beats also counted the siren's down, twice as fast).
+      const cycle = siren === 'siren-wail' ? 4.6 : 3;
+      expect(sirens.length).toBeLessThanOrEqual(Math.ceil((frames * H) / cycle) + 1);
+      expect(new Set(sirens.map((p) => p.id))).toEqual(new Set([siren]));
+      expect(sirens.every((p) => p.at !== null)).toBe(true); // from where the helicopter is
+      const rotor = played.filter((p) => p.id === 'rotor').map((p) => p.gain);
+      expect(rotor.length).toBeGreaterThan(5);
+      expect(rotor.at(-1)!).toBeGreaterThan(2.5 * rotor[0]!);
+      // None once it hovers.
+      played.length = 0;
+      frame(120);
+      expect(played.some((p) => p.id.startsWith('siren'))).toBe(false);
+    }
+  }, 30_000);
+
+  it('stunned by the blast, the ears ring once, as loud as the stun, from everywhere', async () => {
+    const { game, played, frame } = await heard();
+    await game.newGame('researcher-male');
+    await game.scenes.load('simlab-hub');
+    frame(30);
+    expect(game.emergency.call('113')).toBe('dispatched');
+    const e = game.emergency;
+    const off = game.scenes.offsetOf('simlab-hub')!;
+    const [ax, az] = e.squad!.arrival.at;
+    while (e.phase !== 'breach') frame();
+    game.state.player.position = [ax + off[0], off[1], az + off[2]]; // under the hole
+    while (e.blast < 0) frame();
+    frame(60);
+    const rings = played.filter((p) => p.id === 'tinnitus');
+    expect(rings).toHaveLength(1);
+    expect(rings[0]!.at).toBeNull();
+    expect(rings[0]!.gain).toBeGreaterThan(0.9);
+  });
+
+  it('what hangs under the hole shatters where it lands, its shards ringing after', async () => {
+    const { game, played, frame } = await heard();
+    await game.newGame('researcher-male');
+    await game.scenes.load('simlab-hub');
+    frame(30);
+    expect(game.emergency.call('113')).toBe('dispatched');
+    const e = game.emergency;
+    const off = game.scenes.offsetOf('simlab-hub')!;
+    while (e.blast < 0) frame();
+    frame(2);
+    // The hall's emblem (`visual.hanging`), hung at the hole: 0.6 m to fall after the cables.
+    const crash = played.filter((p) => p.id === 'shatter');
+    expect(crash).toHaveLength(1);
+    expect(crash[0]!.delay).toBeGreaterThan(0.4);
+    expect(crash[0]!.delay).toBeLessThan(0.8);
+    expect(crash[0]!.at?.[1]).toBeCloseTo(off[1]); // on the floor
+    const shards = played.filter((p) => p.id === 'impact-glass');
+    expect(shards.length).toBe(6);
+    for (const s of shards) expect(s.delay).toBeGreaterThan(crash[0]!.delay);
+  });
+
+  it('going into a world: the portal as it opens, the arrival as the world shows', async () => {
+    const { game, ids } = await heard();
+    game.events.publish('WorldEntry', { step: 'opening' });
+    game.events.publish('WorldEntry', { step: 'shown' });
+    expect(ids()).toEqual(['enter-portal', 'enter-arrive']);
   });
 
   it('an object striking something knocks where it struck, as its look sounds, louder the harder', async () => {

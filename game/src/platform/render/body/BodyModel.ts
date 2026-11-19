@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from '../nodeLooks';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { FACE_PICTURE } from './facePhoto';
 import type {
@@ -1751,8 +1752,27 @@ function partsOf(shape: BodyShape): { parts: Part[]; fit: BodyFit } {
     const ex = 0.032 * k;
     // In front of the eyes and clear of the nose's bridge.
     const z = Math.min(front(ex, y), front(0, y + 0.006)) - 0.009;
+    // Sunglasses wrap round the face: flat, their dark lenses stood off the face seen from the side,
+    // the eye showing beside them, as if they were slipping off (Phú, 2026-11-18). The outer half
+    // of each lens reaches on towards the temple, turned back as far as it stays 6 mm off the face.
+    const reach = shape.glasses === 'shades' ? 0.036 : 0.0265;
+    let wrap = 0;
+    if (shape.glasses === 'shades') {
+      const clear = (a: number) =>
+        [0.25, 0.5, 0.75, 1].every((u) =>
+          [-0.0165, 0, 0.0185].every(
+            (dy) =>
+              z + u * reach * Math.sin(a) <= front(ex + u * reach * Math.cos(a), y + dy) - 0.006,
+          ),
+        );
+      for (let a = 0.8; a > 0 && !wrap; a -= 0.02) if (clear(a)) wrap = a;
+    }
+    const [wc, ws] = [Math.cos(wrap), Math.sin(wrap)];
     for (const side of [-1, 1]) {
       const x = side * ex;
+      /** A point `d` along a lens's outer half (0 its middle, `reach` its edge), `dy` up. */
+      const outerAt = (d: number, dy: number): V3 => [side * (ex + d * wc), y + dy, z + d * ws];
+      const turn = -side * wrap;
       if (shape.glasses === 'round') {
         add(
           'head',
@@ -1764,19 +1784,30 @@ function partsOf(shape: BodyShape): { parts: Part[]; fit: BodyFit } {
             .translate(x, y, z),
         );
       } else {
-        for (const [dx, dy, sx, sy] of [
-          [0, 0.0185, 0.055, 0.003],
-          [0, -0.0165, 0.053, 0.0022],
-          [-0.0265, 0, 0.0022, 0.035],
+        // Each lens in two halves: the inner one flat, the outer one turned back by the wrap.
+        // [the inner half's piece, the outer half's (`along` it)]: its middle, height, size.
+        const pieces = [
+          [0.01375, 0.0185, 0.0275, 0.003],
+          [0.01325, -0.0165, 0.0265, 0.0022],
           [0.0265, 0, 0.0022, 0.035],
-        ] as const) {
-          add('head', 'trim', true, block([x + dx, y + dy, z], sx, sy, 0.0035));
-        }
+        ] as const;
+        const along = [(reach + 0.001) / 2, reach / 2, reach] as const;
+        pieces.forEach(([d, dy, sx, sy], i) => {
+          add('head', 'trim', true, block([x - side * d, y + dy, z], sx, sy, 0.0035));
+          // The bars' outer halves start 2 mm back over the inner ones: no crack at the bend.
+          const [length, from] = i < 2 ? [sx + reach - 0.0265 + 0.002, 0.001] : [sx, 0];
+          const o = outerAt((along[i] ?? d) - from, dy);
+          add('head', 'trim', true, block(o, length, sy, 0.0035, 0, turn));
+        });
         // Sunglasses: a dark lens filling the frame.
-        if (shape.glasses === 'shades')
-          add('head', 'trim', true, block([x, y, z], 0.051, 0.033, 0.0012));
+        if (shape.glasses === 'shades') {
+          add('head', 'trim', true, block([x - side * 0.01275, y, z], 0.0255, 0.033, 0.0012));
+          const lens = reach + 0.001;
+          const o = outerAt(lens / 2 - 0.002, 0);
+          add('head', 'trim', true, block(o, lens, 0.033, 0.0012, 0, turn));
+        }
       }
-      const outer: V3 = [side * (ex + 0.027), y + 0.008, z];
+      const outer: V3 = outerAt(reach + 0.0005, 0.008);
       add('head', 'trim', true, tube(outer, [side * W * 1.0, y + 0.01, 0.012], 0.0016, 0.0016));
     }
     add(
@@ -3279,6 +3310,24 @@ export function clothMaterial(color: string, gradientMap: THREE.Texture): THREE.
     );
   };
   material.customProgramCacheKey = () => 'body-cloth';
+  setNodeLook(material, { kind: 'body-cloth' });
+  return material;
+}
+
+/**
+ * Skin, toon-lit in its own soft steps (`gradientMap`); at Ultra on WebGPU a soft rim and warm
+ * shadows (gpu/looks.ts, G2-5). WebGL draws it as before.
+ */
+export function skinMaterial(color: string, gradientMap: THREE.Texture): THREE.MeshToonMaterial {
+  const material = new THREE.MeshToonMaterial({ color, gradientMap });
+  setNodeLook(material, { kind: 'body-skin' });
+  return material;
+}
+
+/** Hair: a cloth's toon material (its folds); at Ultra on WebGPU a ring of sheen too (G2-5). */
+export function hairMaterial(color: string, gradientMap: THREE.Texture): THREE.MeshToonMaterial {
+  const material = clothMaterial(color, gradientMap);
+  setNodeLook(material, { kind: 'body-hair' });
   return material;
 }
 
@@ -3297,6 +3346,7 @@ ${shader.vertexShader.replace(
 )}`;
   };
   material.customProgramCacheKey = () => 'body-outline';
+  setNodeLook(material, { kind: 'body-outline', width: uniform });
   return material;
 }
 
@@ -3362,6 +3412,17 @@ const NO_SHADOW = new Set<Surface>([
   'bandage',
   'photo',
 ]);
+
+/**
+ * Its bounding sphere taken at rest, from the geometry: three otherwise skins every vertex to find
+ * it at the mesh's first draw, for the draw order (~90 ms for the teacher, in a door's frame on an
+ * RTX 5070, 2026-11-13). A body is never culled (`frustumCulled` false): only the order reads it.
+ */
+function rested(mesh: THREE.SkinnedMesh): void {
+  const { geometry } = mesh;
+  if (!geometry.boundingSphere) geometry.computeBoundingSphere();
+  if (geometry.boundingSphere) mesh.boundingSphere = geometry.boundingSphere.clone();
+}
 
 /**
  * Builds the skeleton and the meshes; materials by surface (the caller's, shared by its meshes),
@@ -3446,6 +3507,9 @@ export function buildBody(
   const extra = outlines ? [outlines.body, outlines.coat] : [];
   group.add(root, ...meshes, shadows.body, shadows.coat, ...extra);
   group.updateMatrixWorld(true);
-  for (const mesh of [...meshes, shadows.body, shadows.coat, ...extra]) mesh.bind(skeleton);
+  for (const mesh of [...meshes, shadows.body, shadows.coat, ...extra]) {
+    mesh.bind(skeleton);
+    rested(mesh);
+  }
   return { group, root, bones, skeleton, meshes, shadows, fit, outlines };
 }

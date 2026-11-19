@@ -18,6 +18,9 @@ const FADE_S = 1.2;
 /** The share of a sound in the world sent to the room's reverb. */
 const REVERB_SEND = 0.22;
 
+/** The muffle's cut-off (Hz) when the player is not stunned: open. */
+const MUFFLE_OFF_HZ = 20000;
+
 /**
  * The game's sound (Phase S), on the Web Audio API: the only code that makes any. The sound bank
  * (`content/sounds.json`) says what each sound is; `SoundCues` says when and where. Mixer: five
@@ -40,6 +43,9 @@ export class AudioView implements GameSystem, SoundOut {
   private reverb: ConvolverNode | null = null;
   private music: Music | null = null;
   private send: GainNode | null = null;
+  /** The world muffled while the player is stunned (all but the interface: the ringing is there). */
+  private muffle: BiquadFilterNode | null = null;
+  private muffledHz = 0;
   private readonly takes = new Map<string, AudioBuffer[] | 'loading' | 'failed'>();
   private readonly lastTake = new Map<string, number>();
   private readonly reverbs = new Map<string, AudioBuffer>();
@@ -111,6 +117,14 @@ export class AudioView implements GameSystem, SoundOut {
       if (phase === 'menu') this.music.mood = 'menu';
       else if (phase === 'playing') this.music.mood = 'lab';
       this.music.update();
+    }
+    // Stunned: the world through cotton, 600 Hz at the worst, clearing with the stun.
+    const stun = this.game.emergency.stun;
+    const hz =
+      stun > 0.01 ? Math.round((MUFFLE_OFF_HZ * Math.pow(0.03, stun)) / 50) * 50 : MUFFLE_OFF_HZ;
+    if (this.muffle && hz !== this.muffledHz) {
+      this.muffledHz = hz;
+      this.muffle.frequency.setTargetAtTime(hz, ctx.currentTime, 0.04);
     }
     const p = this.game.state.player;
     const look = p.pitch + p.glance;
@@ -184,17 +198,9 @@ export class AudioView implements GameSystem, SoundOut {
     const ctx = this.ctx;
     if (!ctx || !this.buses || !this.reverb) return;
     if (roomId) {
-      let impulse = this.reverbs.get(roomId);
-      if (!impulse) {
-        const [left, right] = impulseResponse(rt60, ctx.sampleRate);
-        impulse = ctx.createBuffer(2, left.length, ctx.sampleRate);
-        impulse.copyToChannel(left, 0);
-        impulse.copyToChannel(right, 1);
-        this.reverbs.set(roomId, impulse);
-      }
       // shortcut: the reverb switches at once at a doorway (no crossfade between two convolvers);
       // crossfade them if the change is heard.
-      this.reverb.buffer = impulse;
+      this.reverb.buffer = this.reverbOf(ctx, roomId, rt60);
     }
     if (this.air?.id === ambience) return;
     const t = ctx.currentTime;
@@ -241,10 +247,15 @@ export class AudioView implements GameSystem, SoundOut {
     const master = ctx.createGain();
     master.connect(ctx.destination);
     const buses = { master } as Record<AudioBus, GainNode>;
+    this.muffle = ctx.createBiquadFilter();
+    this.muffle.type = 'lowpass';
+    this.muffle.frequency.value = MUFFLE_OFF_HZ;
+    this.muffledHz = MUFFLE_OFF_HZ;
+    this.muffle.connect(master);
     for (const bus of AUDIO_BUSES) {
       if (bus === 'master') continue;
       buses[bus] = ctx.createGain();
-      buses[bus].connect(master);
+      buses[bus].connect(bus === 'interface' ? master : this.muffle);
     }
     this.buses = buses;
     this.reverb = ctx.createConvolver();
@@ -280,6 +291,39 @@ export class AudioView implements GameSystem, SoundOut {
     const p = this.game.state.player;
     const dy = at[1] - p.position[1] - p.eyeHeight;
     return Math.hypot(at[0] - p.position[0], dy, at[2] - p.position[2]) > max;
+  }
+
+  /**
+   * Rooms of a scene coming in: their reverb and air made in idle time, one room a callback — made
+   * in the frame they were walked into, the hub's took ~20 ms of it (RTX 5070 machine, 2026-11-14).
+   */
+  prepare(rooms: readonly { roomId: string; ambience: string | null; rt60: number }[]): void {
+    const later =
+      typeof requestIdleCallback === 'function'
+        ? (run: () => void) => requestIdleCallback(run, { timeout: 1000 })
+        : (run: () => void) => setTimeout(run, 50);
+    for (const { roomId, ambience, rt60 } of rooms) {
+      later(() => {
+        const ctx = this.ctx;
+        if (!ctx) return; // not unlocked yet: made when first needed
+        this.reverbOf(ctx, roomId, rt60);
+        const sound = ambience ? this.sounds.get(ambience) : undefined;
+        if (sound) this.buffersOf(sound);
+      });
+    }
+  }
+
+  /** A room's reverb, made the first time. */
+  private reverbOf(ctx: AudioContext, roomId: string, rt60: number): AudioBuffer {
+    let impulse = this.reverbs.get(roomId);
+    if (!impulse) {
+      const [left, right] = impulseResponse(rt60, ctx.sampleRate);
+      impulse = ctx.createBuffer(2, left.length, ctx.sampleRate);
+      impulse.copyToChannel(left, 0);
+      impulse.copyToChannel(right, 1);
+      this.reverbs.set(roomId, impulse);
+    }
+    return impulse;
   }
 
   /** A sound's takes, made or loaded on first need (null until they are there). */

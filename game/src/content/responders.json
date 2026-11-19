@@ -1,0 +1,944 @@
+[
+  {
+    "id": "fire-squad",
+    "numbers": ["114"],
+    "behavior": "fire-rescue",
+    "siren": "wail",
+    "title": "Firefighter",
+    "vi": {
+      "title": "Lính cứu hoả"
+    },
+    "livery": {
+      "body": "#c8241c",
+      "stripe": "#f2f2f2",
+      "lettering": "CỨU HỎA 114",
+      "beacon": "#ff3b30"
+    },
+    "helmet": "fire",
+    "pack": "air-tank",
+    "back": "CỨU HỎA",
+    "arrival": {
+      "scene": "simlab-hub",
+      "at": [0, -3],
+      "ceiling": 9,
+      "radius": 3.6
+    },
+    "members": [
+      {
+        "id": "firefighter-1",
+        "realBody": "rocketbox-fire-male-01",
+        "displayName": "Firefighter 1",
+        "role": "Firefighter",
+        "trait": "Quick, calm and very serious about false alarms.",
+        "vi": {
+          "displayName": "Lính cứu hoả 1",
+          "role": "Lính cứu hoả",
+          "trait": "Nhanh, bình tĩnh và rất nghiêm với những cuộc gọi đùa."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.78,
+          "skinTone": "#d9ac85",
+          "hairColor": "#16151a",
+          "shoulderM": 0.46,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.12,
+          "muscle": 0.6,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "none",
+          "clothes": {
+            "top": "#2b2f38",
+            "bottom": "#d9a441",
+            "shoes": "#141414",
+            "accent": "#c9cdd2",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "zip",
+            "jacketColour": "#d9a441",
+            "jacketTrim": "#e8eaee",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "long"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "firefighter-2",
+        "realBody": "rocketbox-fire-male-03",
+        "displayName": "Firefighter 2",
+        "role": "Firefighter",
+        "trait": "Quick, calm and very serious about false alarms.",
+        "vi": {
+          "displayName": "Lính cứu hoả 2",
+          "role": "Lính cứu hoả",
+          "trait": "Nhanh, bình tĩnh và rất nghiêm với những cuộc gọi đùa."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.72,
+          "skinTone": "#c99a72",
+          "hairColor": "#221c18",
+          "shoulderM": 0.44,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.05,
+          "muscle": 0.5,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "none",
+          "clothes": {
+            "top": "#2b2f38",
+            "bottom": "#d9a441",
+            "shoes": "#141414",
+            "accent": "#c9cdd2",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "zip",
+            "jacketColour": "#d9a441",
+            "jacketTrim": "#e8eaee",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "long"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "firefighter-3",
+        "realBody": "rocketbox-fire-male-05",
+        "displayName": "Firefighter 3",
+        "role": "Firefighter",
+        "trait": "Quick, calm and very serious about false alarms.",
+        "vi": {
+          "displayName": "Lính cứu hoả 3",
+          "role": "Lính cứu hoả",
+          "trait": "Nhanh, bình tĩnh và rất nghiêm với những cuộc gọi đùa."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.81,
+          "skinTone": "#e2b996",
+          "hairColor": "#1b1a1f",
+          "shoulderM": 0.47,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.15,
+          "muscle": 0.65,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "none",
+          "clothes": {
+            "top": "#2b2f38",
+            "bottom": "#d9a441",
+            "shoes": "#141414",
+            "accent": "#c9cdd2",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "zip",
+            "jacketColour": "#d9a441",
+            "jacketTrim": "#e8eaee",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "long"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "firefighter-4",
+        "realBody": "rocketbox-fire-male-06",
+        "displayName": "Firefighter 4",
+        "role": "Firefighter",
+        "trait": "Quick, calm and very serious about false alarms.",
+        "vi": {
+          "displayName": "Lính cứu hoả 4",
+          "role": "Lính cứu hoả",
+          "trait": "Nhanh, bình tĩnh và rất nghiêm với những cuộc gọi đùa."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.69,
+          "skinTone": "#b98a63",
+          "hairColor": "#2a2420",
+          "shoulderM": 0.43,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.02,
+          "muscle": 0.45,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "none",
+          "clothes": {
+            "top": "#2b2f38",
+            "bottom": "#d9a441",
+            "shoes": "#141414",
+            "accent": "#c9cdd2",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "zip",
+            "jacketColour": "#d9a441",
+            "jacketTrim": "#e8eaee",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "long"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      }
+    ],
+    "lines": {
+      "arrive": [
+        {
+          "text": "Fire and rescue! Where is the fire? Stay back, everyone!",
+          "vi": {
+            "text": "Cứu hoả đây! Đám cháy ở đâu? Mọi người lùi lại!"
+          }
+        },
+        {
+          "text": "Fire and rescue again! … Where is it burning this time?",
+          "vi": {
+            "text": "Cứu hỏa lại đến đây! … Lần này cháy ở đâu?"
+          }
+        },
+        {
+          "text": "Third call from SimLab today. If there is no fire, somebody is in trouble.",
+          "vi": {
+            "text": "Cuộc gọi thứ ba từ SimLab hôm nay rồi. Mà không có cháy thì có người gặp rắc rối đấy."
+          }
+        },
+        {
+          "text": "Fourth time! Everybody stay exactly where you are!",
+          "vi": {
+            "text": "Lần thứ tư! Tất cả đứng yên tại chỗ!"
+          }
+        },
+        {
+          "text": "Again?! We know this address by heart now. Where is the fire, if there is one?",
+          "vi": {
+            "text": "Lại nữa à?! Địa chỉ này bọn tôi thuộc lòng rồi. Cháy ở đâu, nếu có?"
+          }
+        }
+      ],
+      "work": [
+        {
+          "text": "Hose on! Knock it down, keep the water on its base!",
+          "vi": {
+            "text": "Mở vòi! Dập nó xuống, phun vào gốc lửa!"
+          }
+        },
+        {
+          "text": "Hose on! Hit the base of it, not the smoke!",
+          "vi": {
+            "text": "Mở vòi! Phun vào gốc lửa, đừng phun vào khói!"
+          }
+        }
+      ],
+      "done": [
+        {
+          "text": "Fire is out. Area safe. Nobody touch that bench until it cools.",
+          "vi": {
+            "text": "Lửa tắt rồi. Khu vực an toàn. Không ai được chạm vào bàn đó cho đến khi nó nguội."
+          }
+        },
+        {
+          "text": "Out. Good. Keep everyone back from it until it is cold.",
+          "vi": {
+            "text": "Tắt rồi. Tốt. Giữ mọi người tránh xa cho đến khi nó nguội hẳn."
+          }
+        }
+      ],
+      "scold": [
+        {
+          "text": "There is no fire here! Who called 114 for nothing?",
+          "vi": {
+            "text": "Ở đây làm gì có cháy! Ai gọi 114 cho vui vậy hả?"
+          }
+        },
+        {
+          "text": "You again? There is still no fire!",
+          "vi": {
+            "text": "Lại là cậu à? Vẫn không có cháy nào cả!"
+          }
+        },
+        {
+          "text": "Third time! Do you think this is a game?",
+          "vi": {
+            "text": "Lần thứ ba rồi! Cậu nghĩ đây là trò chơi à?"
+          }
+        },
+        {
+          "text": "Four calls and not one flame. Your name is going in my report.",
+          "vi": {
+            "text": "Bốn cuộc gọi mà không một ngọn lửa. Tên cậu sẽ có trong biên bản của tôi."
+          }
+        },
+        {
+          "text": "That is it. I am telling your teacher, and your parents.",
+          "vi": {
+            "text": "Thôi đủ rồi. Tôi sẽ báo với thầy cậu, và cả bố mẹ cậu."
+          }
+        }
+      ],
+      "lesson": [
+        {
+          "text": "An emergency line is not a toy. While we are here, someone with a real fire waits.",
+          "vi": {
+            "text": "Số khẩn cấp không phải đồ chơi. Trong lúc bọn tôi ở đây, có người đang cháy nhà thật phải chờ."
+          }
+        },
+        {
+          "text": "Every false call takes a truck away from a real fire. Remember that.",
+          "vi": {
+            "text": "Mỗi cuộc gọi bậy là một chiếc xe bị kéo khỏi một đám cháy thật. Nhớ lấy."
+          }
+        },
+        {
+          "text": "A real fire can double in a minute. That minute, we spent here.",
+          "vi": {
+            "text": "Một đám cháy thật có thể lớn gấp đôi chỉ trong một phút. Phút đó, bọn tôi đã tiêu ở đây."
+          }
+        },
+        {
+          "text": "Calling an emergency line for nothing is against the law. This is your last warning.",
+          "vi": {
+            "text": "Gọi số khẩn cấp khi không có việc gì là vi phạm pháp luật. Đây là lần cảnh cáo cuối cùng."
+          }
+        },
+        {
+          "text": "Next time there will be a written report and a penalty. Not a warning.",
+          "vi": {
+            "text": "Lần sau sẽ là biên bản và xử phạt. Không cảnh cáo nữa đâu."
+          }
+        }
+      ],
+      "ask": [
+        {
+          "text": "Sir, a call to 114 came from here. Is there a fire anywhere?",
+          "vi": {
+            "text": "Thưa thầy, có cuộc gọi 114 từ đây. Có đám cháy nào không ạ?"
+          }
+        },
+        {
+          "text": "Sir, it is us again. Another call to 114. Any fire this time?",
+          "vi": {
+            "text": "Thưa thầy, lại là bọn tôi. Lại có cuộc gọi 114. Lần này có cháy không ạ?"
+          }
+        },
+        {
+          "text": "Sir, this is the third time. Please tell me there is a real fire.",
+          "vi": {
+            "text": "Thưa thầy, đây là lần thứ ba rồi. Xin thầy nói là có cháy thật đi ạ."
+          }
+        }
+      ],
+      "answer": [
+        {
+          "text": "No, there is no fire here. The students are working in the labs.",
+          "vi": {
+            "text": "Không, ở đây không có cháy. Các em đang làm việc trong phòng thí nghiệm."
+          }
+        },
+        {
+          "text": "Again? No… there is still no fire. I am sorry, officers.",
+          "vi": {
+            "text": "Lại nữa sao? Không… vẫn không có cháy. Tôi xin lỗi các anh."
+          }
+        },
+        {
+          "text": "No fire. I will find out which of them is doing this, I promise.",
+          "vi": {
+            "text": "Không có cháy. Tôi hứa sẽ tìm ra em nào làm chuyện này."
+          }
+        }
+      ],
+      "fled": [
+        {
+          "text": "Hey! Running off, are you? Call 114 for nothing again and you will answer for it!",
+          "vi": {
+            "text": "Này! Chạy đi đâu đấy? Còn gọi 114 bậy lần nữa thì biết tay!"
+          }
+        },
+        {
+          "text": "Running again? We will be back, you know!",
+          "vi": {
+            "text": "Lại chạy nữa à? Bọn tôi sẽ quay lại đấy!"
+          }
+        },
+        {
+          "text": "You cannot run from 114 forever!",
+          "vi": {
+            "text": "Cậu không chạy khỏi 114 mãi được đâu!"
+          }
+        }
+      ],
+      "remind": [
+        {
+          "text": "Then someone called for nothing. Please keep an eye on your students, sir. An emergency line is not a toy.",
+          "vi": {
+            "text": "Vậy là có người gọi nhầm rồi. Nhờ thầy trông coi các em cẩn thận giúp. Số khẩn cấp không phải đồ chơi."
+          }
+        },
+        {
+          "text": "Again nobody. Sir, please, talk to your students about this.",
+          "vi": {
+            "text": "Lại không thấy ai. Thầy ơi, nhờ thầy nói chuyện với các em về việc này."
+          }
+        },
+        {
+          "text": "Sir, next time we will have to take someone with us. Please keep watch.",
+          "vi": {
+            "text": "Thưa thầy, lần sau bọn tôi sẽ phải đưa người về làm việc. Nhờ thầy để mắt giúp."
+          }
+        }
+      ],
+      "followUp": [
+        {
+          "text": "Was it you who called 114? The firefighters came for nothing. Only call an emergency number when there is a real emergency.",
+          "vi": {
+            "text": "Em vừa gọi 114 phải không? Đội cứu hỏa đã đến mà không có việc gì. Chỉ gọi số khẩn cấp khi thật sự có chuyện thôi nhé."
+          }
+        },
+        {
+          "text": "The firefighters came again. Was it you? This has to stop, now.",
+          "vi": {
+            "text": "Đội cứu hỏa lại đến nữa rồi. Có phải em không? Chuyện này phải dừng lại, ngay bây giờ."
+          }
+        },
+        {
+          "text": "Third time. I am disappointed. A real emergency line saves lives — it is not for fun.",
+          "vi": {
+            "text": "Lần thứ ba rồi. Thầy rất thất vọng. Số khẩn cấp là để cứu người, không phải để đùa."
+          }
+        }
+      ],
+      "leave": [
+        {
+          "text": "Back to the ropes! Move, move!",
+          "vi": {
+            "text": "Về dây! Nhanh lên!"
+          }
+        },
+        {
+          "text": "Pack it up. Nothing here. Again.",
+          "vi": {
+            "text": "Thu dọn. Không có gì. Lại thế."
+          }
+        },
+        {
+          "text": "Back to the ropes. This is getting old.",
+          "vi": {
+            "text": "Về dây. Chuyện này cũ rích rồi."
+          }
+        },
+        {
+          "text": "Move out! And somebody tell them to fix that ceiling.",
+          "vi": {
+            "text": "Rút! Và ai đó bảo họ sửa cái trần kia đi."
+          }
+        },
+        {
+          "text": "Let us go before they call a sixth time.",
+          "vi": {
+            "text": "Đi thôi, trước khi họ gọi lần thứ sáu."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "police-squad",
+    "numbers": ["113", "911"],
+    "behavior": "police-check",
+    "siren": "yelp",
+    "title": "Police",
+    "vi": {
+      "title": "Cảnh sát"
+    },
+    "livery": {
+      "body": "#1c3f8f",
+      "stripe": "#f2f2f2",
+      "lettering": "CẢNH SÁT 113",
+      "beacon": "#2f7bff"
+    },
+    "helmet": "tactical",
+    "pack": "radio",
+    "back": "CẢNH SÁT",
+    "arrival": {
+      "scene": "simlab-hub",
+      "at": [0, -3],
+      "ceiling": 9,
+      "radius": 3.6
+    },
+    "members": [
+      {
+        "id": "police-1",
+        "realBody": "rocketbox-police-male-01",
+        "displayName": "Police officer 1",
+        "role": "Police officer",
+        "trait": "Firm, polite, and here to see that everyone is safe.",
+        "vi": {
+          "displayName": "Cảnh sát 1",
+          "role": "Cảnh sát",
+          "trait": "Nghiêm, lịch sự, đến để chắc mọi người đều an toàn."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.78,
+          "skinTone": "#d9ac85",
+          "hairColor": "#16151a",
+          "shoulderM": 0.46,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.12,
+          "muscle": 0.6,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "shades",
+          "clothes": {
+            "top": "#1f2f4f",
+            "bottom": "#1b2232",
+            "shoes": "#101010",
+            "accent": "#d8b23a",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "vest",
+            "jacketColour": "#15181e",
+            "jacketTrim": "#d8b23a",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "fingerless"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "police-2",
+        "realBody": "rocketbox-police-male-02",
+        "displayName": "Police officer 2",
+        "role": "Police officer",
+        "trait": "Firm, polite, and here to see that everyone is safe.",
+        "vi": {
+          "displayName": "Cảnh sát 2",
+          "role": "Cảnh sát",
+          "trait": "Nghiêm, lịch sự, đến để chắc mọi người đều an toàn."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.72,
+          "skinTone": "#c99a72",
+          "hairColor": "#221c18",
+          "shoulderM": 0.44,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.05,
+          "muscle": 0.5,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "shades",
+          "clothes": {
+            "top": "#1f2f4f",
+            "bottom": "#1b2232",
+            "shoes": "#101010",
+            "accent": "#d8b23a",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "vest",
+            "jacketColour": "#15181e",
+            "jacketTrim": "#d8b23a",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "fingerless"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "police-3",
+        "realBody": "rocketbox-police-male-03",
+        "displayName": "Police officer 3",
+        "role": "Police officer",
+        "trait": "Firm, polite, and here to see that everyone is safe.",
+        "vi": {
+          "displayName": "Cảnh sát 3",
+          "role": "Cảnh sát",
+          "trait": "Nghiêm, lịch sự, đến để chắc mọi người đều an toàn."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.81,
+          "skinTone": "#e2b996",
+          "hairColor": "#1b1a1f",
+          "shoulderM": 0.47,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.15,
+          "muscle": 0.65,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "shades",
+          "clothes": {
+            "top": "#1f2f4f",
+            "bottom": "#1b2232",
+            "shoes": "#101010",
+            "accent": "#d8b23a",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "vest",
+            "jacketColour": "#15181e",
+            "jacketTrim": "#d8b23a",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "fingerless"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      },
+      {
+        "id": "police-4",
+        "realBody": "rocketbox-police-male-04",
+        "displayName": "Police officer 4",
+        "role": "Police officer",
+        "trait": "Firm, polite, and here to see that everyone is safe.",
+        "vi": {
+          "displayName": "Cảnh sát 4",
+          "role": "Cảnh sát",
+          "trait": "Nghiêm, lịch sự, đến để chắc mọi người đều an toàn."
+        },
+        "gender": "male",
+        "appearance": {
+          "heightM": 1.69,
+          "skinTone": "#b98a63",
+          "hairColor": "#2a2420",
+          "shoulderM": 0.43,
+          "hipM": 0.35,
+          "waistM": 0.34,
+          "build": 1.02,
+          "muscle": 0.45,
+          "hair": "short",
+          "eyeColor": "#2e2219",
+          "glasses": "shades",
+          "clothes": {
+            "top": "#1f2f4f",
+            "bottom": "#1b2232",
+            "shoes": "#101010",
+            "accent": "#d8b23a",
+            "neck": "collar",
+            "skirt": false,
+            "sleeves": "long",
+            "jacket": "vest",
+            "jacketColour": "#15181e",
+            "jacketTrim": "#d8b23a",
+            "legs": "cargo",
+            "footwear": "boots",
+            "gloves": "fingerless"
+          }
+        },
+        "outfit": {
+          "default": "lab-coat"
+        },
+        "profile": {
+          "pose": "arms-crossed",
+          "seat": 0,
+          "coat": false
+        }
+      }
+    ],
+    "lines": {
+      "arrive": [
+        {
+          "text": "Police! Nobody move! … Where is the emergency?",
+          "vi": {
+            "text": "Cảnh sát đây! Tất cả đứng yên! … Có chuyện gì khẩn cấp?"
+          }
+        },
+        {
+          "text": "Police again! … Right. What is it this time?",
+          "vi": {
+            "text": "Cảnh sát lại đây! … Được rồi. Lần này có chuyện gì?"
+          }
+        },
+        {
+          "text": "Third call to 113 from here. Everyone, hands where I can see them.",
+          "vi": {
+            "text": "Cuộc gọi 113 thứ ba từ đây. Mọi người, để tay ở chỗ tôi nhìn thấy."
+          }
+        },
+        {
+          "text": "Fourth time. Nobody leaves until we know who is calling.",
+          "vi": {
+            "text": "Lần thứ tư. Không ai được rời đi cho đến khi biết ai đang gọi."
+          }
+        },
+        {
+          "text": "SimLab. Again. Alright, let us get this over with.",
+          "vi": {
+            "text": "SimLab. Lại nữa. Được rồi, làm cho xong đi."
+          }
+        }
+      ],
+      "work": [
+        {
+          "text": "Huh? Everyone is just… studying?",
+          "vi": {
+            "text": "Hả? Mọi người chỉ đang… học bài thôi à?"
+          }
+        },
+        {
+          "text": "Same as last time… they are all just studying.",
+          "vi": {
+            "text": "Giống lần trước… mọi người chỉ đang học thôi."
+          }
+        },
+        {
+          "text": "Nothing. Again. Somebody is wasting our time.",
+          "vi": {
+            "text": "Không có gì. Lại thế. Có người đang phí thời gian của bọn tôi."
+          }
+        }
+      ],
+      "ask": [
+        {
+          "text": "Excuse me, sir. We had a call to 113 from here. Is anything wrong?",
+          "vi": {
+            "text": "Xin lỗi thầy. Chúng tôi nhận cuộc gọi 113 từ đây. Có chuyện gì không ạ?"
+          }
+        },
+        {
+          "text": "Sir, us again. Another 113 call from this building. Anything wrong?",
+          "vi": {
+            "text": "Thưa thầy, lại là chúng tôi. Lại có cuộc gọi 113 từ tòa nhà này. Có chuyện gì không ạ?"
+          }
+        },
+        {
+          "text": "Sir, third call. Do you know who keeps doing this?",
+          "vi": {
+            "text": "Thưa thầy, cuộc gọi thứ ba rồi. Thầy có biết ai cứ làm thế không?"
+          }
+        }
+      ],
+      "answer": [
+        {
+          "text": "No, nothing at all. We are just doing experiments.",
+          "vi": {
+            "text": "Không, không có chuyện gì cả. Chúng tôi chỉ đang làm thí nghiệm thôi."
+          }
+        },
+        {
+          "text": "Nothing again, officers. I am terribly sorry.",
+          "vi": {
+            "text": "Lại không có gì, thưa các anh. Tôi thật sự xin lỗi."
+          }
+        },
+        {
+          "text": "I do not know yet. But I will find out, I promise you.",
+          "vi": {
+            "text": "Tôi chưa biết. Nhưng tôi hứa sẽ tìm ra."
+          }
+        }
+      ],
+      "scold": [
+        {
+          "text": "Was it you who called? There is no emergency here.",
+          "vi": {
+            "text": "Là cậu gọi phải không? Ở đây không có chuyện gì khẩn cấp cả."
+          }
+        },
+        {
+          "text": "You again? There is no emergency here. There never is.",
+          "vi": {
+            "text": "Lại là cậu à? Ở đây không có gì khẩn cấp. Chưa bao giờ có."
+          }
+        },
+        {
+          "text": "Third time. Do you know what a false report is?",
+          "vi": {
+            "text": "Lần thứ ba. Cậu có biết báo tin giả là gì không?"
+          }
+        },
+        {
+          "text": "Four false calls. You are now on record.",
+          "vi": {
+            "text": "Bốn cuộc gọi giả. Cậu đã có tên trong hồ sơ rồi."
+          }
+        },
+        {
+          "text": "Enough. Your teacher and your family will hear about this.",
+          "vi": {
+            "text": "Đủ rồi. Thầy và gia đình cậu sẽ được biết chuyện này."
+          }
+        }
+      ],
+      "lesson": [
+        {
+          "text": "Calling 113 for nothing keeps us from someone who really needs help. This is a warning: do not do it again.",
+          "vi": {
+            "text": "Gọi 113 khi không có việc gì là làm lỡ việc của người thật sự cần giúp. Đây là lời cảnh cáo: không được tái phạm."
+          }
+        },
+        {
+          "text": "While we stand here, someone in real danger waits. Think about that.",
+          "vi": {
+            "text": "Trong lúc bọn tôi đứng đây, có người gặp nguy thật đang phải chờ. Nghĩ về điều đó đi."
+          }
+        },
+        {
+          "text": "False calls to 113 are against the law. This is your final warning.",
+          "vi": {
+            "text": "Gọi 113 báo tin giả là vi phạm pháp luật. Đây là lời cảnh cáo cuối cùng."
+          }
+        },
+        {
+          "text": "Next time it will not be a warning. It will be a report and a penalty.",
+          "vi": {
+            "text": "Lần sau sẽ không còn là cảnh cáo nữa. Sẽ là biên bản và xử phạt."
+          }
+        }
+      ],
+      "fled": [
+        {
+          "text": "Hey, you! Stop! … Next time we will find you. Do not call 113 for nothing.",
+          "vi": {
+            "text": "Này, cậu kia! Đứng lại! … Lần sau thì không thoát đâu. Đừng gọi 113 bậy nữa."
+          }
+        },
+        {
+          "text": "Running again? We know your face now!",
+          "vi": {
+            "text": "Lại chạy à? Bọn tôi nhớ mặt cậu rồi đấy!"
+          }
+        },
+        {
+          "text": "You can run. The call log does not.",
+          "vi": {
+            "text": "Cậu chạy được. Nhật ký cuộc gọi thì không."
+          }
+        }
+      ],
+      "remind": [
+        {
+          "text": "We could not find who called. Please keep an eye on your students, sir.",
+          "vi": {
+            "text": "Chúng tôi không thấy người gọi. Nhờ thầy để ý các em giúp."
+          }
+        },
+        {
+          "text": "Nobody to be seen, again. Sir, please speak to your students.",
+          "vi": {
+            "text": "Lại không thấy ai. Thưa thầy, nhờ thầy nói chuyện với các em."
+          }
+        },
+        {
+          "text": "Sir, if it happens again we will have to come in and question them.",
+          "vi": {
+            "text": "Thưa thầy, nếu còn nữa chúng tôi sẽ phải vào làm việc với các em."
+          }
+        }
+      ],
+      "followUp": [
+        {
+          "text": "Did you call 113? The police came here for nothing. Emergency numbers are only for real emergencies. Remember that.",
+          "vi": {
+            "text": "Em vừa gọi 113 phải không? Cảnh sát đã đến đây mà không có việc gì. Số khẩn cấp chỉ dùng khi thật sự khẩn cấp, nhớ nhé."
+          }
+        },
+        {
+          "text": "The police came again. Tell me honestly: was it you?",
+          "vi": {
+            "text": "Cảnh sát lại đến nữa. Nói thật với thầy: có phải em không?"
+          }
+        },
+        {
+          "text": "Third time the police came for nothing. Emergency numbers save lives. No more.",
+          "vi": {
+            "text": "Lần thứ ba cảnh sát đến mà không có việc gì. Số khẩn cấp là để cứu người. Không được nữa."
+          }
+        }
+      ],
+      "leave": [
+        {
+          "text": "All clear. Team, back to the helicopter!",
+          "vi": {
+            "text": "Không có gì. Cả đội, về trực thăng!"
+          }
+        },
+        {
+          "text": "Nothing. Again. Back to the helicopter.",
+          "vi": {
+            "text": "Không có gì. Lại thế. Về trực thăng."
+          }
+        },
+        {
+          "text": "Let us go. And log this address.",
+          "vi": {
+            "text": "Đi thôi. Và ghi lại địa chỉ này."
+          }
+        },
+        {
+          "text": "Move out. I want this building flagged.",
+          "vi": {
+            "text": "Rút. Đánh dấu tòa nhà này cho tôi."
+          }
+        }
+      ]
+    }
+  }
+]

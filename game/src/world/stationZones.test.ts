@@ -211,6 +211,6 @@ function checkZones(
 describe('the Physics Lab’s experiment zones', () => checkZones('physics-lab', 569, ZONES)); // Phase T-1a: the wing's four rooms; T-2: four stations; T-3: seven; T-4: seven; the ripple tank and the electric field; the air track and the Atwood machine; Phase X: the AC generator (12); Phase E: the circuit bench (40 + 2)
 
 describe('the Chemistry Lab’s experiment zones', () =>
-  checkZones('chemistry-lab', 295, CHEMISTRY_ZONES)); // Y-3: the board; + the light switch, the titration bench's 16, 3 lights + housings, T-5's solubility station (13); Phase X: the practice room's 3 lights and its stations (13 each)
+  checkZones('chemistry-lab', 298, CHEMISTRY_ZONES)); // the annex door (frame, two leaves: 2026-11-14); Y-3: the board; + the light switch, the titration bench's 16, 3 lights + housings, T-5's solubility station (13); Phase X: the practice room's 3 lights and its stations (13 each)
 
-describe('the Biology Lab’s experiment zones', () => checkZones('biology-lab', 251, BIOLOGY_ZONES)); // Y-3: the board; + 3 lights + housings, the enzyme bench, T-6's transpiration station (13), T-6b's stations (respiration and pea cross 13 each, mark and recapture and food tests 12: three dials); Phase X: the practice room's 3 lights and its twelve stations
+describe('the Biology Lab’s experiment zones', () => checkZones('biology-lab', 254, BIOLOGY_ZONES)); // the annex door (frame, two leaves: 2026-11-14); Y-3: the board; + 3 lights + housings, the enzyme bench, T-6's transpiration station (13), T-6b's stations (respiration and pea cross 13 each, mark and recapture and food tests 12: three dials); Phase X: the practice room's 3 lights and its twelve stations

@@ -500,6 +500,12 @@ export const ItemDefinitionSchema = z
          * instead of the plain primitive; the box stays the collider and the aim box.
          */
         prop: z.enum(PROPS).optional(),
+        /**
+         * Hung from the ceiling: when the ceiling over it is blown open (an emergency's breach),
+         * it falls and breaks on the floor, and is back when the ceiling is mended. Drawing only:
+         * a hung object has no body (`physical.body` none).
+         */
+        hanging: z.boolean().default(false),
       })
       .refine(
         ({ shape, size: [w, h, d] }) =>
@@ -547,6 +553,10 @@ export const ItemDefinitionSchema = z
       }
       if (grip && (physical.body !== 'dynamic' || !interactions.includes('grab'))) {
         issue(['grip'], '"grip" needs a dynamic body and "grab"');
+      }
+      // It falls only as drawn: nothing of it may stand in the world's physics.
+      if (visual.hanging && physical.body !== 'none') {
+        issue(['visual', 'hanging'], '"hanging" needs no body (physical.body "none")');
       }
       if (physical.handling !== 'free' && (physical.body !== 'dynamic' || physical.throwable)) {
         issue(['physical', 'handling'], `"${physical.handling}" needs a dynamic, unthrowable body`);

@@ -1,0 +1,476 @@
+/* The rocket opening's notes (rocketOverlay.ts; Phú 2026-11-18) over the live wallpaper, in the
+   live menu's ink: solid colours, ink lines, slanted labels, hard shadows. Its motion is
+   transforms and opacity (the compositor's), but for the leader lines drawn in. */
+
+.rocket-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  --r-ink: #111417;
+  --r-accent: #ffd23f;
+  --r-glass: rgb(255 255 255 / 92%);
+  --r-dim: #3a4450;
+  --r-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --r-ease: cubic-bezier(0.2, 0.9, 0.1, 1);
+  color: var(--r-ink);
+  font: 14px / 1.35 var(--font-sans);
+}
+
+.rocket-lines,
+.rocket-tags {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Leader lines: an ink line on a white one, drawn in, a dot where they point. */
+.rocket-leaders path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.rocket-leaders .under {
+  stroke: #ffffff;
+  stroke-width: 8;
+}
+
+.rocket-leaders .ink {
+  stroke: var(--r-ink);
+  stroke-width: 3.5;
+}
+
+.rocket-leaders .dot {
+  fill: var(--r-accent);
+  stroke: var(--r-ink);
+  stroke-width: 3;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.rocket-leaders.on path {
+  animation: rocket-draw 0.5s var(--r-ease) var(--delay) forwards;
+}
+
+.rocket-leaders.on .dot {
+  animation: rocket-dot 0.35s var(--r-spring) var(--delay) forwards;
+}
+
+.rocket-leaders:not(.on) {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+@keyframes rocket-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rocket-dot {
+  from {
+    opacity: 1;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* The notes' panels: one shot at a time, slammed in slanted, their rows after. */
+.rocket-panel {
+  position: absolute;
+  width: min(440px, 34vw);
+  padding-bottom: 14px;
+  background: var(--r-glass);
+  border: 3px solid var(--r-ink);
+  box-shadow: 8px 8px 0 var(--r-ink);
+  opacity: 0;
+  transform: translateX(-46px) skewX(-8deg);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.rocket-panel.on {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.55s var(--r-spring);
+}
+
+.rocket-panel.chem {
+  left: 4vw;
+  bottom: 7vh;
+}
+
+.rocket-panel.phys {
+  right: 4vw;
+  top: 20vh;
+  transform: translateX(46px) skewX(-8deg);
+}
+
+.rocket-panel.phys.on {
+  transform: none;
+}
+
+/* Low on the left: his face is high in the cabin's picture. */
+.rocket-panel.bio {
+  left: 4vw;
+  bottom: 6vh;
+  width: min(640px, 46vw);
+}
+
+.rocket-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  background: var(--r-accent);
+  border-bottom: 3px solid var(--r-ink);
+}
+
+.rocket-subject {
+  padding: 2px 10px;
+  background: var(--r-ink);
+  color: var(--r-accent);
+  font: 900 italic 12px / 1.4 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: skewX(-12deg);
+}
+
+.rocket-title {
+  font: 900 italic 16px / 1.2 var(--font-sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.rocket-badge {
+  margin-left: auto;
+  padding: 1px 8px;
+  border: 2px solid var(--r-ink);
+  background: #ffffff;
+  font: 800 11px / 1.4 var(--font-sans);
+}
+
+.rocket-eq {
+  padding: 12px 16px 4px;
+  font:
+    800 25px / 1.2 'Cambria Math',
+    'Segoe UI',
+    serif;
+  opacity: 0;
+  transform: scale(0.85);
+  transform-origin: left center;
+}
+
+.rocket-panel.on .rocket-eq {
+  animation: rocket-pop 0.45s var(--r-spring) 0.2s forwards;
+}
+
+.rocket-rows {
+  display: grid;
+  gap: 3px;
+  padding: 10px 16px 0;
+}
+
+.rocket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.rocket-panel.on .rocket-row {
+  animation: rocket-rise 0.35s var(--r-ease) calc(0.3s + var(--i) * 0.11s) forwards;
+}
+
+.rocket-value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rocket-swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  margin-right: 7px;
+  border: 2px solid var(--r-ink);
+  vertical-align: -1px;
+}
+
+/* A force's direction as drawn: an arrow turned to it. */
+.rocket-dir {
+  display: inline-block;
+  width: 11px;
+  height: 14px;
+  margin-left: 7px;
+  vertical-align: -2px;
+  background: var(--r-ink);
+  clip-path: polygon(50% 0, 100% 46%, 66% 46%, 66% 100%, 34% 100%, 34% 46%, 0 46%);
+}
+
+.rocket-note {
+  margin: 10px 16px 0;
+  color: var(--r-dim);
+  font-size: 12px;
+  opacity: 0;
+}
+
+.rocket-panel.on .rocket-note {
+  animation: rocket-rise 0.4s var(--r-ease) 1s forwards;
+}
+
+/* Khoa: his vitals (a heart trace drawn in) beside the cabin's air (bars filling). */
+.rocket-bio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 4px;
+}
+
+.rocket-ecg {
+  display: block;
+  width: calc(100% - 32px);
+  height: 40px;
+  margin: 10px 16px 0;
+  overflow: visible;
+}
+
+.rocket-ecg polyline {
+  fill: none;
+  stroke: #d8343c;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.rocket-panel.on .rocket-ecg polyline {
+  animation: rocket-draw 1.6s linear 0.3s forwards;
+}
+
+.rocket-air {
+  padding: 10px 16px 0 0;
+}
+
+.rocket-air-title {
+  margin-bottom: 4px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.rocket-gas {
+  display: grid;
+  grid-template-columns: 7.5em 1fr;
+  align-items: center;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+}
+
+.rocket-panel.on .rocket-gas {
+  animation: rocket-rise 0.3s var(--r-ease) calc(0.3s + var(--i) * 0.11s) forwards;
+}
+
+.rocket-bar {
+  position: relative;
+  height: 12px;
+  overflow: hidden;
+  border: 2px solid var(--r-ink);
+  background: #ffffff;
+}
+
+.rocket-bar i {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.rocket-panel.on .rocket-bar i {
+  animation: rocket-fill 0.8s var(--r-ease) calc(0.45s + var(--i) * 0.11s) forwards;
+}
+
+.rocket-air .rocket-rows {
+  padding: 6px 0 0;
+}
+
+@keyframes rocket-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rocket-pop {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rocket-fill {
+  to {
+    transform: scaleX(var(--share));
+  }
+}
+
+/* Labels by the molecules and the arrows: placed by RocketIntro.ts, popped in. */
+.rocket-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 3px solid var(--r-ink);
+  box-shadow: 4px 4px 0 var(--r-ink);
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity 0.18s ease,
+    scale 0.18s ease;
+}
+
+.rocket-tag.on {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity 0.25s ease,
+    scale 0.4s var(--r-spring);
+}
+
+.rocket-tag b {
+  font: 900 19px / 1 var(--font-sans);
+}
+
+.rocket-tag em {
+  font-style: normal;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.rocket-tag.in b {
+  color: #0e68a8;
+}
+
+.rocket-tag.out b {
+  color: #a3242b;
+}
+
+.rocket-tag.force {
+  border-left: 9px solid var(--swatch);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+/* How fast time runs (top left, while it runs slow), and Skip (top right). */
+.rocket-clock {
+  position: absolute;
+  top: 3.5vh;
+  left: 4vw;
+  padding: 6px 18px;
+  background: var(--r-accent);
+  border: 3px solid var(--r-ink);
+  box-shadow: 5px 5px 0 var(--r-ink);
+  font: 900 italic 20px / 1.2 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  transform: skewX(-12deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rocket-clock.on {
+  opacity: 1;
+}
+
+.rocket-skip {
+  position: absolute;
+  top: 3.5vh;
+  right: 3vw;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border: 3px solid var(--r-ink);
+  background: #ffffff;
+  box-shadow: 5px 5px 0 var(--r-ink);
+  color: var(--r-ink);
+  font: 900 italic 16px / 1.2 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: skewX(-12deg);
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transition:
+    opacity 0.4s ease 0.6s,
+    transform 0.2s var(--r-spring),
+    box-shadow 0.2s ease;
+}
+
+.rocket-overlay.playing .rocket-skip {
+  opacity: 1;
+}
+
+.rocket-skip:hover,
+.rocket-skip:focus-visible {
+  background: var(--r-accent);
+  box-shadow: 8px 8px 0 var(--r-ink);
+  transform: skewX(-12deg) translate(-3px, -3px);
+}
+
+.rocket-skip:active {
+  box-shadow: 2px 2px 0 var(--r-ink);
+  transform: skewX(-12deg) translate(3px, 3px);
+}
+
+.rocket-skip-arrow {
+  width: 10px;
+  height: 14px;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.rocket-overlay.leaving {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .rocket-panel.chem,
+  .rocket-panel.phys,
+  .rocket-panel.bio {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+  }
+
+  .rocket-bio {
+    grid-template-columns: 1fr;
+  }
+
+  .rocket-tag {
+    font-size: 11px;
+  }
+}

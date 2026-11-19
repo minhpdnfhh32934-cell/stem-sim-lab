@@ -79,8 +79,8 @@ function rig(item: ItemDefinition): BenchRig {
   const kit = new Assembly();
   const { keep, own, mesh } = kit;
   kit.group.position.copy(originOf(item));
-  const iron = own(new THREE.MeshStandardMaterial({ color: '#9aa1a8', ...LOOKS.metal }));
-  const zinc = own(new THREE.MeshStandardMaterial({ color: '#c3c8cc', ...LOOKS.satin }));
+  const iron = kit.mine(new THREE.MeshStandardMaterial({ color: '#9aa1a8', ...LOOKS.metal }));
+  const zinc = kit.mine(new THREE.MeshStandardMaterial({ color: '#c3c8cc', ...LOOKS.satin }));
   const copper = own(new THREE.MeshStandardMaterial({ color: '#b87333', ...LOOKS.metal }));
   const water = own(
     new THREE.MeshStandardMaterial({ color: '#d4e8f0', ...LOOKS.glass, opacity: 0.5 }),

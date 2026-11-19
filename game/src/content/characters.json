@@ -1,6 +1,7 @@
 [
   {
     "id": "researcher-male",
+    "realBody": "rocketbox-male-adult-10",
     "displayName": "Khoa",
     "role": "Physicist",
     "trait": "Calm and methodical: checks every number twice before he believes it.",
@@ -45,6 +46,7 @@
   },
   {
     "id": "researcher-female",
+    "realBody": "rocketbox-female-adult-05",
     "displayName": "Lan",
     "role": "Chemist",
     "trait": "Warm and cheerful: knows everyone's name and everyone's experiment.",
@@ -87,6 +89,7 @@
   },
   {
     "id": "intern-minh",
+    "realBody": "rocketbox-male-adult-20",
     "displayName": "Minh",
     "role": "Physics intern",
     "trait": "Full of energy: asks a question before you finish yours.",
@@ -128,6 +131,7 @@
   },
   {
     "id": "intern-vy",
+    "realBody": "rocketbox-female-adult-08",
     "displayName": "Vy",
     "role": "Biology intern",
     "trait": "Quiet and careful: her notebook has an answer for most things.",
@@ -173,6 +177,7 @@
   },
   {
     "id": "technician-huy",
+    "realBody": "rocketbox-male-adult-05",
     "displayName": "Huy",
     "role": "Lab technician",
     "trait": "Practical and steady: if it is broken, he has already fixed it.",
@@ -222,6 +227,7 @@
   },
   {
     "id": "biologist-mai",
+    "realBody": "rocketbox-female-adult-02",
     "displayName": "Mai",
     "role": "Senior biologist",
     "trait": "Confident and clear: leads the project and listens before she decides.",
@@ -270,6 +276,7 @@
   },
   {
     "id": "scientist-tuan",
+    "realBody": "rocketbox-male-adult-04",
     "displayName": "Tuấn",
     "role": "Computational scientist",
     "trait": "Thoughtful and dry-humoured: happiest when the simulation agrees with the lab.",
@@ -312,6 +319,7 @@
   },
   {
     "id": "intern-linh",
+    "realBody": "rocketbox-female-adult-12",
     "displayName": "Linh",
     "role": "Chemistry intern",
     "trait": "Playful and bold: turns every break into a small adventure.",

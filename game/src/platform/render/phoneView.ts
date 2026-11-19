@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import type { Game } from '../../game/Game';
 import { PHONE_ITEM } from '../../gameplay/phone/PhoneSystem';
-import type { GraphicsQuality } from '../../persistence/settings';
+import { type GraphicsQuality, highOrMore } from '../../persistence/settings';
 import { clockText } from '../../world/clock';
 import type { HeldView } from './body/BodyView';
 
@@ -123,7 +123,7 @@ export class PhoneView {
   private build(quality: GraphicsQuality): void {
     this.clear();
     this.built = quality;
-    const ultra = quality === 'ultra';
+    const ultra = highOrMore(quality);
     const low = quality === 'low';
     // A sharper screen the higher the preset.
     const px = ultra ? 1024 : low ? 384 : 640;
@@ -250,9 +250,9 @@ export class PhoneView {
     const c = this.context;
     if (!c) return;
     const phone = this.game.phone;
-    const fires = this.game.fires;
     const call = phone.call;
-    const brigade = fires.brigadeIn === null ? -1 : Math.ceil(fires.brigadeIn);
+    const eta = this.game.emergency.eta;
+    const brigade = eta === null ? -1 : Math.ceil(eta);
     const clockS = this.game.state.world.clockS;
     const key = [
       this.game.language,
@@ -365,7 +365,7 @@ export class PhoneView {
     c.font = `${5 * u}px ${FONT}`;
     const lines =
       call.state === 'talking'
-        ? wrap(c, answer(t, call.outcome, brigade), w - 14 * u)
+        ? wrap(c, answer(t, call.outcome, brigade, phone.number), w - 14 * u)
         : [t.ui('phone.ringing', 'Calling…')];
     lines.forEach((line, i) => c.fillText(line, w / 2, 40 * u + i * 7 * u));
     // The ring: pulsing circles while it rings.
@@ -390,26 +390,24 @@ export class PhoneView {
 /** What the number answers. */
 function answer(
   t: Game['texts'],
-  outcome: 'dispatched' | 'already-coming' | 'false-alarm' | 'other-service' | 'no-answer',
+  outcome: 'dispatched' | 'already-coming' | 'other-service' | 'no-answer',
   brigade: number,
+  number: string,
 ): string {
   switch (outcome) {
     case 'dispatched':
     case 'already-coming':
+      // The squad the number calls (Phú 2026-11-13): by helicopter, there in this many seconds.
       return brigade >= 0
-        ? t.ui('phone.dispatched', '114: the fire is reported. The brigade is on its way: {s} s.', {
+        ? t.ui('phone.coming', '{n}: your call is taken. They are on their way: {s} s.', {
+            n: number,
             s: brigade,
           })
-        : t.ui('phone.arrived', '114: the fire brigade has arrived.');
-    case 'false-alarm':
-      return t.ui(
-        'phone.falseAlarm',
-        '114: nothing is burning here. A false fire call is against the law — call only for a real fire.',
-      );
+        : t.ui('phone.here', '{n}: they are here.', { n: number });
     case 'other-service':
       return t.ui(
         'phone.otherService',
-        'This emergency service is not part of the simulation; for a fire, call 114.',
+        'This service is not in the game: 114 for the fire brigade, 113 for the police.',
       );
     case 'no-answer':
       return t.ui('phone.noAnswer', 'The number does not answer.');

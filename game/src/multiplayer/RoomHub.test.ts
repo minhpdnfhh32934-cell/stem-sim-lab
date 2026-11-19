@@ -227,4 +227,12 @@ describe('RoomHub (LAN rooms, Phase M)', () => {
     hub.receive(a, { t: 'signal', to: d.last('joined')!.you, signal: offer }); // another room
     expect(d.last('signal')).toBeUndefined();
   });
+
+  it('answers a probe to its sender only, in a room or not (the round trip shown in F3)', () => {
+    const { hub, connect } = setup();
+    const [a, b] = [connect(), connect()];
+    hub.receive(a, { t: 'ping', n: 7 });
+    expect(a.last('pong')).toEqual({ t: 'pong', n: 7 });
+    expect(b.last('pong')).toBeUndefined();
+  });
 });

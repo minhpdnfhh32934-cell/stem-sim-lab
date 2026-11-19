@@ -206,8 +206,14 @@ export class DebugPanel implements GameSystem {
   private fireText(): string {
     const f = this.game.fires;
     const fires = f.list.map((x) => `${x.entityId} ${x.size.toFixed(2)}`).join(', ') || '—';
-    const brigade = f.brigadeIn === null ? '' : ` · brigade in ${Math.ceil(f.brigadeIn)} s`;
-    return `${fires}${f.spraying ? ' · spraying' : ''}${brigade}`;
+    const e = this.game.emergency;
+    // The leader where he is (his scene's frame), for a test to look at him.
+    const lead = e.views[0];
+    const at = lead?.visible
+      ? ` · lead ${lead.sceneId} ${lead.x.toFixed(2)}, ${lead.z.toFixed(2)} ${lead.speed.toFixed(2)} m/s`
+      : '';
+    const call = e.squad ? ` · ${e.squad.id} ${e.phase} ${e.t.toFixed(1)}${at}` : '';
+    return `${fires}${f.spraying ? ' · spraying' : ''}${call}`;
   }
 
   private procedureText(): string {
@@ -248,12 +254,16 @@ export class DebugPanel implements GameSystem {
         t?.rest ? `rest ${t.rest}` : '',
         t?.act ? `act ${t.act}` : '',
         t?.doing ? `doing ${t.doing}` : '',
+        // Their face from a photo (F-8b) arrived with their character: drawn on their head.
+        p.character.appearance.facePhoto ? 'face-photo' : '',
       ]
         .filter(Boolean)
         .join(' ');
-      return `${p.name} ${p.sceneId ?? '—'} ${fixed(p.x)}, ${fixed(p.z)}${extra ? ` ${extra}` : ''}`;
+      const age = `heard ${p.since.toFixed(2)} s ago`;
+      return `${p.name} ${p.sceneId ?? '—'} ${fixed(p.x)}, ${fixed(p.z)}${extra ? ` ${extra}` : ''} ${age}`;
     });
-    return [`${room.id} ${room.players}/${room.max}`, ...each].join(' · ');
+    const net = `rtt ${Math.round(this.game.peers.rtt)} ms (max ${Math.round(this.game.peers.rttMax)})`;
+    return [`${room.id} ${room.players}/${room.max}`, ...each, net].join(' · ');
   }
 
   private talkText(): string {
@@ -263,7 +273,8 @@ export class DebugPanel implements GameSystem {
         (v) =>
           `${v.npc.id} ${this.game.npcs.mode(v.npc.id) ?? '?'} ${v.sceneId} ` +
           `${v.x.toFixed(2)}, ${v.z.toFixed(2)} ${v.gesture}${v.point ? ` → ${v.point}` : ''}` +
-          (v.card ? ' card' : ''),
+          (v.card ? ' card' : '') +
+          (this.game.npcs.follows(v.npc.id) ? ' mirrored' : ''),
       )
       .join('; ');
     // The board written on (Y-3): its lines written whole, of all.

@@ -315,7 +315,7 @@ describe('hold lifecycle', () => {
     expect(order).toEqual(['released:scene-change', 'unloaded']);
     expect(released.at(-1)?.entityId).toBe(BALL);
     expect(game.interaction.heldId).toBeNull();
-    expect(game.physics.stats()).toMatchObject({ heldId: null, bodies: 41, colliders: 54 });
+    expect(game.physics.stats()).toMatchObject({ heldId: null, bodies: 40, colliders: 53 });
     run(game, 0.2);
 
     await game.scenes.load('physics-lab');

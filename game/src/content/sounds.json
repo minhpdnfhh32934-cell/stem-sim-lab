@@ -965,31 +965,1337 @@
       }
     },
     {
-      "id": "siren",
+      "id": "rotor",
       "bus": "effects",
-      "volume": 0.4,
-      "positional": false,
+      "volume": 1.1,
+      "distance": [10, 220],
       "synth": {
-        "seconds": 1.4,
+        "seconds": 1,
         "layers": [
           {
-            "tone": "sawtooth",
-            "hz": 620,
-            "toHz": 1050,
-            "for": 0.7,
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 150
+            },
+            "wobble": {
+              "hz": 7,
+              "depth": 0.95
+            },
+            "attack": 0.01,
+            "release": 0.01,
+            "gain": 0.95
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 700,
+              "q": 0.8
+            },
+            "wobble": {
+              "hz": 7,
+              "depth": 0.7
+            },
+            "attack": 0.01,
+            "release": 0.01,
+            "gain": 0.3
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 3000
+            },
+            "attack": 0.01,
+            "release": 0.01,
+            "gain": 0.025
+          },
+          {
+            "tone": "sine",
+            "hz": 1150,
+            "attack": 0.01,
+            "release": 0.01,
+            "gain": 0.02
+          },
+          {
+            "tone": "sine",
+            "hz": 2300,
+            "attack": 0.01,
+            "release": 0.01,
+            "gain": 0.01
+          }
+        ]
+      }
+    },
+    {
+      "id": "charge",
+      "bus": "effects",
+      "volume": 0.55,
+      "distance": [2, 40],
+      "synth": {
+        "seconds": 0.12,
+        "layers": [
+          {
+            "tone": "square",
+            "hz": 2350,
+            "for": 0.09,
+            "attack": 0.003,
+            "release": 0.01,
+            "gain": 0.2
+          }
+        ]
+      }
+    },
+    {
+      "id": "blast",
+      "bus": "effects",
+      "volume": 2,
+      "distance": [6, 160],
+      "synth": {
+        "seconds": 3,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 1500
+            },
+            "for": 0.12,
+            "attack": 0.001,
+            "release": 0.1,
+            "gain": 0.3
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 420
+            },
+            "for": 3,
+            "attack": 0.004,
+            "release": 2.6,
+            "gain": 0.35
+          },
+          {
+            "tone": "sine",
+            "hz": 62,
+            "toHz": 28,
+            "for": 1.4,
+            "attack": 0.002,
+            "release": 1.2,
+            "gain": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "id": "debris",
+      "bus": "effects",
+      "volume": 0.9,
+      "pitch": 0.1,
+      "distance": [3, 60],
+      "synth": {
+        "seconds": 2.2,
+        "layers": [
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1100,
+              "q": 0.8
+            },
+            "wobble": {
+              "hz": 17,
+              "depth": 0.85
+            },
             "attack": 0.05,
-            "release": 0.05,
+            "release": 1.6,
+            "gain": 0.55
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 300
+            },
+            "attack": 0.03,
+            "release": 1.8,
+            "gain": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "shatter",
+      "bus": "effects",
+      "volume": 1.4,
+      "pitch": 0.06,
+      "distance": [2, 40],
+      "synth": {
+        "seconds": 1.2,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "highpass",
+              "hz": 2600
+            },
+            "attack": 0.002,
+            "release": 0.45,
+            "for": 0.5,
+            "gain": 0.45
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 6200,
+              "q": 4
+            },
+            "wobble": {
+              "hz": 23,
+              "depth": 0.9
+            },
+            "attack": 0.01,
+            "release": 0.9,
+            "gain": 0.28
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 3700,
+              "q": 5
+            },
+            "wobble": {
+              "hz": 31,
+              "depth": 0.8
+            },
+            "attack": 0.02,
+            "release": 0.7,
+            "gain": 0.2
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 220
+            },
+            "attack": 0.003,
+            "release": 0.3,
+            "for": 0.35,
+            "gain": 0.32
+          },
+          {
+            "tone": "sine",
+            "hz": 5200,
+            "toHz": 5044,
+            "at": 0.02,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
             "gain": 0.17
           },
           {
-            "tone": "sawtooth",
-            "hz": 1050,
-            "toHz": 620,
+            "tone": "sine",
+            "hz": 7300,
+            "toHz": 7081,
+            "at": 0.05,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.162
+          },
+          {
+            "tone": "sine",
+            "hz": 4100,
+            "toHz": 3977,
+            "at": 0.09,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.154
+          },
+          {
+            "tone": "sine",
+            "hz": 6400,
+            "toHz": 6208,
+            "at": 0.13,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.146
+          },
+          {
+            "tone": "sine",
+            "hz": 8200,
+            "toHz": 7954,
+            "at": 0.18,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.138
+          },
+          {
+            "tone": "sine",
+            "hz": 4700,
+            "toHz": 4559,
+            "at": 0.24,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.13
+          },
+          {
+            "tone": "sine",
+            "hz": 5900,
+            "toHz": 5723,
+            "at": 0.31,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.122
+          },
+          {
+            "tone": "sine",
+            "hz": 7700,
+            "toHz": 7469,
+            "at": 0.39,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.114
+          },
+          {
+            "tone": "sine",
+            "hz": 4400,
+            "toHz": 4268,
+            "at": 0.48,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.106
+          },
+          {
+            "tone": "sine",
+            "hz": 6800,
+            "toHz": 6596,
+            "at": 0.58,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.098
+          },
+          {
+            "tone": "sine",
+            "hz": 5300,
+            "toHz": 5141,
             "at": 0.7,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.09
+          },
+          {
+            "tone": "sine",
+            "hz": 7100,
+            "toHz": 6887,
+            "at": 0.84,
+            "for": 0.09,
+            "attack": 0.001,
+            "release": 0.08,
+            "gain": 0.082
+          }
+        ]
+      }
+    },
+    {
+      "id": "rope",
+      "bus": "effects",
+      "volume": 0.6,
+      "pitch": 0.12,
+      "distance": [1.5, 30],
+      "synth": {
+        "seconds": 1.8,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 2600,
+              "q": 1.2
+            },
+            "attack": 0.08,
+            "release": 0.5,
+            "gain": 0.35
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "bandpass",
+              "hz": 900,
+              "q": 1
+            },
+            "attack": 0.1,
+            "release": 0.5,
+            "gain": 0.2
+          }
+        ]
+      }
+    },
+    {
+      "id": "radio",
+      "bus": "effects",
+      "volume": 0.5,
+      "distance": [1.5, 25],
+      "synth": {
+        "seconds": 0.22,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 1900,
+              "q": 0.8
+            },
+            "for": 0.16,
+            "attack": 0.002,
+            "release": 0.03,
+            "gain": 0.4
+          },
+          {
+            "tone": "sine",
+            "hz": 1180,
+            "at": 0.16,
+            "for": 0.05,
+            "attack": 0.002,
+            "release": 0.01,
+            "gain": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "slap",
+      "bus": "effects",
+      "volume": 1,
+      "positional": false,
+      "synth": {
+        "seconds": 0.25,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 2100,
+              "q": 0.9
+            },
+            "for": 0.05,
+            "attack": 0.001,
+            "release": 0.04,
+            "gain": 0.95
+          },
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 240
+            },
+            "for": 0.2,
+            "attack": 0.002,
+            "release": 0.17,
+            "gain": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "id": "enter-portal",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.7,
+      "synth": {
+        "seconds": 1.9,
+        "layers": [
+          {
+            "noise": "brown",
+            "filter": {
+              "type": "lowpass",
+              "hz": 400
+            },
+            "for": 1.7,
+            "attack": 1,
+            "release": 0.6,
+            "gain": 0.5
+          },
+          {
+            "tone": "triangle",
+            "hz": 73.42,
+            "toHz": 146.83,
+            "for": 1.4,
+            "attack": 0.6,
+            "release": 0.35,
+            "gain": 0.35
+          },
+          {
+            "tone": "sine",
+            "hz": 587.33,
+            "toHz": 1174.66,
+            "at": 0.2,
+            "for": 1.1,
+            "attack": 0.5,
+            "release": 0.4,
+            "gain": 0.08
+          },
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 2500,
+              "q": 2
+            },
+            "at": 0.3,
+            "for": 1.2,
+            "attack": 0.8,
+            "release": 0.3,
+            "gain": 0.2
+          },
+          {
+            "tone": "sine",
+            "hz": 1760,
+            "at": 0.95,
+            "for": 0.9,
+            "attack": 0.003,
+            "release": 0.85,
+            "gain": 0.07
+          },
+          {
+            "tone": "sine",
+            "hz": 2349.32,
+            "at": 1.02,
+            "for": 0.85,
+            "attack": 0.003,
+            "release": 0.8,
+            "gain": 0.04
+          }
+        ]
+      }
+    },
+    {
+      "id": "enter-arrive",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.85,
+      "synth": {
+        "seconds": 2.4,
+        "layers": [
+          {
+            "noise": "white",
+            "filter": {
+              "type": "bandpass",
+              "hz": 3000,
+              "q": 0.8
+            },
             "for": 0.7,
-            "attack": 0.05,
-            "release": 0.1,
-            "gain": 0.17
+            "attack": 0.55,
+            "release": 0.15,
+            "gain": 0.3
+          },
+          {
+            "tone": "sine",
+            "hz": 70,
+            "toHz": 45,
+            "at": 0.6,
+            "for": 0.9,
+            "attack": 0.005,
+            "release": 0.85,
+            "gain": 0.45
+          },
+          {
+            "noise": "pink",
+            "filter": {
+              "type": "lowpass",
+              "hz": 1200
+            },
+            "at": 0.6,
+            "for": 1.3,
+            "attack": 0.01,
+            "release": 1.2,
+            "gain": 0.12
+          },
+          {
+            "tone": "triangle",
+            "hz": 293.66,
+            "at": 0.6,
+            "for": 1.7,
+            "attack": 0.02,
+            "release": 1.5,
+            "gain": 0.1
+          },
+          {
+            "tone": "triangle",
+            "hz": 369.99,
+            "at": 0.6,
+            "for": 1.7,
+            "attack": 0.02,
+            "release": 1.5,
+            "gain": 0.09
+          },
+          {
+            "tone": "triangle",
+            "hz": 440,
+            "at": 0.6,
+            "for": 1.7,
+            "attack": 0.02,
+            "release": 1.5,
+            "gain": 0.09
+          },
+          {
+            "tone": "sine",
+            "hz": 587.33,
+            "at": 0.6,
+            "for": 1.75,
+            "attack": 0.02,
+            "release": 1.55,
+            "gain": 0.09
+          },
+          {
+            "tone": "sine",
+            "hz": 1174.66,
+            "at": 0.64,
+            "for": 1.3,
+            "attack": 0.01,
+            "release": 1.2,
+            "gain": 0.04
+          }
+        ]
+      }
+    },
+    {
+      "id": "phone-ring",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.45,
+      "synth": {
+        "seconds": 1.05,
+        "layers": [
+          {
+            "tone": "sine",
+            "hz": 425,
+            "for": 1,
+            "attack": 0.012,
+            "release": 0.02,
+            "gain": 0.45
+          }
+        ]
+      }
+    },
+    {
+      "id": "siren-wail",
+      "bus": "effects",
+      "volume": 0.9,
+      "distance": [12, 320],
+      "synth": {
+        "seconds": 4.6,
+        "layers": [
+          {
+            "tone": "triangle",
+            "hz": 420,
+            "toHz": 1180,
+            "at": 0,
+            "for": 2.25,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.32
+          },
+          {
+            "tone": "sine",
+            "hz": 840,
+            "toHz": 2360,
+            "at": 0,
+            "for": 2.25,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.08
+          },
+          {
+            "tone": "sine",
+            "hz": 1260,
+            "toHz": 3540,
+            "at": 0,
+            "for": 2.25,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0576
+          },
+          {
+            "tone": "triangle",
+            "hz": 1180,
+            "toHz": 420,
+            "at": 2.2,
+            "for": 2.4,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.32
+          },
+          {
+            "tone": "sine",
+            "hz": 2360,
+            "toHz": 840,
+            "at": 2.2,
+            "for": 2.4,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.08
+          },
+          {
+            "tone": "sine",
+            "hz": 3540,
+            "toHz": 1260,
+            "at": 2.2,
+            "for": 2.4,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0576
+          }
+        ]
+      }
+    },
+    {
+      "id": "siren-yelp",
+      "bus": "effects",
+      "volume": 0.8,
+      "distance": [12, 320],
+      "synth": {
+        "seconds": 3,
+        "layers": [
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 0,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 0,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 0,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 0.19,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 0.19,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 0.19,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 0.3,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 0.3,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 0.3,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 0.49,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 0.49,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 0.49,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 0.6,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 0.6,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 0.6,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 0.79,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 0.79,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 0.79,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 0.8999999999999999,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 0.8999999999999999,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 0.8999999999999999,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 1.0899999999999999,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 1.0899999999999999,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 1.0899999999999999,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 1.2,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 1.2,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 1.2,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 1.39,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 1.39,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 1.39,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 1.5,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 1.5,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 1.5,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 1.69,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 1.69,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 1.69,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 1.7999999999999998,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 1.7999999999999998,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 1.7999999999999998,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 1.9899999999999998,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 1.9899999999999998,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 1.9899999999999998,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 2.1,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 2.1,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 2.1,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 2.29,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 2.29,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 2.29,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 2.4,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 2.4,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 2.4,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 2.59,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 2.59,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 2.59,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 650,
+            "toHz": 1500,
+            "at": 2.6999999999999997,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 1300,
+            "toHz": 3000,
+            "at": 2.6999999999999997,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 1950,
+            "toHz": 4500,
+            "at": 2.6999999999999997,
+            "for": 0.2,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          },
+          {
+            "tone": "square",
+            "hz": 1500,
+            "toHz": 650,
+            "at": 2.8899999999999997,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.16
+          },
+          {
+            "tone": "sine",
+            "hz": 3000,
+            "toHz": 1300,
+            "at": 2.8899999999999997,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.04
+          },
+          {
+            "tone": "sine",
+            "hz": 4500,
+            "toHz": 1950,
+            "at": 2.8899999999999997,
+            "for": 0.11,
+            "attack": 0.03,
+            "release": 0.03,
+            "gain": 0.0288
+          }
+        ]
+      }
+    },
+    {
+      "id": "tinnitus",
+      "bus": "interface",
+      "positional": false,
+      "volume": 0.3,
+      "synth": {
+        "seconds": 6.5,
+        "layers": [
+          {
+            "tone": "sine",
+            "hz": 3800,
+            "for": 6.4,
+            "attack": 0.08,
+            "release": 5,
+            "gain": 0.5
+          },
+          {
+            "tone": "sine",
+            "hz": 3807,
+            "for": 6.4,
+            "attack": 0.08,
+            "release": 5.5,
+            "gain": 0.3
           }
         ]
       }
@@ -1015,7 +2321,21 @@
     "fire": "fire",
     "spray": "spray",
     "alarm": "alarm",
-    "siren": "siren"
+    "rotor": "rotor",
+    "charge": "charge",
+    "blast": "blast",
+    "debris": "debris",
+    "shatter": "shatter",
+    "shard": "impact-glass",
+    "rope": "rope",
+    "radio": "radio",
+    "slap": "slap",
+    "enter-portal": "enter-portal",
+    "enter-arrive": "enter-arrive",
+    "phone-ring": "phone-ring",
+    "siren-wail": "siren-wail",
+    "siren-yelp": "siren-yelp",
+    "tinnitus": "tinnitus"
   },
   "footsteps": {
     "vinyl": "step-vinyl",

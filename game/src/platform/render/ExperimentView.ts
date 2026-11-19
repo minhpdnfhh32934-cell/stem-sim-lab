@@ -17,6 +17,7 @@ import { type ExperimentDefinition, shownInputs, theoryShown } from '../../simul
 import type { SessionState } from '../../simulation/ExperimentSession';
 import type { WorldEntity } from '../../world/World';
 import { formatQuantity } from '../ui/dom';
+import { setNodeLook } from './nodeLooks';
 import { extent, niceAxis, scale, tickLabel } from '../ui/plot';
 import {
   changedSettings,
@@ -232,6 +233,7 @@ export class ExperimentView {
     const texture = new THREE.CanvasTexture(canvas);
     const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false });
     material.defines = { DECODE_VIDEO_TEXTURE: '' };
+    setNodeLook(material, { kind: 'decoded-map', map: texture }); // the same under WebGPU
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.94, h * 0.9), material);
     mesh.position.z = d / 2 + 0.002;
     group.add(mesh);

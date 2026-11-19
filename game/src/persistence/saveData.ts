@@ -9,7 +9,7 @@ import { CharacterDefinitionSchema } from '../gameplay/character';
  * migration from the previous version to SAVE_MIGRATIONS, and add a test that upgrades a
  * fixture of the old version.
  */
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 const QuatSchema = z.tuple([z.number(), z.number(), z.number(), z.number()]) as z.ZodType<Quat>;
 
@@ -107,6 +107,8 @@ export const SaveDataSchema = z.object({
      * when they load (PaperSystem): a question no bank holds any more is left out.
      */
     papers: z.array(PaperSchema),
+    /** The calls made to each emergency squad (v12), by squad id: what they say goes by it. */
+    calls: z.record(z.string(), z.number().int().nonnegative()),
     /** The marks of every paper handed in (v11), kept after the paper is thrown away. */
     scores: z.array(
       z.object({
@@ -287,6 +289,14 @@ export const SAVE_MIGRATIONS: readonly SaveMigration[] = [
         papers: [],
         scores: [],
       },
+    }),
+  },
+  {
+    // v12 (2026-11-14, the squads' lines by call): a v11 player had called no one yet.
+    from: 11,
+    migrate: (data) => ({
+      ...data,
+      progression: { ...(isRecord(data.progression) ? data.progression : {}), calls: {} },
     }),
   },
 ];

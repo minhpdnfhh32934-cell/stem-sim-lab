@@ -66,10 +66,17 @@ const pose = (
   sample: Record<string, number>,
 ): BenchPose => ({ status, parameters: p, sample });
 
+/** The rigs build() made, freed after each test (a shared material goes with its last owner). */
+const built: { dispose(): void }[] = [];
+afterEach(() => {
+  for (const kit of built.splice(0)) kit.dispose();
+});
+
 function build() {
   const painted = new THREE.MeshStandardMaterial();
   const frame = rayOpticsBoard.frame(item, painted);
   const rig = rayOpticsBoard.rig!(item);
+  built.push(frame, rig);
   const root = new THREE.Group();
   root.add(new THREE.Mesh(frame.body, painted), frame.parts, rig.group);
   const named = (name: string) => root.getObjectByName(name) as THREE.Mesh;

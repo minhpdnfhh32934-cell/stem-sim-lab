@@ -4264,6 +4264,24 @@
         "item": "solubility-instructions",
         "position": [7.45, 2.05, 1.6],
         "rotationY": 3.14159
+      },
+      {
+        "id": "door-annex-frame",
+        "item": "starship-door-frame",
+        "position": [-10.125, 0, -4.2],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-annex-leaf-a",
+        "item": "starship-door-leaf",
+        "position": [-10.125, 0, -3.7],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-annex-leaf-b",
+        "item": "starship-door-leaf",
+        "position": [-10.125, 0, -4.7],
+        "rotationY": 1.5708
       }
     ]
   },
@@ -7126,6 +7144,24 @@
         "item": "food-tests-instructions",
         "position": [-11.55, 2.05, -3],
         "rotationY": 3.14159
+      },
+      {
+        "id": "door-annex-frame",
+        "item": "greenhouse-door-frame",
+        "position": [-15.125, 0, 3.5],
+        "rotationY": 1.5708
+      },
+      {
+        "id": "door-annex-leaf-a",
+        "item": "greenhouse-door-leaf",
+        "position": [-15.125, 0, 4],
+        "rotationY": -1.5708
+      },
+      {
+        "id": "door-annex-leaf-b",
+        "item": "greenhouse-door-leaf",
+        "position": [-15.125, 0, 3],
+        "rotationY": 1.5708
       }
     ]
   },

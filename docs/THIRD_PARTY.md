@@ -30,6 +30,8 @@ Bản dựng sẵn của game phòng thí nghiệm 3D (thêm ngày 12/11/2026):
 - **Thư viện đóng gói trong bản dựng:** three.js (MIT), Rapier `@dimforge/rapier3d-compat` (Apache-2.0), zod (MIT).
 - **Âm thanh:** Kenney "Impact Sounds" và "RPG Audio", CC0 1.0. Danh sách từng tệp ở `public/game/audio/CREDITS.md`.
 - **Mô hình thành phố dưới sàn sảnh:** Quaternius "Downtown City MegaKit" (bản Standard miễn phí), CC0 1.0 (`public/game/hub-city/README.md`).
+- **Video giới thiệu** (`public/game/video/simlab3d-gioi-thieu.mp4`, cập nhật 19/11/2026): do người dùng làm, người dùng xác nhận được phát hành cùng app.
 - **Không đóng gói:**
   - texture Ultra (ambientCG, CC0), vì quá nặng; chúng chỉ nằm trong mã nguồn `game/public/ultra` (nguồn từng bộ ở README trong đó);
+  - người thật và vải của mức Ultra (`game/public/max`): mô hình Microsoft Rocketbox Avatar Library, MIT (`game/public/max/people/LICENSE-Rocketbox.md`, nguồn từng người ở README trong đó);
   - mô hình MediaPipe Face Landmarker / Hair Segmenter (Apache-2.0), vì không chạy mô hình trong app khi chưa hỏi người dùng.

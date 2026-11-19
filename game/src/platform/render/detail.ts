@@ -148,12 +148,15 @@ function placing(
   made: THREE.BufferGeometry,
   start = 0,
   count = made.getAttribute('position').count,
+  linear?: readonly number[],
 ): THREE.Matrix4 | null {
   const a = fresh.getAttribute('position') as THREE.BufferAttribute | undefined;
   const b = made.getAttribute('position') as THREE.BufferAttribute | undefined;
   if (!a || !b || a.count !== count || a.count === 0) return null;
   const v = new THREE.Vector3();
-  for (const turn of TURNS) {
+  // The turn a merge recorded for the piece first (any angle), then the quarter turns.
+  const turns = linear ? [new THREE.Matrix4().fromArray(linear), ...TURNS] : TURNS;
+  for (const turn of turns) {
     v.fromBufferAttribute(a, 0).applyMatrix4(turn);
     const dx = b.getX(start) - v.x;
     const dy = b.getY(start) - v.y;
@@ -181,7 +184,7 @@ function detailedPiece(
   const fresh = build(piece.type, p, false);
   if (!fresh) return null;
   const same = fresh.index?.count === piece.indices;
-  const place = same ? placing(fresh, made, piece.vertex, piece.count) : null;
+  const place = same ? placing(fresh, made, piece.vertex, piece.count, piece.linear) : null;
   fresh.dispose();
   if (!place) return null;
   const out = build(piece.type, p, true);
@@ -189,6 +192,22 @@ function detailedPiece(
   out.applyMatrix4(place);
   for (const name of Object.keys(out.attributes)) {
     if (!(name in made.attributes)) out.deleteAttribute(name); // the merge's uv is gone
+  }
+  // The merge's other attributes (a bench model's vertex colours): the piece's own, if it has one
+  // value throughout; else it stays as merged (three cannot merge a piece without them).
+  for (const [name, attribute] of Object.entries(made.attributes)) {
+    if (name in out.attributes) continue;
+    const from = attribute as THREE.BufferAttribute;
+    const size = from.itemSize;
+    const raw = from.array;
+    const first = raw.slice(piece.vertex * size, piece.vertex * size + size);
+    for (let i = piece.vertex * size; i < (piece.vertex + piece.count) * size; i++) {
+      if (raw[i] !== first[i % size]) return null;
+    }
+    const count = out.getAttribute('position').count;
+    const values = new (raw.constructor as new (n: number) => typeof raw)(count * size);
+    for (let v = 0; v < count; v++) values.set(first, v * size);
+    out.setAttribute(name, new THREE.BufferAttribute(values, size, from.normalized));
   }
   // A rounded box comes unindexed: indexed, as the merge is.
   if (!out.index) out.setIndex([...Array(out.getAttribute('position').count).keys()]);

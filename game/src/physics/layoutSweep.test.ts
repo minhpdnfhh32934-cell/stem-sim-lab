@@ -236,7 +236,7 @@ describe('physics bodies and colliders of each world scene', () => {
     // UX3.1: the washroom door (its body, no collider; its leaf); Phase F-1: its cabinet opens
     // (two leaves, a carcass of seven)
     ['teacher-room', 16, 38],
-    ['simlab-hub', 42, 55], // Phase Y: + the teacher's capsule; F-2: + the laptop
+    ['simlab-hub', 41, 54], // Phase Y: + the teacher's capsule; F-2: + the laptop; − the directory sign (2026-11-14)
     // 14C+: the range's refraction, Ohm's law and incline stations; + 7 benches: 7 apparatus,
     // 7 desks and 4 benches under them. Phase T-1a: the wing rebuilt — every bench station on a
     // lab bench (5 more), 19 benches kept for the planned experiments, the teacher's cabinets and
@@ -248,8 +248,8 @@ describe('physics bodies and colliders of each world scene', () => {
     // rack (a collider each).
     // Phase B's titration bench: the retort stand (3 colliders: foot, tile, rod) in place of the 2D
     // rig, 11 dynamic glass items and a pipette rack: +12 bodies, +14 colliders.
-    ['chemistry-lab', 109, 134], // + the light switch; T-5: the solubility station's bench, desk and apparatus; Phase X: the practice room's stations (3 each)
-    ['biology-lab', 72, 88], // four stations: their apparatus and the benches under them (the enzyme rig's own since Phase L), no desks (they work in workspaces); T-6: the transpiration station's bench, desk and potometer; T-6b: each new station's bench, desk and apparatus (respiration, pea cross, mark and recapture, food tests); Phase X: the practice room (its walls, door and twelve stations)
+    ['chemistry-lab', 111, 136], // the annex door's two leaves (2026-11-14); + the light switch; T-5: the solubility station's bench, desk and apparatus; Phase X: the practice room's stations (3 each)
+    ['biology-lab', 74, 90], // the annex door's two leaves (2026-11-14); four stations: their apparatus and the benches under them (the enzyme rig's own since Phase L), no desks (they work in workspaces); T-6: the transpiration station's bench, desk and potometer; T-6b: each new station's bench, desk and apparatus (respiration, pea cross, mark and recapture, food tests); Phase X: the practice room (its walls, door and twelve stations)
   ];
 
   it.each(counts)('%s: %i bodies, %i colliders', async (sceneId, bodies, colliders) => {
