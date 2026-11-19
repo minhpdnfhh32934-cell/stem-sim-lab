@@ -121,6 +121,15 @@ export function withoutBlockedQuestions(
   return records.filter((r) => r.role !== 'user' || checkInput(sentText(r)).ok);
 }
 
+/**
+ * The conversation without the learner's questions that got no answer (stopped with "Dừng", or
+ * failed): sent again, a small on-device model answered that question instead of the new one
+ * (machine B's sweep 19/11/2026, N2). They stay in the chat; they are only not sent.
+ */
+export function withoutUnanswered(records: readonly ChatMessageRecord[]): ChatMessageRecord[] {
+  return records.filter((r, i) => r.role !== 'user' || records[i + 1]?.role === 'assistant');
+}
+
 export function sentText(record: ChatMessageRecord, question?: string): string {
   if (record.role !== 'assistant') {
     const asked = record.prompt ?? record.content;

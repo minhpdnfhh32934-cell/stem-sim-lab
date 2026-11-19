@@ -1147,7 +1147,7 @@ const vi = {
     blockedHint:
       'Nếu trình duyệt đã chặn hẳn, hãy bấm biểu tượng ổ khóa/cài đặt trang bên cạnh thanh địa chỉ, chuyển Camera thành “Cho phép”, rồi bấm Thử lại.',
     unsupported: 'Thiết bị này không hỗ trợ camera.',
-    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI Teacher.',
+    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI trong SimLab.',
     needVision:
       'Chưa đọc được ảnh: cần AI trực tuyến (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
@@ -1838,7 +1838,7 @@ const vi = {
     localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
     voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
     gemmaMissingNotice:
-      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “AI trực tuyến”.',
+      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI trong SimLab, hoặc chọn “AI trực tuyến”.',
     settings: 'Cài đặt',
     localOnly: 'Câu hỏi được xử lý cục bộ trên máy này.',
     noWebgpuNotice:
@@ -1921,7 +1921,7 @@ const vi = {
         'AI chưa được bật cho hồ sơ này. Hoàn tất bước an toàn trong Cài đặt để tiếp tục.',
       noCloudKey: 'Chưa có khóa API cho mô hình trả lời. Hãy nhập khóa trong Cài đặt.',
       gemmaMissing:
-        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
+        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI trong SimLab để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
       gemmaStalled:
@@ -1929,9 +1929,9 @@ const vi = {
       gemmaGpu:
         'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Em có thể hỏi lại; nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
       gemmaGpuBlocked:
-        'Card đồ họa đã bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
+        'Card đồ họa báo lỗi khi chạy Gemma (hết bộ nhớ của card, hoặc card bị treo). Để máy an toàn, Gemma tạm dừng tới khi em mở lại app hoặc bật lại trong Cài đặt → GPU cho Gemma. Em có thể chọn câu trả lời “Ngắn”, mô hình nhỏ hơn, hoặc hỏi bằng API.',
       gemmaFailed:
-        'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
+        'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trong SimLab.',
       crisis:
         'Mình rất tiếc em đang gặp khó khăn. Hãy nói ngay với người lớn em tin tưởng. Nếu em đang nguy hiểm, gọi 111 hoặc 115. Tin nhắn này không được gửi tới AI.',
       personal:
