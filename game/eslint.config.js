@@ -14,7 +14,17 @@ const domGlobals = ['window', 'document', 'localStorage', 'navigator', 'requestA
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'dist-app', 'node_modules', 'test-results', 'playwright-report', '.claude/'],
+    ignores: [
+      'dist',
+      'dist-app',
+      'node_modules',
+      'test-results',
+      'playwright-report',
+      '.claude/',
+      'promo',
+      'dist-wallpaper',
+      'graphify-out',
+    ],
   },
   {
     files: ['**/*.ts'],

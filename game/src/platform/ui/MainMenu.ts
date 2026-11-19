@@ -2,6 +2,7 @@ import { Disposables } from '../../core/EventBus';
 import { describeError, type GameSystem } from '../../core/SystemRunner';
 import type { Game } from '../../game/Game';
 import { ControlsPanel } from './ControlsPanel';
+import { PromoVideo } from './PromoVideo';
 import { CursorTrail } from './cursorTrail';
 import { listen } from '../BrowserInput';
 import { el } from './dom';
@@ -14,10 +15,14 @@ import type { SaveSlot } from '../../persistence/saveSlots';
 import type { RoomSummary } from '../../multiplayer/protocol';
 import type { LanRooms } from '../net/LanRooms';
 import { emblem, meteors } from './menuArt';
+import { cssAnimationsIn, SteppedMotion } from './steppedMotion';
 import { avatar, portraitKey } from './characterPage/avatar';
 import { CharacterPage } from './characterPage/CharacterPage';
 import { storedCustom } from './characterPage/Customiser';
+import { setHintDot } from './hintDot';
 import type { SettingsPanel } from './settings';
+import type { LiveMenu } from './liveMenu';
+import type { IntroPhases } from './AppIntro';
 
 /**
  * Character choice, Play (Phú 2026-11-12: one button, then Single player — new game, play on,
@@ -26,12 +31,19 @@ import type { SettingsPanel } from './settings';
  * interface language). Going into the world plays an entering transition (`EnterTransition`).
  * Visible while a menu scene is loaded.
  */
+/**
+ * The menu's sky and emblem move this many times a second (steppedMotion.ts), not at the screen's
+ * rate: their CSS animations, left running, kept the browser drawing the page 300 times a second
+ * on a 300 Hz screen (Phú, 2026-11-18). Stars drift 4–11 px/s: 30 steps a second still glide.
+ */
+const MOTION_HZ = 30;
+
 export class MainMenu implements GameSystem {
   readonly id = 'main-menu';
   private readonly root = el('div', 'menu hidden');
   private readonly message = el('p', 'menu-message');
   private readonly playButton = el('button', 'menu-button primary menu-play');
-  private readonly catalogButton = el('button', 'menu-button');
+  private readonly catalogButton = el('button', 'menu-button menu-catalog-open');
   private playPage: PlayPage | null = null;
   private soloPage: SoloPage | null = null;
   /** Going into the world (a page's buttons are off meanwhile). */
@@ -39,8 +51,13 @@ export class MainMenu implements GameSystem {
   /** The LAN room the player is in, under the buttons (Phase M). */
   private readonly roomLine = el('p', 'menu-room');
   private multiplayer: MultiplayerPage | null = null;
-  private readonly controlsButton = el('button', 'menu-button');
+  private readonly controlsButton = el('button', 'menu-button menu-controls-open');
   private controls: ControlsPanel | null = null;
+  /** The promo video (Phú 2026-11-19): a small button under the name, its own dialog. */
+  private readonly promoButton = el('button', 'menu-promo-open');
+  private promo: PromoVideo | null = null;
+  /** The promo is playing: the menu's own music quiet meanwhile. */
+  private promoPlaying = false;
   private readonly panel = el('div', 'menu-panel');
   private catalog: ExperimentCatalog | null = null;
   /** Settings (Phú 2026-11-12): a page of its own, opened from this button. */
@@ -57,6 +74,15 @@ export class MainMenu implements GameSystem {
   /** Whether a menu scene is loaded (the menu shows). */
   private visible = false;
   private trail: CursorTrail | null = null;
+  /** The menu's looping motion (the sky, the emblem, the hint dot) stepped (steppedMotion.ts). */
+  private readonly motion = new SteppedMotion(() => cssAnimationsIn([this.root]), MOTION_HZ);
+  /**
+   * The live background (Phú 2026-11-18, liveMenu.ts): the wallpaper behind the menu, laid out
+   * round, when chosen in the settings (not at Low); its chunk loaded only then, freed when the
+   * menu goes.
+   */
+  private live: LiveMenu | null = null;
+  private liveLoading = false;
 
   constructor(
     private readonly parent: HTMLElement,
@@ -65,6 +91,8 @@ export class MainMenu implements GameSystem {
     private readonly storageBlocked: boolean,
     private readonly settingsPanel: SettingsPanel,
     private readonly rooms: LanRooms,
+    /** The app's opening: the live background waits for it before its heavy work. */
+    private readonly opening: IntroPhases,
   ) {
     this.characterId = game.content.characters.all()[0]?.id ?? '';
     // The player's own character, if they made one in this browser.
@@ -92,7 +120,21 @@ export class MainMenu implements GameSystem {
       this.show(el('p', 'menu-subtitle'), () =>
         t.ui('menu.subtitle', 'Scientific laboratory simulation'),
       ),
+      this.promoButton,
     );
+    this.promoButton.type = 'button';
+    this.promoButton.setAttribute('aria-haspopup', 'dialog');
+    this.show(this.promoButton, () => t.ui('menu.promo', '▶ Watch the trailer'));
+    this.promo = new PromoVideo(
+      this.game,
+      (element, text) => this.show(element, text),
+      (playing) => {
+        this.promoPlaying = playing;
+        this.applyVolumes();
+        if (!playing) this.promoButton.focus();
+      },
+    );
+    this.promoButton.addEventListener('click', () => this.promo?.show());
 
     // "Choose your character", the chosen one's name and picture: opens the character page.
     const choice = el('button', 'menu-character');
@@ -207,6 +249,7 @@ export class MainMenu implements GameSystem {
       this.multiplayer.root,
       this.settingsPage.root,
       this.controls.root,
+      this.promo.root,
       this.characterPage.root,
     );
     this.parent.append(this.root);
@@ -218,12 +261,47 @@ export class MainMenu implements GameSystem {
         this.visible = kind === 'menu';
         this.root.classList.toggle('hidden', !this.visible);
         if (this.visible) this.refresh();
+        this.motion.refresh(); // shown again: the browser made the animations anew
+        if (!this.visible) this.characterPage?.release();
+        this.syncBackground();
       }),
     );
+    this.subscriptions.add(
+      events.subscribe('MenuBackgroundChanged', () => {
+        this.syncBackground();
+        this.motion.refresh(); // the sky shown again under the default background
+        this.paintHint();
+      }),
+    );
+    this.subscriptions.add(
+      events.subscribe('GraphicsQualityChanged', () => {
+        this.syncBackground();
+        this.paintHint();
+      }),
+    );
+    this.subscriptions.add(events.subscribe('LiveHintSeen', () => this.paintHint()));
+    // The opening's and the rocket's sounds play in contexts of their own: they follow the sliders.
+    this.subscriptions.add(events.subscribe('AudioSettingsChanged', () => this.applyVolumes()));
+    this.paintHint();
     this.subscriptions.add(events.subscribe('LanguageChanged', () => this.render()));
+    // The character page's room made ahead once the player is at the menu — a pointer or a key on
+    // it (a menu nobody uses, a tab in the background, fetches nothing more); freed when it goes.
+    const warm = () => {
+      if (this.visible) this.characterPage?.prepare(this.characterId);
+    };
+    for (const type of ['pointermove', 'pointerdown', 'keydown'] as const) {
+      listen(this.subscriptions, this.root, type, warm);
+    }
   }
 
-  /** The chosen one's picture on the menu's row: drawn once per character (the stage's chunk). */
+  /** The sliders' volumes on the menu's own sounds: quiet while the promo plays over them. */
+  private applyVolumes(): void {
+    const { master, music, effects } = this.game.volumes;
+    const muted = this.game.muted || this.promoPlaying;
+    this.opening.volume(master, music, muted);
+    this.live?.volume(master, effects, muted);
+  }
+
   /**
    * The chosen one's picture on the menu's row: their 3D portrait if one was drawn (this session
    * or kept in the browser), else a flat one in their colours. The menu loads without three.js:
@@ -434,12 +512,14 @@ export class MainMenu implements GameSystem {
     this.entering = true;
     busy(true);
     const shown = new EnterTransition(document.body, words, kind);
+    this.game.events.publish('WorldEntry', { step: 'opening' });
     try {
       await shown.covered;
       await action(shown);
       this.closePages(this.playButton);
       this.onEnterWorld();
       shown.done();
+      this.game.events.publish('WorldEntry', { step: 'shown' });
     } catch (error) {
       // Shown to the player (a refused room is no fault of the game's).
       this.game.log.warn('Going into the world failed', describeError(error));
@@ -471,12 +551,69 @@ export class MainMenu implements GameSystem {
     this.catalogButton.focus();
   }
 
-  /** Per frame, from the game's one loop: the cursor trail, only while the menu shows. */
+  /** Per frame, from the game's one loop: the cursor trail and the live background's look. */
   update(dt: number): void {
-    if (this.visible) this.trail?.update(dt);
+    if (!this.visible) return;
+    this.motion.update(dt);
+    if (this.live) this.live.update();
+    else this.trail?.update(dt);
+  }
+
+  /** The live background shown while the menu is and it is chosen (not at Low); else freed. */
+  private syncBackground(): void {
+    const wanted = () =>
+      this.visible && this.game.menuBackground === 'live' && this.game.graphicsQuality !== 'low';
+    if (!wanted()) {
+      this.live?.dispose();
+      this.live = null;
+      return;
+    }
+    if (this.live || this.liveLoading) return;
+    this.liveLoading = true;
+    import('./liveMenu')
+      .then(({ LiveMenu }) => {
+        this.liveLoading = false;
+        // Changed its mind while loading (the world entered, the setting turned off).
+        if (!wanted() || this.live) return;
+        const live = new LiveMenu(
+          this.root,
+          this.game,
+          (event) => this.wheelTurns(event),
+          this.opening,
+        );
+        this.live = live;
+        return live.start();
+      })
+      .catch((error: unknown) => {
+        this.liveLoading = false;
+        // Left before it was built (the world entered, the setting changed): nothing went wrong.
+        if (error instanceof Error && error.name === 'LiveCancelled') return;
+        this.live?.dispose();
+        this.live = null;
+        this.game.log.warn('The live menu background could not be shown', describeError(error));
+      });
+  }
+
+  /**
+   * Whether a turn of the wheel turns the live view: not over a page or a list it would scroll,
+   * nor over the character page or a dialog.
+   */
+  private wheelTurns(event: WheelEvent): boolean {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('.char-page, .menu-dialog-backdrop')) return false;
+    for (let node = target; node; node = node.parentElement) {
+      if (node.scrollHeight > node.clientHeight + 1) {
+        const overflow = getComputedStyle(node).overflowY;
+        if (overflow === 'auto' || overflow === 'scroll') return false;
+      }
+      if (node === this.root) break;
+    }
+    return true;
   }
 
   dispose(): void {
+    this.live?.dispose();
+    this.live = null;
     this.subscriptions.dispose();
     this.multiplayer?.dispose();
     this.playPage?.dispose();
@@ -491,10 +628,17 @@ export class MainMenu implements GameSystem {
     return element;
   }
 
+  /** The red dot on Settings while the way to the live background has not been shown. */
+  private paintHint(): void {
+    setHintDot(this.settingsButton, this.game.liveHint, this.game.texts.ui('menu.hintNew', 'New'));
+    this.motion.refresh(); // its dot's pulse, when it comes
+  }
+
   /** Every text in the current language; the page's `lang` follows, for screen readers. */
   private render(): void {
     document.documentElement.lang = this.game.language;
     for (const [element, text] of this.texts) element.textContent = text();
+    this.paintHint();
     this.controls?.render();
     this.multiplayer?.render();
     this.paintRoom();

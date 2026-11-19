@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from './nodeLooks';
 import type { ItemDefinition } from '../../gameplay/item';
 
 /**
@@ -238,6 +239,16 @@ export class WaterStreams {
         fragmentShader: SPLASH_FRAGMENT,
       }),
     };
+    setNodeLook(pair.column, {
+      kind: 'water-column',
+      color: uniforms.uColor.value,
+      time: this.time,
+    });
+    setNodeLook(pair.splash, {
+      kind: 'water-splash',
+      color: uniforms.uColor.value,
+      time: this.time,
+    });
     this.materials.set(color, pair);
     return pair;
   }

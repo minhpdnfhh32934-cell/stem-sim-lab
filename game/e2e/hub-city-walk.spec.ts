@@ -22,7 +22,7 @@ test.use({ viewport: { width: 640, height: 360 } });
 
 test('the city under the glass after walking into the hub', async ({ page }) => {
   test.setTimeout(300_000);
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'high'));
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'medium'));
   const cityRequests: string[] = [];
   page.on('request', (r) => {
     if (r.url().includes('hub-city')) cityRequests.push(r.url());

@@ -22,6 +22,7 @@ describe('Game boot', () => {
       { id: 'physics', status: 'active' },
       { id: 'gait', status: 'active' }, // Phase S: the walk and its footsteps
       { id: 'interaction', status: 'active' },
+      { id: 'periodic-table', status: 'active' }, // the hub's periodic table display (2026-11-14)
       { id: 'actions', status: 'active' }, // Phase H-3: actions acted out
       { id: 'liquids', status: 'active' }, // physical lab: pours detected
       { id: 'doors', status: 'active' },
@@ -33,6 +34,7 @@ describe('Game boot', () => {
       { id: 'hits', status: 'active' },
       { id: 'circuit', status: 'active' },
       { id: 'fire', status: 'active' },
+      { id: 'emergency', status: 'active' }, // Phú 2026-11-13: 113/114 answered by helicopter
       { id: 'procedures', status: 'active' },
       { id: 'experiments', status: 'active' },
       { id: 'stations', status: 'active' },
@@ -380,8 +382,8 @@ describe('Game language', () => {
     expect(game.language).toBe('vi');
     game.setFrameCap(60);
     expect(game.frameCap).toBe(60); // also for this visit only
-    game.setGraphicsQuality('high');
-    expect(game.graphicsQuality).toBe('high');
+    game.setGraphicsQuality('medium');
+    expect(game.graphicsQuality).toBe('medium');
     expect(logs.filter((l) => l.level === 'warn').map((l) => l.message)).toEqual([
       'Could not read the language: SecurityError; using English',
       'Could not read the frame-rate cap: SecurityError; using none',
@@ -394,6 +396,8 @@ describe('Game language', () => {
       'Could not read the voice volume: SecurityError; using 100 %', // Phase Y: the teacher's voice
       'Could not read the mute: SecurityError; using sound on',
       'Could not read the setting for rooms out of sight: SecurityError; using rooms out of sight not drawn',
+      'Could not read the menu background: SecurityError; using the live one',
+      'Could not read the live background hint: SecurityError; using not seen',
       'Could not read the look sensitivity: SecurityError; using 1×',
       'Could not read the tilt-to-look setting: SecurityError; using off',
       'Could not read the tilt sensitivity: SecurityError; using 1×',
@@ -454,8 +458,37 @@ describe('Game language', () => {
       expect(again.game.language).toBe('en');
       again.game.dispose();
     }
-    expect(storage.data.get('simlab.settings.graphicsQuality')).toBe('medium');
+    expect(storage.data.get('simlab.settings.graphics')).toBe('medium');
     expect(first.game.hasSavedGame()).toBe(false); // not part of a save
+  });
+
+  it('points a first-time player to the live menu background until it has been shown, once', async () => {
+    const storage = new MemorySaveStorage();
+    const first = await bootTestGame({ storage });
+    const seen: number[] = [];
+    first.game.events.subscribe('LiveHintSeen', () => seen.push(1));
+    // The live one is the menu's at first: nothing to point to.
+    expect(first.game.menuBackground).toBe('live');
+    expect(first.game.liveHint).toBe(false);
+    first.game.setMenuBackground('default');
+    expect(first.game.liveHint).toBe(true);
+    // Not offered at Low; not needed once the live one is chosen.
+    first.game.setGraphicsQuality('low');
+    expect(first.game.liveHint).toBe(false);
+    first.game.setGraphicsQuality('medium');
+    first.game.setMenuBackground('live');
+    expect(first.game.liveHint).toBe(false);
+    first.game.setMenuBackground('default');
+    expect(first.game.liveHint).toBe(true);
+    first.game.seeLiveHint();
+    first.game.seeLiveHint();
+    expect(seen).toEqual([1]);
+    expect(first.game.liveHint).toBe(false);
+    first.game.dispose();
+    const again = await bootTestGame({ storage });
+    expect(again.game.liveHint).toBe(false); // kept for the next visit, outside any save
+    expect(again.game.hasSavedGame()).toBe(false);
+    again.game.dispose();
   });
 
   it('takes a suggested preset (a software renderer: Low) only until the player picks one, without keeping it', async () => {
@@ -474,27 +507,54 @@ describe('Game language', () => {
     expect(changes).toEqual(['low', 'medium', 'low lowered']);
     changes.length = 1;
     expect(storage.data.has('simlab.settings.graphicsQuality')).toBe(false); // not remembered
-    game.setGraphicsQuality('high');
+    game.setGraphicsQuality('medium');
     game.preferGraphicsQuality('low', 'a software renderer');
-    expect(game.graphicsQuality).toBe('high'); // the player's own choice wins
+    expect(game.graphicsQuality).toBe('medium'); // the player's own choice wins
     game.dispose();
     // A choice from an earlier visit wins too.
     const again = await bootTestGame({ storage });
     again.game.preferGraphicsQuality('low', 'a software renderer');
-    expect(again.game.graphicsQuality).toBe('high');
+    expect(again.game.graphicsQuality).toBe('medium');
     again.game.dispose();
   });
 
   it('falls back to medium when the stored graphics quality is not one it offers', async () => {
-    for (const stored of ['extreme', 'High', '', '1']) {
+    for (const stored of ['extreme', 'High', '', '1', 'max']) {
       const storage = new MemorySaveStorage();
-      storage.write('simlab.settings.graphicsQuality', stored);
+      storage.write('simlab.settings.graphics', stored);
       const { game, logs } = await bootTestGame({ storage });
       expect(game.graphicsQuality).toBe('medium');
       expect(logs.filter((l) => l.level === 'warn').map((l) => l.message)).toEqual([
         `Stored graphics quality "${stored}" is not one of low, medium, high, ultra; using medium`,
       ]);
     }
+  });
+
+  it('takes a level kept before the 2026-11-18 renaming under its new name, once', async () => {
+    const renamed = [
+      ['low', 'low'],
+      ['medium', 'medium'],
+      ['high', 'medium'],
+      ['ultra', 'high'],
+      ['max', 'ultra'],
+    ] as const;
+    for (const [old, now] of renamed) {
+      const storage = new MemorySaveStorage();
+      storage.write('simlab.settings.graphicsQuality', old);
+      const { game } = await bootTestGame({ storage });
+      expect(game.graphicsQuality, old).toBe(now);
+      expect(storage.data.get('simlab.settings.graphics'), old).toBe(now);
+      game.dispose();
+    }
+    // The new key wins once there; an unknown old value is left alone.
+    const both = new MemorySaveStorage();
+    both.write('simlab.settings.graphicsQuality', 'max');
+    both.write('simlab.settings.graphics', 'low');
+    expect((await bootTestGame({ storage: both })).game.graphicsQuality).toBe('low');
+    const odd = new MemorySaveStorage();
+    odd.write('simlab.settings.graphicsQuality', 'extreme');
+    expect((await bootTestGame({ storage: odd })).game.graphicsQuality).toBe('medium');
+    expect(odd.data.get('simlab.settings.graphics')).toBeUndefined();
   });
 
   it('has no frame-rate cap at first; each cap is kept for the next visit, apart from the language', async () => {
@@ -632,6 +692,7 @@ describe('Game saved game', () => {
         tasks: { active: null, done: [] },
         papers: [],
         scores: [],
+        calls: {},
       },
     } satisfies SaveData);
   const cases: [string, Record<string, string>, string | null][] = [

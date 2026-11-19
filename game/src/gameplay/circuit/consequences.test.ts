@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Game } from '../../game/Game';
 import type { GameEvents } from '../../game/GameEvents';
-import { bootTestGame, placePlayer, lookAt } from '../../game/testing';
-import { BRIGADE_S, BURNING_KEY } from '../fire/FireSystem';
+import { bootTestGame, flush, placePlayer, lookAt } from '../../game/testing';
+import { BURNING_KEY } from '../fire/FireSystem';
 import { plusPost, minusPost, type BoardSpec, type MountedPart, nodeAt } from './board';
 import { BROKEN_KEY, CIRCUIT_KEY } from './CircuitSystem';
 
@@ -154,17 +154,22 @@ describe('fire', () => {
     expect(game.entityStates.get(extinguisher.id, 'charge')).toBeLessThan(15);
   });
 
-  it('114 sends the brigade, who put every fire out when they arrive; a call with no fire is a false alarm', async () => {
+  it('114 brings the fire brigade (Phú 2026-11-13): down into the hub, their hoses put the fire out', async () => {
     const { game, board } = await burning();
-    expect(game.fires.call('114')).toBe('dispatched');
-    expect(game.fires.call('114')).toBe('already-coming');
-    run(game, BRIGADE_S - 1);
-    expect(game.fires.burning(BOARD)).toBe(true);
-    run(game, 2);
-    expect(game.fires.list).toHaveLength(0);
-    expect(game.fires.call('114')).toBe('false-alarm');
-    expect(game.fires.call('115')).toBe('other-service');
-    expect(game.fires.call('0909')).toBe('no-answer');
+    expect(game.emergency.call('114')).toBe('dispatched');
+    expect(game.emergency.call('114')).toBe('already-coming');
+    expect(game.emergency.call('113')).toBe('already-coming'); // one squad at a time
+    run(game, 12);
+    expect(game.fires.burning(BOARD)).toBe(true); // still coming down
+    expect(game.emergency.phase).not.toBe('inbound');
+    // From the hall through the lab's door, opened for them once the hall has loaded.
+    for (let s = 0; s < 150 && game.fires.list.length > 0; s++) {
+      run(game, 1);
+      await flush();
+    }
+    expect(game.fires.list).toHaveLength(0); // put out by their hoses
+    expect(game.emergency.call('115')).toBe('other-service');
+    expect(game.emergency.call('0909')).toBe('no-answer');
     // The burnt board replaced, its parts back in the cabinet sound.
     placePlayer(game, [0.98, 0, 6.3]);
     lookAt(game, [0.98, 0.94, 6.98]);

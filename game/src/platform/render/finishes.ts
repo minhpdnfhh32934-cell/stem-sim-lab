@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { GLASSWARE, METAL, SHEEN } from './looks';
+import { GLASSWARE, METAL, SHEEN, STEAM } from './looks';
+import { setNodeLook } from './nodeLooks';
 import type { QualityConfig } from './quality';
 
 /**
@@ -43,6 +44,41 @@ ${GLASS_EDGE}`,
   );
 }
 
+const PRINTS_VARYINGS = /* glsl */ `
+varying vec3 vWearPos;
+varying vec3 vWearN;
+`;
+/** The glassware sheen's world position, for Max's fingerprints (instanced glassware too). */
+const PRINTS_VERTEX = /* glsl */ `
+{
+  vec4 wearPos = vec4( transformed, 1.0 );
+  mat3 wearM = mat3( modelMatrix );
+  #ifdef USE_INSTANCING
+    wearPos = instanceMatrix * wearPos;
+    wearM = wearM * mat3( instanceMatrix );
+  #endif
+  vWearPos = ( modelMatrix * wearPos ).xyz;
+  vWearN = normalize( wearM * objectNormal );
+}
+`;
+/**
+ * Fingerprints on glass (Max): sampled from three sides like the surfaces' wear, at a hand's
+ * scale, gathered in clusters; where they are the sheen is rougher (a greasy, dull smear).
+ */
+const PRINTS_FRAGMENT = /* glsl */ `
+{
+  vec3 pw = pow( abs( normalize( vWearN ) ), vec3( 4.0 ) );
+  pw /= pw.x + pw.y + pw.z;
+  vec3 pf = vWearPos / 0.3;
+  vec3 pb = vWearPos / 1.2;
+  float g = texture2D( tWear, pf.zy ).g * pw.x + texture2D( tWear, pf.xz ).g * pw.y
+    + texture2D( tWear, pf.xy ).g * pw.z;
+  float r = texture2D( tWear, pb.zy ).r * pw.x + texture2D( tWear, pb.xz ).r * pw.y
+    + texture2D( tWear, pb.xy ).r * pw.z;
+  roughnessFactor = clamp( roughnessFactor + 0.4 * g * smoothstep( 0.1, 0.28, r ), 0.04, 1.0 );
+}
+`;
+
 /** A glassware material's own paint, kept to give it back below Medium. */
 interface Paint {
   readonly color: THREE.Color;
@@ -61,10 +97,81 @@ interface Paint {
  *   are made only then, so a preset without sheen never compiles their program;
  * - metal and sheen: on High the room light as their own environment map, metal then fully
  *   metallic (F5, F6); sheen materials are drawn only where the preset has `sheen` (F13);
- * - small print and sheen passes are hidden beyond DETAIL_DISTANCE (draws saved, §5.3).
+ * - small print and sheen passes are hidden beyond DETAIL_DISTANCE (draws saved, §5.3);
+ * - steam's mist (looks.ts STEAM) where the preset has `effects` (Ultra): soft and torn (`wisps`).
  * Each material's and texture's own values are remembered on first sight, so a switch back gives
  * exactly what the builder made.
  */
+/**
+ * Ultra's steam (WISPS): a puff of mist instead of a pale ball — drawn out upward, thin towards its
+ * rim (where the eye looks through less of it) and torn by noise in the puff's own space, its
+ * pattern turning as it rises. The colour and the opacity the builder gave stay; only how it fades is shaped.
+ */
+const wisps = (shader: THREE.WebGLProgramParametersWithUniforms): void => {
+  shader.vertexShader = shader.vertexShader
+    .replace(
+      'void main() {',
+      `#ifdef WISPS
+varying vec3 vWispNormal;
+varying vec3 vWispView;
+varying vec3 vWispAt;
+#endif
+void main() {`,
+    )
+    .replace(
+      '#include <project_vertex>',
+      `#ifdef WISPS
+  transformed *= vec3( 0.75, 1.7, 0.75 ); // drawn out upward, as it streams off
+#endif
+#include <project_vertex>
+#ifdef WISPS
+  vec3 wispNormal = normal;
+  vec3 wispSeed = vec3( 0.0 );
+  #ifdef USE_INSTANCING
+    wispNormal = mat3( instanceMatrix ) * wispNormal;
+    wispSeed = instanceMatrix[ 3 ].xyz * 23.0; // its curls turn as it rises
+  #endif
+  vWispNormal = normalize( normalMatrix * wispNormal );
+  vWispView = -mvPosition.xyz;
+  vWispAt = position * vec3( 2.6, 1.4, 2.6 ) + wispSeed;
+#endif`,
+    );
+  shader.fragmentShader = shader.fragmentShader
+    .replace(
+      'void main() {',
+      `#ifdef WISPS
+varying vec3 vWispNormal;
+varying vec3 vWispView;
+varying vec3 vWispAt;
+float wispHash( vec3 p ) {
+  return fract( sin( dot( p, vec3( 12.9898, 78.233, 37.719 ) ) ) * 43758.5453 );
+}
+float wispNoise( vec3 p ) {
+  vec3 i = floor( p );
+  vec3 f = fract( p );
+  f = f * f * ( 3.0 - 2.0 * f );
+  vec2 e = vec2( 1.0, 0.0 );
+  return mix(
+    mix( mix( wispHash( i ), wispHash( i + e.xyy ), f.x ),
+         mix( wispHash( i + e.yxy ), wispHash( i + e.xxy ), f.x ), f.y ),
+    mix( mix( wispHash( i + e.yyx ), wispHash( i + e.xyx ), f.x ),
+         mix( wispHash( i + e.yxx ), wispHash( i + e.xxx ), f.x ), f.y ),
+    f.z );
+}
+#endif
+void main() {`,
+    )
+    .replace(
+      '#include <alphamap_fragment>',
+      `#include <alphamap_fragment>
+#ifdef WISPS
+  float facing = abs( dot( normalize( vWispNormal ), normalize( vWispView ) ) );
+  float mist = 0.6 * wispNoise( vWispAt ) + 0.4 * wispNoise( vWispAt * 2.7 + 5.0 );
+  diffuseColor.a *= smoothstep( 0.1, 0.9, facing ) * smoothstep( 0.42, 0.85, mist + 0.3 * facing ) * 1.5;
+#endif`,
+    );
+};
+
 export class Finishes {
   private quality: QualityConfig;
   private environment: THREE.Texture | null = null;
@@ -87,6 +194,10 @@ export class Finishes {
   /** Print and sheen meshes, hidden far away, with their geometry's bounds. */
   private readonly details = new Map<THREE.Object3D, THREE.Sphere>();
   private sinceDetail = Infinity;
+  /** Every glassware mesh adopted (and not released). */
+  private readonly glassware = new Set<THREE.Mesh>();
+  /** Max's wear texture on the sheen (setWear), or null. */
+  private wear: THREE.Texture | null = null;
   // Reused by the distance check: nothing is allocated there.
   private readonly eye = new THREE.Vector3();
   private readonly centre = new THREE.Vector3();
@@ -141,6 +252,47 @@ export class Finishes {
     this.details.forEach(this.near);
   }
 
+  /**
+   * Max's fingerprints on glassware (Phase Max; wear.png's G, gathered by its R, in world space as
+   * on the surfaces): where a hand has been, the glass's reflection dulls and blurs. Null takes it
+   * off. The shared sheen pass compiles once more on a change.
+   */
+  setWear(texture: THREE.Texture | null): void {
+    if (texture === this.wear) return;
+    this.wear = texture;
+    const sheen = this.sheen;
+    if (!texture) {
+      delete (sheen as Partial<THREE.MeshStandardMaterial>).onBeforeCompile;
+      delete (sheen as Partial<THREE.MeshStandardMaterial>).customProgramCacheKey;
+    } else {
+      sheen.onBeforeCompile = (shader) => {
+        shader.uniforms.tWear = { value: texture };
+        shader.vertexShader = shader.vertexShader
+          .replace('#include <common>', `#include <common>\n${PRINTS_VARYINGS}`)
+          .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>\n${PRINTS_VERTEX}`);
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            '#include <common>',
+            `#include <common>\n${PRINTS_VARYINGS}\nuniform sampler2D tWear;`,
+          )
+          .replace(
+            '#include <roughnessmap_fragment>',
+            `#include <roughnessmap_fragment>\n${PRINTS_FRAGMENT}`,
+          );
+      };
+      sheen.customProgramCacheKey = () => 'max-glass-prints';
+    }
+    sheen.needsUpdate = true;
+  }
+
+  /** The glassware meshes there are (Max's see-through pass draws them itself: effectsPass.ts). */
+  readonly glassMeshes = (): ReadonlySet<THREE.Mesh> => this.glassware;
+
+  /** Shows or hides the glassware (their own materials; their sheen passes stay). */
+  readonly showGlass = (shown: boolean): void => {
+    for (const mesh of this.glassware) (mesh.material as THREE.Material).visible = shown;
+  };
+
   /** A glassware mesh's sheen pass, if it has one (tests). */
   sheenOf(mesh: THREE.Mesh): THREE.Mesh | undefined {
     return this.twins.get(mesh);
@@ -157,12 +309,14 @@ export class Finishes {
     const { material } = mesh;
     for (const m of Array.isArray(material) ? material : [material]) this.finish(m);
     const glassware = !Array.isArray(material) && material.name === GLASSWARE;
+    if (glassware) this.glassware.add(mesh);
     if (glassware && this.quality.sheen) this.twin(mesh);
     if (PRINT.has(mesh.name)) this.detail(mesh);
   };
 
   private readonly forget = (object: THREE.Object3D): void => {
     this.details.delete(object);
+    this.glassware.delete(object as THREE.Mesh);
   };
 
   private readonly near = (bounds: THREE.Sphere, object: THREE.Object3D): void => {
@@ -173,6 +327,7 @@ export class Finishes {
   private finish(m: THREE.Material): void {
     const { map } = m as THREE.MeshBasicMaterial;
     if (map) this.texture(map);
+    if (m.name === STEAM) this.steam(m);
     if (!(m instanceof THREE.MeshStandardMaterial)) return;
     if (m.name === GLASSWARE) this.glass(m);
     else if (m.name === METAL) this.metal(m);
@@ -182,10 +337,25 @@ export class Finishes {
     }
   }
 
+  /** Steam's puffs: on Ultra a mist thinning to its rim and torn (`wisps`), else as built. */
+  private steam(m: THREE.Material): void {
+    if (m.onBeforeCompile !== wisps) {
+      m.onBeforeCompile = wisps;
+      m.customProgramCacheKey = () => 'steam-wisps';
+    }
+    const defines = (m.defines ??= {}) as Record<string, string>;
+    const on = this.quality.effects;
+    if (on === 'WISPS' in defines) return;
+    if (on) defines.WISPS = '';
+    else delete defines.WISPS;
+    m.needsUpdate = true;
+  }
+
   /** Paint without `sheen`; with it a filter (unlit, multiplied, the sheen pass adds light). */
   private glass(m: THREE.MeshStandardMaterial): void {
     if (m.onBeforeCompile !== glassEdge) {
       m.onBeforeCompile = glassEdge;
+      setNodeLook(m, { kind: 'glass-edge' });
       m.needsUpdate = true;
     }
     let paint = this.paints.get(m);

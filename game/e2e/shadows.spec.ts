@@ -12,7 +12,7 @@ const drawn = async (page: Page) =>
 
 test('standing still the lab draws no shadow map; walking draws them again', async ({ page }) => {
   test.setTimeout(120_000);
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'medium'));
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'medium'));
   const errors = await continueFrom(page, labSave(STAND, LOOK));
   // Settled: the warm-up over (it draws the maps again after each batch) and the rooms asleep.
   let last = -1;

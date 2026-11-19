@@ -46,6 +46,11 @@ export interface NpcSystemDeps {
    * null: drawn as that game says (`mirror`), not to be talked to until they are done.
    */
   drivenBy?: (npcId: string) => string | null;
+  /**
+   * Another game drives the person's day (a LAN room's day driver, no one having them): drawn as
+   * that game says unless this player has them (Phú 2026-11-13).
+   */
+  dayFromRoom?: (npcId: string) => boolean;
   /** Where a resident scene's own coordinates start in the session frame (SceneManager). */
   offsetOf: (sceneId: string) => Readonly<Vec3> | null;
   /** The walk-through door pairs joining scenes (SceneManager), for walking between them. */
@@ -197,6 +202,11 @@ const GIVE_WAY_M = 0.8;
 const NOTICE_M = 3.5;
 /** How quickly (1/s) a person turns to face the player they talk with, and the view turns too. */
 const TURN_RATE = 5;
+/** Startled: how near (m) a blast has to be, how long they stay calm after the guard (s). */
+const STARTLE_M = 30;
+const CALM_S = 2;
+/** How near (m) they come to the player to remind them of something. */
+const REMIND_M = 1.4;
 /** The view turned this far (rad) right of the person talked to: they stand left of their choices. */
 const VIEW_ASIDE = 0.15;
 /** Following: how near (m) they come to the player, and beyond what (m) they hurry. */
@@ -296,6 +306,25 @@ interface Person {
   readonly walker: Walker;
   /** Drawn as another player's game says (Phase F-3); back to their own day when it ends. */
   mirrored: boolean;
+  /**
+   * Answering someone who is not the player (a responder's question, Phú 2026-11-13): stopped,
+   * turned to them (their scene's x, z), talking, for `left` seconds.
+   */
+  aside: { sceneId: string; x: number; z: number; left: number } | null;
+  /**
+   * Startled by a blast at (x, z) of `sceneId` (Phú 2026-11-14): turned to it, guarded, for
+   * `left` seconds past CALM_S; then calm, looking at it, for CALM_S; then their day goes on.
+   */
+  startle: { sceneId: string; x: number; z: number; left: number } | null;
+  /**
+   * Watching something at (x, z) of `sceneId` for `left` seconds (the squad in the building):
+   * stood, turned to it, looking, their own business left; then their day goes on.
+   */
+  watch: { sceneId: string; x: number; z: number; left: number } | null;
+  /** Something to tell the player when they come where this person is (walking up to them). */
+  remind: (() => string) | null;
+  /** Where the other game last said they are: drawn easing there, not jumping 8 times a second. */
+  readonly aim: { x: number; z: number; heading: number; set: boolean };
 }
 
 /** A person as another game draws them: the NpcView's fields that travel (Phase F-3). */
@@ -317,6 +346,13 @@ const MIRROR_NUMBERS = [
   'paperZ',
 ] as const;
 const MIRROR_FLAGS = ['looking', 'talking', 'card', 'reaching'] as const;
+/** A mirrored person catches up with the other game's word (1/s): ~0.1 s behind at 8 a second. */
+const EASE = 12;
+/** Farther than this (m) from the other game's word, they are put there at once (a door). */
+const SNAP_M = 3;
+
+const isNumber = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isFinite(value);
 const GESTURES = new Set<string>([
   'idle',
   'talk',
@@ -328,6 +364,7 @@ const GESTURES = new Set<string>([
   'phone',
   'pose',
   'wait',
+  'guard',
 ]);
 
 const UPRIGHT: Quat = [0, 0, 0, 1];
@@ -449,6 +486,11 @@ export class NpcSystem implements GameSystem {
         errandT: 0,
         errandStage: 'work',
         mirrored: false,
+        aim: { x: 0, z: 0, heading: 0, set: false },
+        aside: null,
+        startle: null,
+        watch: null,
+        remind: null,
         meet: [0, 0, 0],
         offerCenter: [0, 0, 0],
         offerRelease: null,
@@ -941,8 +983,67 @@ export class NpcSystem implements GameSystem {
     const person = this.person(npcId);
     if (!person || person.mirrored) return false;
     return (
-      this.conversation?.npcId === npcId || (person.mode !== 'day' && person.mode !== 'return')
+      this.conversation?.npcId === npcId ||
+      person.aside !== null ||
+      (person.mode !== 'day' && person.mode !== 'return')
     );
+  }
+
+  /** Drawn as another player's game says now (it has them, or drives their day for the room). */
+  follows(npcId: string): boolean {
+    return this.person(npcId)?.mirrored ?? false;
+  }
+
+  /**
+   * Has `npcId` stop and answer someone at (x, z) of `sceneId` for `seconds` (a responder's
+   * question): turned to them, talking; then their day goes on. False if not there or with the
+   * player (a conversation goes first).
+   */
+  aside(npcId: string, sceneId: string, x: number, z: number, seconds: number): boolean {
+    const person = this.person(npcId);
+    if (!person || this.conversation?.npcId === npcId) return false;
+    person.aside = { sceneId, x, z, left: seconds };
+    return true;
+  }
+
+  /**
+   * A blast at (x, z) of `sceneId` (the emergency squad's charge): everyone of the world there
+   * within STARTLE_M turns to it and guards their face for `seconds`, then stands calm a moment
+   * looking at it. Not the ones another player's game draws (theirs startles them).
+   */
+  startle(sceneId: string, x: number, z: number, seconds: number): void {
+    for (const person of this.people) {
+      const { view } = person;
+      if (!person.resident || person.mirrored || view.sceneId !== sceneId) continue;
+      if (Math.hypot(view.x - x, view.z - z) > STARTLE_M) continue;
+      person.startle = { sceneId, x, z, left: seconds + CALM_S };
+    }
+  }
+
+  /**
+   * Everyone of the world in `sceneId` within STARTLE_M of (x, z) — not talking with the player,
+   * not answering someone — stands and watches it for `seconds` (renewed while it lasts). Not the
+   * ones another player's game draws.
+   */
+  watch(sceneId: string, x: number, z: number, seconds: number): void {
+    for (const person of this.people) {
+      const { view } = person;
+      if (!person.resident || person.mirrored || view.sceneId !== sceneId) continue;
+      if (Math.hypot(view.x - x, view.z - z) > STARTLE_M) continue;
+      // Only about their day: a lesson, a follow, a job for the player goes on as it is.
+      if (person.mode !== 'day' && person.mode !== 'return') continue;
+      if (person.watch) Object.assign(person.watch, { x, z, left: seconds });
+      else person.watch = { sceneId, x, z, left: seconds };
+    }
+  }
+
+  /**
+   * `npcId` has `text` for the player (an emergency squad's word about a call made for nothing,
+   * Phú 2026-11-14): once the player is in their scene, on their day, they walk up and say it.
+   */
+  remind(npcId: string, text: () => string): void {
+    const person = this.person(npcId);
+    if (person && !person.mirrored) person.remind = text;
   }
 
   /** The person as drawn here, for the others (`mirror` there). */
@@ -967,10 +1068,28 @@ export class NpcSystem implements GameSystem {
     const person = this.person(npcId);
     if (!person) return;
     const view = person.view;
+    const { aim } = person;
+    const x = fields.x;
+    const z = fields.z;
+    const heading = fields.heading;
+    const sameScene = fields.sceneId === undefined || fields.sceneId === view.sceneId;
     for (const key of MIRROR_NUMBERS) {
+      if (key === 'x' || key === 'z' || key === 'heading') continue;
       const value = fields[key];
       if (typeof value === 'number' && Number.isFinite(value)) view[key] = value;
     }
+    // Each of place and facing as given (one left out stays as it is).
+    aim.x = isNumber(x) ? x : view.x;
+    aim.z = isNumber(z) ? z : view.z;
+    aim.heading = isNumber(heading) ? heading : view.heading;
+    // New, or far (a door, another scene): there at once; else eased there (`live`).
+    const far = Math.hypot(aim.x - view.x, aim.z - view.z) > SNAP_M;
+    if (!person.mirrored || !aim.set || !sameScene || far) {
+      view.x = aim.x;
+      view.z = aim.z;
+      view.heading = aim.heading;
+    }
+    aim.set = true;
     for (const key of MIRROR_FLAGS) {
       const value = fields[key];
       if (typeof value === 'boolean') view[key] = value;
@@ -1364,17 +1483,34 @@ export class NpcSystem implements GameSystem {
   /** On through their day or their errand; where they look. */
   private live(person: Person, dt: number): void {
     const { view } = person;
-    if (this.deps.drivenBy?.(person.npc.id)) {
-      // Another player's game drives them (Phase F-3): drawn as it says; here they only stand.
+    const id = person.npc.id;
+    // Another player's game has them (Phase F-3), or drives their day for the room (unless this
+    // player is with them): drawn as it says, eased; here they only stand.
+    // This player's own business with them (a talk, a lecture, a job): theirs, never followed.
+    const mine =
+      this.conversation?.npcId === id || (person.mode !== 'day' && person.mode !== 'return');
+    const followed = this.deps.drivenBy?.(id) || (!mine && (this.deps.dayFromRoom?.(id) ?? false));
+    if (followed) {
       person.mirrored = true;
+      if (person.aim.set) {
+        const k = 1 - Math.exp(-EASE * dt);
+        view.x += (person.aim.x - view.x) * k;
+        view.z += (person.aim.z - view.z) * k;
+        view.heading += wrap(person.aim.heading - view.heading) * k;
+      }
       person.center[0] = view.x + person.ox;
       person.center[2] = view.z + person.oz;
       person.center[1] = person.npc.character.appearance.heightM / 2 - 0.45 * view.sit;
       return;
     }
-    if (person.mirrored) {
+    if (person.mirrored && mine) {
+      // This player went to talk to them while another game drove their day: theirs now.
+      person.mirrored = false;
+      person.aim.set = false;
+    } else if (person.mirrored) {
       // Done with them there: they walk back to their day from where they are.
       person.mirrored = false;
+      person.aim.set = false;
       person.mode = 'return';
       person.lecture = null;
       person.board = null;
@@ -1383,6 +1519,85 @@ export class NpcSystem implements GameSystem {
       view.progress = null;
       view.paper = 'none';
       view.pen = 'none';
+    }
+    const startle = person.startle;
+    if (startle) {
+      // Startled: stopped, turned (quickly) to the blast, arms up; then calm, still looking.
+      startle.left -= dt;
+      if (startle.left <= 0) person.startle = null;
+      view.speed = 0;
+      view.talking = false;
+      view.gesture = startle.left > CALM_S ? 'guard' : 'idle';
+      if (view.sit < 0.5) {
+        const face = Math.atan2(-(startle.x - view.x), -(startle.z - view.z));
+        view.heading += wrap(face - view.heading) * Math.min(1, dt * TURN_RATE * 2);
+      }
+      view.looking = true;
+      view.lookX = startle.x;
+      view.lookZ = startle.z;
+      if (person.startle) return;
+      view.looking = false;
+    }
+    const aside = person.aside;
+    if (aside) {
+      // Answering a responder: stopped, turned to them, talking, until it is said.
+      aside.left -= dt;
+      if (aside.left <= 0) person.aside = null;
+      view.speed = 0;
+      view.gesture = 'talk';
+      view.talking = true;
+      if (aside.sceneId === view.sceneId && view.sit < 0.5) {
+        const face = Math.atan2(-(aside.x - view.x), -(aside.z - view.z));
+        view.heading += wrap(face - view.heading) * Math.min(1, dt * TURN_RATE);
+      }
+      view.looking = aside.sceneId === view.sceneId;
+      view.lookX = aside.x;
+      view.lookZ = aside.z;
+      if (person.aside) return;
+      view.talking = false;
+      view.gesture = 'idle';
+    }
+    const remind = person.remind;
+    const free = person.mode === 'day' || person.mode === 'return';
+    const here = this.deps.state.session.sceneId === view.sceneId && person.resident;
+    if (remind && free && here && !this.conversation && !person.watch && !person.startle) {
+      // The player has come: up from the seat, over to them, and a word (a conversation).
+      view.sit = Math.max(0, view.sit - dt * 2);
+      view.gesture = 'idle';
+      view.talking = false;
+      const player = this.playerLocal(person);
+      if (
+        person.walker.to(
+          view.sceneId,
+          player[0],
+          player[2],
+          person.npc.walkSpeed * 1.3,
+          dt,
+          REMIND_M,
+        )
+      ) {
+        person.remind = null;
+        view.heading = Math.atan2(-(player[0] - view.x), -(player[2] - view.z));
+        this.speak(person.npc.id, { text: remind() });
+      }
+      return;
+    }
+    const watch = person.watch;
+    if (watch && this.conversation?.npcId !== person.npc.id) {
+      // Watching the squad: up from the seat, turned to them, looking, the book put down.
+      watch.left -= dt;
+      if (watch.left <= 0) person.watch = null;
+      view.speed = 0;
+      view.talking = false;
+      view.sit = Math.max(0, view.sit - dt * 2);
+      view.gesture = 'idle';
+      const face = Math.atan2(-(watch.x - view.x), -(watch.z - view.z));
+      view.heading += wrap(face - view.heading) * Math.min(1, dt * TURN_RATE);
+      view.looking = true;
+      view.lookX = watch.x;
+      view.lookZ = watch.z;
+      if (person.watch) return;
+      view.looking = false;
     }
     const playerScene = this.deps.state.session.sceneId;
     const player = this.playerLocal(person);

@@ -2,12 +2,15 @@ import { facePhotoMaterial } from './facePhoto';
 import * as THREE from 'three';
 import type { CharacterDefinition, SIGNATURE_POSES } from '../../../gameplay/character';
 import type { WornOn } from '../../../gameplay/item';
+import { runShare, stepLength } from '../../../gameplay/player/gait';
 import {
   type BodyModel,
   bodyShapeOf,
   type BoneName,
   buildBody,
   clothMaterial,
+  hairMaterial,
+  skinMaterial,
   DIGITS,
   outlineMaterial,
   setOutlineWidth,
@@ -16,6 +19,8 @@ import {
   toonGradient,
 } from './BodyModel';
 import { Cloth } from './cloth';
+import { fabricTexture, type Motion, secondaryMotion } from './motion';
+import { type PrepareReal, RealBody, realPerson } from './realBody';
 import { blushColour, lipColour } from './head';
 import type { Gesture, PersonView } from './person';
 
@@ -180,7 +185,14 @@ function curlOf(
 ): Readonly<Record<(typeof DIGITS)[number], number>> {
   if (pose === 'thumbs-up') return CURL_THUMBS_UP;
   if (pose === 'peace') return CURL_PEACE;
-  if (pose === 'arms-crossed' || gesture === 'drink' || gesture === 'phone') return CURL_HOLD;
+  if (
+    pose === 'arms-crossed' ||
+    gesture === 'drink' ||
+    gesture === 'phone' ||
+    gesture === 'rope' ||
+    gesture === 'lance'
+  )
+    return CURL_HOLD;
   return CURL_EASY;
 }
 
@@ -278,6 +290,65 @@ function gestureTargets(g: Gesture, t: number, seed: number, out: Targets): Targ
       put(out, 'upperArmR', 0.45 + 0.03 * s(t * 3 + seed), 0, 0.12);
       put(out, 'foreArmR', 1.3 + 0.06 * s(t * 7 + seed), 0, -0.45);
       break;
+    case 'rope': {
+      // On a rope: both hands up on it, over the head, one above the other; the legs together
+      // round it, the knees a little bent, a slight sway.
+      const sway = 0.04 * s(t * 2.3 + seed);
+      put(out, 'upperArmR', 2.75, 0, -0.12);
+      put(out, 'upperArmL', 2.95, 0, 0.12);
+      put(out, 'foreArmR', 0.35, 0, 0);
+      put(out, 'foreArmL', 0.25, 0, 0);
+      put(out, 'thighR', 0.35 + sway, 0, 0.05);
+      put(out, 'thighL', 0.3 - sway, 0, -0.05);
+      put(out, 'shinR', -0.55, 0, 0);
+      put(out, 'shinL', -0.45, 0, 0);
+      put(out, 'head', -0.25, 0, 0);
+      break;
+    }
+    case 'land':
+      // Just down: a crouch, the hands forward for balance.
+      put(out, 'thighR', 0.85, 0, 0.1);
+      put(out, 'thighL', 0.75, 0, -0.1);
+      put(out, 'shinR', -1.2, 0, 0);
+      put(out, 'shinL', -1.05, 0, 0);
+      put(out, 'spine', 0.3, 0, 0);
+      put(out, 'upperArmR', 0.6, 0, 0.25);
+      put(out, 'upperArmL', 0.6, 0, -0.25);
+      put(out, 'foreArmR', 0.6, 0, 0);
+      put(out, 'foreArmL', 0.6, 0, 0);
+      break;
+    case 'lance':
+      // A lance held out at the hip in both hands, the body braced against its push.
+      put(out, 'upperArmR', 0.55, 0, 0.12);
+      put(out, 'foreArmR', 0.85, 0, -0.25);
+      put(out, 'upperArmL', 0.95, 0, -0.45);
+      put(out, 'foreArmL', 0.7, 0, 0.35);
+      put(out, 'spine', 0.12, 0, 0);
+      put(out, 'thighR', -0.18, 0, 0.06);
+      put(out, 'thighL', 0.25, 0, -0.06);
+      put(out, 'shinL', -0.3, 0, 0);
+      put(out, 'head', 0.08, 0, 0);
+      break;
+    case 'guard':
+      // Startled: both hands over the head (as the phone is held at an ear), elbows forward,
+      // the head ducked, a half crouch.
+      arms(out, 1, 1.45, 0, -0.05, 2.25, 0, 0.45);
+      arms(out, -1, 1.45, 0, -0.05, 2.25, 0, 0.45);
+      put(out, 'spine', 0.18, 0, 0);
+      put(out, 'head', -0.3, 0, 0);
+      put(out, 'thighR', 0.3, 0, 0.06);
+      put(out, 'thighL', 0.3, 0, -0.06);
+      put(out, 'shinR', -0.55, 0, 0);
+      put(out, 'shinL', -0.55, 0, 0);
+      break;
+    case 'scratch':
+      // Puzzled: the right hand scratching the back of the head, the head on one side.
+      put(out, 'upperArmR', 1.25, 0, 0.95);
+      put(out, 'foreArmR', 2.15 + 0.12 * s(t * 9 + seed), 0, 0);
+      put(out, 'upperArmL', 0.05, 0, -0.1);
+      put(out, 'foreArmL', 0.25, 0, 0);
+      put(out, 'head', 0.06, 0.15 * s(t * 0.8 + seed), -0.14);
+      break;
     case 'wait':
       // Hands behind the back, weight on one leg, now and then a look round.
       put(out, 'upperArmR', -0.3, 0, 0.12);
@@ -294,6 +365,9 @@ function gestureTargets(g: Gesture, t: number, seed: number, out: Targets): Targ
   }
   return out;
 }
+
+/** The lab coat's white, as the profile's coat (in the common room) wears it. */
+const COAT_WHITE = '#f7f8fa';
 
 export class Actor {
   readonly model: BodyModel;
@@ -328,6 +402,18 @@ export class Actor {
   /** A pen (its cap the colour of its ink): Phase Y-5. */
   private pen: THREE.Object3D | null = null;
   private penInk: THREE.MeshToonMaterial | null = null;
+  /** Max (Phase Max): hair and clothes follow the body (motion.ts), made the first time it is on. */
+  private motion: Motion | null = null;
+  /** Max: the real person drawn in the drawn body's stead (realBody.ts), once loaded. */
+  private real: RealBody | null = null;
+  private realOn = false;
+  private realShown = false;
+  private realLoading = false;
+  private disposed = false;
+  /** What an owner put on the drawn body that a real person has of its own (a squad's gear). */
+  private readonly drawnKit: THREE.Object3D[] = [];
+  /** What is worn now (the real person dresses as this when it comes). */
+  private worn: Partial<Record<WornOn, string>> = {};
 
   constructor(
     readonly character: CharacterDefinition,
@@ -342,13 +428,9 @@ export class Actor {
         ? new THREE.MeshBasicMaterial({ color: SHADOW_PERSON })
         : clothMaterial(color, this.gradient);
     this.materials = {
-      skin: silhouette
-        ? m(a.skinTone)
-        : new THREE.MeshToonMaterial({ color: a.skinTone, gradientMap: this.skinGradient }),
-      hands: silhouette
-        ? m(a.skinTone)
-        : new THREE.MeshToonMaterial({ color: a.skinTone, gradientMap: this.skinGradient }),
-      hair: m(a.hairColor),
+      skin: silhouette ? m(a.skinTone) : skinMaterial(a.skinTone, this.skinGradient),
+      hands: silhouette ? m(a.skinTone) : skinMaterial(a.skinTone, this.skinGradient),
+      hair: silhouette ? m(a.hairColor) : hairMaterial(a.hairColor, this.gradient),
       // The drawn eyes keep their colours in any light, as an anime's do.
       eyeWhite: new THREE.MeshBasicMaterial({ color: silhouette ? SHADOW_PERSON : '#fbfbfb' }),
       iris: new THREE.MeshBasicMaterial({ color: silhouette ? SHADOW_PERSON : a.eyeColor }),
@@ -359,7 +441,7 @@ export class Actor {
       shoes: m(a.clothes.shoes),
       accent: m(a.clothes.accent),
       trim: m('#1d1f23'),
-      coat: m('#f7f8fa'),
+      coat: m(COAT_WHITE),
       coatTrim: m('#5b6878'),
       goggles: m('#d9e6ee'),
       shield: m('#e4f1f7'),
@@ -391,6 +473,7 @@ export class Actor {
     }
     this.model.shadows.coat.visible = character.profile.coat;
     if (this.model.outlines) this.model.outlines.coat.visible = character.profile.coat;
+    if (character.profile.coat) this.worn = { body: COAT_WHITE };
     this.hip = this.model.bones.thighL.getWorldPosition(new THREE.Vector3()).y;
     for (const name of Object.keys(this.model.bones) as BoneName[]) {
       this.current.set(name, new THREE.Euler());
@@ -512,6 +595,8 @@ export class Actor {
    * with nothing on it — the lab coat, goggles, a face shield, gloves (the hands' colour).
    */
   wear(worn: Partial<Record<WornOn, string>>): void {
+    this.worn = { ...worn };
+    this.real?.wear(this.worn);
     for (const mesh of this.model.meshes) {
       const slot = SHOWN_BY[mesh.userData.surface as Surface];
       if (slot) mesh.visible = worn[slot] !== undefined;
@@ -539,6 +624,7 @@ export class Actor {
     look: { x: number; z: number } | null,
     point: { readonly x: number; readonly y: number; readonly z: number } | null = null,
   ): void {
+    this.motion?.update(dt, time, view.speed);
     const g = this.group;
     g.position.set(view.x, 0, view.z);
     g.rotation.y = view.heading;
@@ -554,9 +640,10 @@ export class Actor {
       // Walking: legs and arms swing with the stride, the body bobbing at each step. Running
       // (called up): a longer stride, the knees high, the arms bent and pumping, the body leaning
       // into it and bouncing.
-      const run = THREE.MathUtils.smoothstep(view.speed, 2.4, 3.6);
+      const run = runShare(view.speed);
       // Heard steps (the world's people) set the swing, so a foot comes down as it is heard.
-      if (view.stride === undefined) this.phase += (view.speed * dt * Math.PI) / (0.75 + 0.6 * run);
+      if (view.stride === undefined)
+        this.phase += (view.speed * dt * Math.PI) / stepLength(view.speed);
       else this.phase = view.stride;
       const p = this.phase;
       const swing = (0.34 + 0.36 * run) * Math.min(1, view.speed / 1.2);
@@ -618,8 +705,11 @@ export class Actor {
     if (this.glow > 0.001 || this.glowing) {
       const pulse = 0.5 + 0.5 * Math.sin(time * 7);
       this.outline.color.lerpColors(INK, GLOW, this.glow * (0.75 + 0.25 * pulse));
-      setOutlineWidth(this.outline, 0.0022 + this.glow * (0.0035 + 0.0012 * pulse));
+      const width = 0.0022 + this.glow * (0.0035 + 0.0012 * pulse);
+      setOutlineWidth(this.outline, width);
       this.glowing = this.glow > 0.001;
+      // A real person has no ink line: only the glow, while called.
+      this.real?.glow(this.glowing, this.outline.color, width);
     }
 
     const bones = this.model.bones;
@@ -657,6 +747,7 @@ export class Actor {
     if (this.keyCard) this.keyCard.visible = view.card === true;
     if (this.pen) this.pen.visible = (view.pen ?? null) !== null;
     if (view.pen) this.penInk?.color.set(view.pen === 'red' ? '#c62828' : '#1d3fa8');
+    if (this.realShown) this.real?.drive(dt);
   }
 
   /**
@@ -689,7 +780,82 @@ export class Actor {
     arms(targets, side, b, 0, a, 0.08, 0, 0, 0, 0, -0.1);
   }
 
+  /** Max's motion on or off with the owner's graphics level (quality.ts `motion`); each frame is fine. */
+  setMotion(on: boolean): void {
+    if (on && !this.motion) this.motion = secondaryMotion(this, fabricTexture());
+    this.motion?.setOn(on);
+  }
+
+  /**
+   * Max's real person on or off with the owner's graphics level (quality.ts `realPeople`), for a
+   * character that names one (`realBody`); loaded the first time, shared; each frame is fine.
+   */
+  setReal(on: boolean, warn: (message: string) => void, prepare: PrepareReal | null = null): void {
+    const id = this.character.realBody;
+    this.realOn = on && id !== undefined;
+    if (this.realOn && id !== undefined && !this.real && !this.realLoading) {
+      this.realLoading = true;
+      void realPerson(id, warn).then(async (asset) => {
+        if (!asset || this.disposed) {
+          this.realLoading = false;
+          return;
+        }
+        let real: RealBody;
+        try {
+          real = new RealBody(asset, this.model, this.character.appearance.heightM);
+        } catch (error) {
+          this.realLoading = false;
+          warn(`Ultra: the real person ${id} could not be built (${String(error)})`);
+          return;
+        }
+        // Ready to draw before it is shown (its maps uploaded, its programs compiled): the
+        // drawn body stays meanwhile.
+        if (prepare) {
+          await prepare(real.group, asset.maps).catch((error: unknown) =>
+            warn(`Ultra: the real person ${id} was not prepared (${String(error)})`),
+          );
+        }
+        this.realLoading = false;
+        if (this.gone()) {
+          real.dispose(); // disposed while it was prepared
+          return;
+        }
+        this.real = real;
+        real.wear(this.worn);
+        this.group.add(real.group);
+        this.showReal();
+      });
+    }
+    this.showReal();
+  }
+
+  /** Gear on the drawn body hidden while the real person is shown (it wears its own). */
+  drawnOnly(objects: readonly THREE.Object3D[]): void {
+    this.drawnKit.push(...objects);
+    for (const o of objects) o.visible = !this.realShown;
+  }
+
+  /** Disposed (read after an await: a field check there reads as its value before it). */
+  private gone(): boolean {
+    return this.disposed;
+  }
+
+  /** The real person or the drawn body (its materials, outline and shadow), as `realOn` says. */
+  private showReal(): void {
+    const real = this.realOn && this.real !== null;
+    if (real === this.realShown) return;
+    this.realShown = real;
+    if (this.real) this.real.group.visible = real;
+    for (const material of Object.values(this.materials)) material.visible = !real;
+    this.outline.visible = !real;
+    this.model.shadows.body.castShadow = !real;
+    this.model.shadows.coat.castShadow = !real;
+    for (const o of this.drawnKit) o.visible = !real;
+  }
+
   dispose(): void {
+    this.disposed = true;
+    this.real?.dispose();
     for (const mesh of [...this.model.meshes, this.model.shadows.body, this.model.shadows.coat]) {
       mesh.geometry.dispose();
     }

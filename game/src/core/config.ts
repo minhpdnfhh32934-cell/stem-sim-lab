@@ -20,6 +20,9 @@ export const GameConfigSchema = z.object({
     .object({
       walkSpeed: z.number().positive().default(2.2), // m/s
       runSpeed: z.number().positive().default(4.5), // m/s
+      // The upward speed a jump starts with (Phú 2026-11-13): v²/2g ≈ 0.46 m high at 9.81 m/s²,
+      // a standing jump's.
+      jumpSpeed: z.number().min(0).max(10).default(3), // m/s
       radius: z.number().positive().default(0.3), // m, collision capsule radius
       reach: z.number().positive().default(2.2), // m, max interaction and grab distance
       holdDistance: z.number().min(0.3).max(2).default(0.45), // m from the eye to a held object, looking ahead
@@ -62,6 +65,7 @@ export const GameConfigSchema = z.object({
           moveLeft: KeyList.default(['KeyA', 'ArrowLeft']),
           moveRight: KeyList.default(['KeyD', 'ArrowRight']),
           run: KeyList.default(['ShiftLeft', 'ShiftRight']),
+          jump: KeyList.default(['Space']),
           interact: KeyList.default(['KeyE']),
           // The target's second available action (e.g. Inspect next to Grab).
           secondary: KeyList.default(['KeyF']),

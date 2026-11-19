@@ -33,7 +33,6 @@ const DoneSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('completed'), station: IdSchema }),
   z.object({ kind: z.literal('viewed'), station: IdSchema }),
 ]);
-export type TaskDone = z.infer<typeof DoneSchema>;
 
 export const TaskStepSchema = z.object({
   id: IdSchema,

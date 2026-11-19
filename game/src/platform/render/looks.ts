@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { setNodeLook } from './nodeLooks';
 import type { MATERIALS } from '../../gameplay/item';
 
 type Material = (typeof MATERIALS)[number];
@@ -11,6 +12,8 @@ type Material = (typeof MATERIALS)[number];
 export const GLASSWARE = 'glassware';
 export const METAL = 'metal';
 export const SHEEN = 'sheen';
+/** Steam's mist (a puff's material): Ultra draws it soft and torn (finishes.ts). */
+export const STEAM = 'steam';
 
 /**
  * How each kind of surface answers light — the items' `visual.material` and the apparatus parts
@@ -122,6 +125,7 @@ export function liquidLook(): {
     depthWrite: false,
   });
   filter.onBeforeCompile = edged;
+  setNodeLook(filter, { kind: 'liquid-filter' });
   filter.customProgramCacheKey = () => 'liquid-filter';
   const rim = new THREE.MeshStandardMaterial({
     color: 0xffffff,
@@ -132,6 +136,7 @@ export function liquidLook(): {
     depthWrite: false,
   });
   rim.onBeforeCompile = rimmed(filter.color); // the same colour object: it follows `transmit`
+  setNodeLook(rim, { kind: 'liquid-rim', tint: filter.color });
   rim.customProgramCacheKey = () => 'liquid-rim';
   return {
     filter,

@@ -4,6 +4,7 @@ import items from './core-items.json';
 import laboratories from './laboratories.json';
 import npcs from './npcs.json';
 import procedures from './procedures.json';
+import responders from './responders.json';
 import rooms from './rooms.json';
 import scenes from './scenes.json';
 import strings from './strings.json';
@@ -26,4 +27,5 @@ export const coreContent: CoreRawContent = {
   procedures,
   strings,
   npcs,
+  responders,
 };

@@ -300,6 +300,28 @@ describe('PhysicsSystem', () => {
     expect(h.state.player.grounded).toBe(true);
   });
 
+  it('jumps from the floor as high as v²/2g, lands, and takes no jump asked for in the air', async () => {
+    const h = await harness();
+    h.load([1.5, 0, 1.5]);
+    h.run(0.2);
+    expect(h.state.player.grounded).toBe(true);
+    // 3 m/s up at 9.81 m/s²: 3² / (2 · 9.81) = 0.459 m at the top, back down after 2v/g = 0.61 s.
+    h.state.player.jump = true;
+    let top = 0;
+    h.run(0.3, () => (top = Math.max(top, h.state.player.position[1])));
+    expect(h.state.player.jump).toBe(false); // taken by the step
+    expect(h.state.player.grounded).toBe(false);
+    // Asked again in the air: dropped, no second jump.
+    h.state.player.jump = true;
+    h.run(0.6, () => (top = Math.max(top, h.state.player.position[1])));
+    expect(h.state.player.jump).toBe(false);
+    // Each step on y = v t − g t²/2: the highest step (t = 0.3 s) is at 0.4586 m.
+    expect(top).toBeGreaterThan(0.45);
+    expect(top).toBeLessThanOrEqual(3 ** 2 / (2 * 9.81) + 1e-3);
+    expect(h.state.player.grounded).toBe(true);
+    expect(Math.abs(h.state.player.position[1])).toBeLessThan(0.005);
+  });
+
   it('treats an outside write to the player position as a teleport', async () => {
     const h = await harness();
     h.load([0, 0, 1]);
@@ -732,7 +754,7 @@ describe('doorways: Preparation Room ⇄ cleanroom corridor', () => {
     for (let i = 0; i < 3; i++) {
       await game.scenes.load('simlab-hub');
       game.update(H);
-      expect(game.physics.stats()).toMatchObject({ bodies: 42, colliders: 55 });
+      expect(game.physics.stats()).toMatchObject({ bodies: 41, colliders: 54 });
       await game.scenes.load('preparation-room');
       game.update(H);
       expect(game.physics.stats()).toMatchObject({ bodies: 17, colliders: 39 });

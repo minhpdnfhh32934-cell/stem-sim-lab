@@ -334,7 +334,7 @@ function rig(item: ItemDefinition): BenchRig {
   const { keep, own, mesh, copies } = kit;
   kit.group.position.copy(topOf(item));
   const shell = own(new THREE.MeshStandardMaterial({ color: '#33404c', ...LOOKS.painted }));
-  const lens = own(
+  const lens = kit.mine(
     new THREE.MeshStandardMaterial({ color: '#efe9da', roughness: 0.6, emissive: '#ffe6a6' }),
   );
   lens.emissiveIntensity = 0;

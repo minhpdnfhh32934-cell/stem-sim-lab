@@ -54,7 +54,7 @@ function rig(item: ItemDefinition): BenchRig {
   wall.castShadow = false;
   wall.renderOrder = 1;
   const purple = new THREE.MeshStandardMaterial({ color: '#b04a9a', ...LOOKS.satin });
-  own(purple);
+  kit.mine(purple);
   const protoplast = mesh(keep(new THREE.SphereGeometry(1, 32, 20)), purple);
   protoplast.name = 'protoplast';
   protoplast.position.copy(wall.position);

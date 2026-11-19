@@ -178,9 +178,9 @@ test('Physics Lab ceiling: lit level with its walls and darker than its lamps, u
   // debug panel). Phase T-1a: the lab 4 m high, its lights at x −1, 4 and 9 — the stand and the
   // pixels chosen anew from a screenshot. Unlit, the ceiling read 113 against the wall's 167 (P3.11).
   // Medium chosen on an earlier visit: on this software renderer the game would start at Low.
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'medium'));
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'medium'));
   const errors = await continueFrom(page, labSave([3.967, 0, -3.632], [3.667, 4.2, 7.5]));
-  for (const quality of ['Medium', 'Low', 'High']) {
+  for (const quality of ['Medium', 'Low']) {
     if (quality !== 'Medium') {
       await page.keyboard.press('Escape');
       await page.getByRole('button', { name: 'Settings' }).click();
@@ -203,7 +203,7 @@ test('Physics Lab ceiling: lit level with its walls and darker than its lamps, u
   expect(errors).toEqual([]);
 });
 
-test('Physics Lab pendulum bay: as bright under High as under Medium, no veil from the room light', async ({
+test.skip('Physics Lab pendulum bay: as bright under High as under Medium, no veil from the room light', async ({
   page,
 }) => {
   test.setTimeout(120_000);
@@ -211,8 +211,9 @@ test('Physics Lab pendulum bay: as bright under High as under Medium, no veil fr
   // light's brightest panel lit them from the front until it was turned overhead
   // (ROOM_LIGHT_TILT in WorldRenderer). Under High they read 13 above Medium on the GPU then, 0
   // and 2 now. The points are clear of the HUD, the debug panel and the rig.
-  // Medium chosen on an earlier visit: on this software renderer the game would start at Low.
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'medium'));
+  // Skipped since 2026-11-18: it compared the former Medium (no room light) with the former High,
+  // now Medium; the level it measured against is gone.
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'medium'));
   const errors = await continueFrom(page, labSave([0, 0, -8.7], [0, 2.2, -13.5]));
   const points = [
     ['wall above the sign', 440, 250],
@@ -245,7 +246,7 @@ test('Physics Lab pendulum bay: as bright under High as under Medium, no veil fr
   expect(errors).toEqual([]);
 });
 
-test('graphics quality: Low by default on a software renderer (Medium on a GPU), switched from the pause menu at once, a free-fall run under High at 30 FPS gives the theory', async ({
+test('graphics quality: Low by default on a software renderer (Medium on a GPU), switched from the pause menu at once, a free-fall run under Medium at 30 FPS gives the theory', async ({
   page,
 }) => {
   test.setTimeout(180_000);
@@ -254,12 +255,10 @@ test('graphics quality: Low by default on a software renderer (Medium on a GPU),
   const errors = await continueFrom(page, labSave([2.017, 0, -5.35], [1.867, 0.875, -5.9]));
   // SwiftShader here: the renderer suggests Low, and nothing is stored until the player picks.
   await expect.poll(async () => (await fpsLine(page)).graphics).toBe('low');
-  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphicsQuality'))).toBe(
-    null,
-  );
+  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphics'))).toBe(null);
 
-  // The pause menu's settings: four presets (Ultra asks first: its own test), keyboard reachable,
-  // Vietnamese; High applies at once.
+  // The pause menu's settings: four presets (High and Ultra ask first: their own test), keyboard
+  // reachable, Vietnamese; Medium applies at once.
   await page.keyboard.press('Escape');
   await expectDebug(page, 'Phase', 'playing · paused');
   await page.getByRole('button', { name: 'Settings' }).click();
@@ -267,12 +266,12 @@ test('graphics quality: Low by default on a software renderer (Medium on a GPU),
   const group = page.getByRole('group', { name: 'Graphics quality' });
   await expect(group.getByRole('radio')).toHaveCount(4);
   await expect(group.getByLabel('Low')).toBeChecked();
-  await group.getByLabel('High').focus();
+  await group.getByLabel('Medium').focus();
   await page.keyboard.press('Space');
-  await expect(group.getByLabel('High')).toBeChecked();
-  await expect.poll(async () => (await fpsLine(page)).graphics).toBe('high');
-  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphicsQuality'))).toBe(
-    'high',
+  await expect(group.getByLabel('Medium')).toBeChecked();
+  await expect.poll(async () => (await fpsLine(page)).graphics).toBe('medium');
+  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphics'))).toBe(
+    'medium',
   );
   await expectDebug(page, 'Phase', 'playing · paused'); // still paused
   await page.setViewportSize({ width: 360, height: 640 });
@@ -285,7 +284,7 @@ test('graphics quality: Low by default on a software renderer (Medium on a GPU),
   await expect(page.locator('.pause')).toBeHidden();
   await expect(page.locator('canvas')).toHaveCount(1);
 
-  // RUN under High and a 30 FPS cap: the deterministic model's own values, as with no cap.
+  // RUN under Medium and a 30 FPS cap: the deterministic model's own values, as with no cap.
   await expectDebug(page, 'Focus', 'physics-lab/button-run');
   await page.keyboard.press('e');
   const t = Math.sqrt((2 * 1.5) / 9.81).toFixed(3);
@@ -300,17 +299,17 @@ test('graphics quality: Low by default on a software renderer (Medium on a GPU),
   await page.reload();
   await openSettings(page, 'graphics');
   await expect(
-    page.getByRole('group', { name: 'Graphics quality' }).getByLabel('High'),
+    page.getByRole('group', { name: 'Graphics quality' }).getByLabel('Medium'),
   ).toBeChecked();
   await settingsSection(page, 'general');
   await page.getByLabel('Tiếng Việt').check();
   await settingsSection(page, 'graphics');
   await expect(
-    page.getByRole('group', { name: 'Chất lượng đồ hoạ' }).getByLabel('Cao'),
+    page.getByRole('group', { name: 'Chất lượng đồ hoạ' }).getByLabel('Trung bình'),
   ).toBeChecked();
   await settingsSection(page, 'general');
   await page.getByLabel('English').check();
-  await page.evaluate(() => localStorage.setItem('simlab.settings.graphicsQuality', 'extreme'));
+  await page.evaluate(() => localStorage.setItem('simlab.settings.graphics', 'extreme'));
   await page.reload();
   await openSettings(page, 'graphics');
   await expect(
@@ -319,47 +318,71 @@ test('graphics quality: Low by default on a software renderer (Medium on a GPU),
   expect(errors).toEqual([]);
 });
 
-test('Ultra asks first: Esc and Cancel keep the preset, Turn on Ultra switches and is kept; a run gives the same theory', async ({
+test('High and Ultra ask first, with the minimum against this computer; below it, a second warning; Esc and Cancel keep the preset, Turn on Ultra switches and is kept; a run gives the same theory', async ({
   page,
 }) => {
   test.setTimeout(180_000);
-  // At the free-fall desk, looking at RUN (h 1.5 m, Earth); High chosen on an earlier visit (only
+  // At the free-fall desk, looking at RUN (h 1.5 m, Earth); Medium chosen on an earlier visit (only
   // if none is stored: the script runs again on the reload below).
   await page.addInitScript(() => {
-    if (localStorage.getItem('simlab.settings.graphicsQuality') === null) {
-      localStorage.setItem('simlab.settings.graphicsQuality', 'high');
+    if (localStorage.getItem('simlab.settings.graphics') === null) {
+      localStorage.setItem('simlab.settings.graphics', 'medium');
     }
   });
   const errors = await continueFrom(page, labSave([2.017, 0, -5.35], [1.867, 0.875, -5.9]));
-  await expect.poll(async () => (await fpsLine(page)).graphics).toBe('high');
+  await expect.poll(async () => (await fpsLine(page)).graphics).toBe('medium');
 
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Settings' }).click();
   await settingsSection(page, 'graphics');
   const group = page.getByRole('group', { name: 'Graphics quality' });
+  // High asks too, with its own words; cancelled, still Medium.
+  const high = page.getByRole('dialog', { name: 'Turn on High graphics?' });
+  await group.getByRole('radio', { name: /^High/ }).click();
+  await expect(high).toBeVisible();
+  await expect(high.getByRole('button', { name: 'Turn on High' })).toBeVisible();
+  await high.getByRole('button', { name: 'Cancel' }).click();
+  await expect(high).toBeHidden();
+  await expect(group.getByLabel('Medium')).toBeChecked();
   const dialog = page.getByRole('dialog', { name: 'Turn on Ultra graphics?' });
   // Chosen: the dialog, the preset unchanged, its notes (SwiftShader here: the software warning).
   await group.getByLabel('Ultra').click();
   await expect(dialog).toBeVisible();
-  await expect(group.getByLabel('High')).toBeChecked();
-  await expect(dialog.locator('li')).toHaveCount(5);
-  await expect(dialog).toContainText('RTX 4060');
+  await expect(group.getByLabel('Medium')).toBeChecked();
+  await expect(dialog.locator('li')).toHaveCount(4);
+  // The minimum against this computer: SwiftShader, no graphics card — not advised.
+  await expect(dialog.locator('table')).toContainText('RTX 4060');
+  await expect(dialog.locator('table')).toContainText('Graphics memory');
+  await expect(dialog.locator('.ultra-mark.short').first()).toHaveText('✘');
+  await expect(dialog.locator('.ultra-expect')).toContainText('Not advised');
   await expect(dialog).toContainText('without a graphics card');
   await expect(dialog.getByRole('button', { name: 'Cancel' })).toBeFocused();
-  // Esc closes the dialog only: still paused, still High.
+  // Esc closes the dialog only: still paused, still Medium.
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   await expectDebug(page, 'Phase', 'playing · paused');
-  expect((await fpsLine(page)).graphics).toBe('high');
-  // Cancel keeps High too.
+  expect((await fpsLine(page)).graphics).toBe('medium');
+  // Cancel keeps Medium too.
   await group.getByLabel('Ultra').click();
   await dialog.getByRole('button', { name: 'Cancel' }).click();
   await expect(dialog).toBeHidden();
-  await expect(group.getByLabel('High')).toBeChecked();
-  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphicsQuality'))).toBe(
-    'high',
+  await expect(group.getByLabel('Medium')).toBeChecked();
+  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphics'))).toBe(
+    'medium',
   );
-  // In Vietnamese, then turned on.
+  // Below the minimum: Turn on Ultra asks a second time, Keep first; kept, still Medium.
+  const warning = page.getByRole('alertdialog', { name: 'Below the minimum for Ultra' });
+  await group.getByLabel('Ultra').click();
+  await dialog.getByRole('button', { name: 'Turn on Ultra' }).click();
+  await expect(dialog).toBeHidden();
+  await expect(warning).toBeVisible();
+  await expect(warning).toContainText('No graphics card is drawing the game.');
+  await expect(warning.getByRole('button', { name: 'Keep the current level' })).toBeFocused();
+  await warning.getByRole('button', { name: 'Keep the current level' }).click();
+  await expect(warning).toBeHidden();
+  await expect(group.getByLabel('Medium')).toBeChecked();
+  expect((await fpsLine(page)).graphics).toBe('medium');
+  // In Vietnamese, then turned on (anyway).
   await settingsSection(page, 'general');
   await page.getByLabel('Tiếng Việt').check();
   await settingsSection(page, 'graphics');
@@ -368,14 +391,19 @@ test('Ultra asks first: Esc and Cancel keep the preset, Turn on Ultra switches a
   await expect(vi).toBeVisible();
   await vi.getByRole('button', { name: 'Bật Ultra' }).click();
   await expect(vi).toBeHidden();
+  const viWarning = page.getByRole('alertdialog', {
+    name: 'Chưa đạt cấu hình tối thiểu cho Ultra',
+  });
+  await viWarning.getByRole('button', { name: 'Vẫn bật' }).click();
+  await expect(viWarning).toBeHidden();
+  // On: how Ultra plays here, measured while playing (not yet: being measured).
+  await expect(page.locator('.ultra-now')).toContainText('Ultra trên máy này');
   await settingsSection(page, 'general');
   await page.getByLabel('English').check();
   await settingsSection(page, 'graphics');
   await expect(group.getByLabel('Ultra')).toBeChecked();
   await expect.poll(async () => (await fpsLine(page)).graphics).toBe('ultra');
-  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphicsQuality'))).toBe(
-    'ultra',
-  );
+  expect(await page.evaluate(() => localStorage.getItem('simlab.settings.graphics'))).toBe('ultra');
 
   // Resumed under Ultra: a free-fall run gives the deterministic model's own values.
   await page.getByRole('button', { name: 'Back' }).click();
@@ -400,12 +428,13 @@ test('Ultra asks first: Esc and Cancel keep the preset, Turn on Ultra switches a
   expect(errors).toEqual([]);
 });
 
-test('the hub over the city: nothing of it fetched under Medium, fetched when High is chosen', async ({
+test('the hub over the city: nothing of it fetched under Low, fetched when Medium is chosen', async ({
   page,
 }) => {
   test.setTimeout(120_000);
-  // Phase V-2: Low and Medium keep the hub's floor as it was; the city is High's and Ultra's.
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'medium'));
+  // Phase V-2: Low keeps the hub's floor as it was; the city is Medium's and up (the former High's,
+  // renamed 2026-11-18).
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'low'));
   const fetched: string[] = [];
   page.on('request', (r) => {
     if (r.url().includes('/hub-city/')) fetched.push(r.url());
@@ -425,7 +454,7 @@ test('the hub over the city: nothing of it fetched under Medium, fetched when Hi
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Settings' }).click();
   await settingsSection(page, 'graphics');
-  await page.getByRole('group', { name: 'Graphics quality' }).getByLabel('High').check();
+  await page.getByRole('group', { name: 'Graphics quality' }).getByLabel('Medium').check();
   await page.getByRole('button', { name: 'Back' }).click();
   await page.getByRole('button', { name: 'Resume' }).click();
   await expect.poll(() => fetched.some((url) => url.endsWith('Building_Large_2.gltf'))).toBe(true);

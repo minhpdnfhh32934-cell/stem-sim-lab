@@ -13,7 +13,17 @@ export type Gesture =
   /** Another player (2026-11-12): looking at their hands, dialling at the chest, doing a test. */
   | 'hands'
   | 'dial'
-  | 'test';
+  | 'test'
+  /**
+   * The emergency squad (Phú 2026-11-13): both hands up on a rope, the legs gripping it; landed
+   * off it, knees bent; a lance held out in both hands; a hand scratching the head, puzzled.
+   */
+  | 'rope'
+  | 'land'
+  | 'lance'
+  | 'scratch'
+  /** Startled (a blast): both hands over the head, the head down, the knees giving. */
+  | 'guard';
 
 /** A person as drawn this frame: the character page's people and the world's (Phase Y). */
 export interface PersonView {

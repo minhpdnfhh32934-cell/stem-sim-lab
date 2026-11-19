@@ -864,7 +864,6 @@ export type ExperimentDefinition = z.infer<typeof ExperimentDefinitionSchema>;
 export type Presentation = ExperimentDefinition['presentation'];
 export type ExperimentWorkspace = NonNullable<ExperimentDefinition['workspace']>;
 export type WorkspacePiece = ExperimentWorkspace['pieces'][number];
-export type WorkspaceBinding = WorkspacePiece['shows'][number];
 export type SetupStep = ExperimentWorkspace['setup'][number];
 export type ExperimentParameter = ExperimentDefinition['parameters'][number];
 export type ExperimentMilestone = ExperimentDefinition['procedure'][number]['done'];

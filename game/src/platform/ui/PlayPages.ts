@@ -148,6 +148,7 @@ export class PlayPage {
       button.addEventListener('click', go);
       return button;
     };
+    // Inside SimLab (VITE_SIMLAB_EMBED, docs/GAME.md): no room server yet, so Single player only.
     const embedded = import.meta.env.VITE_SIMLAB_EMBED === '1';
     choices.append(
       card(

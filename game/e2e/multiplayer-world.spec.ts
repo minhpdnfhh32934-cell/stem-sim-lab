@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import { sceneSave } from './saves';
 import {
@@ -5,6 +6,7 @@ import {
   captureAt,
   expectDebug,
   openMultiplayer,
+  position,
   roomIdOf,
   seedRoomSave,
   shot,
@@ -210,5 +212,96 @@ test('one world: a ball in the hand seen, thrown at the other player, their scre
   await expectDebug(a, 'Holding', '—');
   await expect(b.locator('.hud-hurt.flash')).toHaveCount(1, { timeout: 10_000 });
   await shot(b, 'mpw-5-hit');
+  expect(errors).toEqual([]);
+});
+
+test('one world: a face from a photo is seen by the others; Space jumps, seen by them too', async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const errors: string[] = [];
+  // A real JPEG for the face (drawn here: no photo of a real person is bundled).
+  const maker = await browser.newPage();
+  const picture = await maker.evaluate(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 128;
+    const g = canvas.getContext('2d');
+    if (!g) return '';
+    g.fillStyle = '#e8b896';
+    g.fillRect(0, 0, 128, 128);
+    g.fillStyle = '#1b1b1b';
+    for (const x of [45, 83]) g.fillRect(x - 6, 50, 12, 8); // eyes
+    g.fillStyle = '#b0384a';
+    g.fillRect(48, 92, 32, 7); // mouth
+    return canvas.toDataURL('image/jpeg', 0.85);
+  });
+  await maker.close();
+  expect(picture.startsWith('data:image/jpeg;base64,')).toBe(true);
+  // A plays their own character (a save's), its face from that picture.
+  const [base] = JSON.parse(readFileSync('src/content/characters.json', 'utf8')) as {
+    appearance: object;
+  }[];
+  if (!base) throw new Error('no character');
+  const own = {
+    ...base,
+    id: 'custom',
+    displayName: 'An',
+    appearance: { ...base.appearance, facePhoto: picture },
+  };
+  const saveA = sceneSave('simlab-hub', [0, 0, -4.5], [0, 1.6, -2.5]);
+  saveA.player.characterId = 'custom';
+  (saveA.player as { custom?: object }).custom = own;
+  const saveB = sceneSave('simlab-hub', [0, 0, -2.5], [0, 1.55, -4.5]);
+  const { a, b, id } = await room(browser, errors, saveA, saveB);
+  await expectDebug(a, 'Character', 'custom');
+  // B has A's character with the picture (sent as A came into the world): drawn on A's head.
+  await expectDebug(b, 'Players', `${id} 2/8 · An simlab-hub .*face-photo`);
+  await aimAt(b, [0, 1.5, -4.5]); // A's face, 2 m ahead
+  await b.waitForTimeout(800);
+  await shot(b, 'mpw-6-face-photo');
+
+  // A jumps: up and down in A's game, the pose (with its height) to B's.
+  await a.keyboard.press('Space');
+  await expect
+    .poll(async () => (await position(a))[1], { timeout: 5000, intervals: [50] })
+    .toBeGreaterThan(0.2);
+  await expect
+    .poll(async () => Math.abs((await position(a))[1]), { timeout: 5000 })
+    .toBeLessThan(0.01);
+  expect(errors).toEqual([]);
+});
+
+test('one world: the teacher on his own day stands and walks in the same place for both', async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const errors: string[] = [];
+  const saveA = sceneSave('simlab-hub', [-1.5, 0, -4], TEACHER);
+  const saveB = sceneSave('simlab-hub', [1.5, 0, -4], TEACHER);
+  const { a, b } = await room(browser, errors, saveA, saveB);
+  // Where each game draws him (the debug panel's Talk line: "teacher day simlab-hub x, z").
+  const at = async (page: Page) => {
+    const text = await page.locator('.debug-text').innerText();
+    const m = /teacher \w+ (\S+) (-?[\d.]+), (-?[\d.]+)/.exec(text);
+    return m ? { scene: m[1], x: Number(m[2]), z: Number(m[3]) } : null;
+  };
+  // A came first: A's game drives his day, B's draws him as A's says.
+  await expectDebug(b, 'Talk', '— · teacher day simlab-hub .* mirrored');
+  await expect(a.locator('.debug-text')).not.toContainText('mirrored');
+  // No one talks to him for 70 s: the two games agree on where he is.
+  let worst = 0;
+  const seen: string[] = [];
+  for (let i = 0; i < 14; i++) {
+    const [pa, pb] = await Promise.all([at(a), at(b)]);
+    expect(pa?.scene).toBe(pb?.scene);
+    const apart = pa && pb ? Math.hypot(pa.x - pb.x, pa.z - pb.z) : Infinity;
+    worst = Math.max(worst, apart);
+    seen.push(`${pa?.x},${pa?.z} / ${pb?.x},${pb?.z}`);
+    await a.waitForTimeout(5000);
+  }
+  test.info().annotations.push({ type: 'teacher A / B', description: seen.join(' · ') });
+  // The panel refreshes 4 times a second and his place 8 times; walking at ~1.2 m/s that is
+  // ~0.4 m at most between two readings taken one after the other.
+  expect(worst).toBeLessThan(0.6);
   expect(errors).toEqual([]);
 });

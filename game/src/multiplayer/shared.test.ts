@@ -23,7 +23,7 @@ async function inRoom(sceneId: string) {
   game.peers.joined(room, 'p1', [{ id: 'p2', name: 'An', character }]);
   const blocked: string[] = [];
   game.events.subscribe('ActionBlocked', ({ reason }) => blocked.push(reason));
-  return { game, blocked };
+  return { game, blocked, character };
 }
 
 /** Places player p2 at a world position (their pose is in their scene's own frame). */
@@ -126,6 +126,39 @@ describe('one world for the room (Phase F-3)', () => {
     run(game, 0.1);
     expect(npcs.mode('teacher')).toBe('return');
     expect(view.pen).toBe('none');
+  });
+
+  it('the teacher’s day is the room’s: one game drives it, the others draw it, eased, and may talk to him', async () => {
+    const { game, character } = await inRoom('simlab-hub');
+    const npcs = game.npcs;
+    // This game came last (p9): An's (p2) drives his day; with no one in the room but this game,
+    // it would be this game's.
+    expect(game.peers.dayDriver()).toBeNull();
+    game.peers.joined(room, 'p9', [{ id: 'p2', name: 'An', character }]);
+    expect(game.peers.dayDriver()).toBe('An');
+    const view = npcs.view('teacher')!;
+    npcs.mirror('teacher', {
+      sceneId: view.sceneId,
+      x: view.x,
+      z: view.z,
+      heading: 0,
+      gesture: 'idle',
+    });
+    run(game, 0.1);
+    // Half a metre on, as An's game says: eased there over a few frames, not jumped.
+    const from = view.x;
+    npcs.mirror('teacher', { sceneId: view.sceneId, x: from + 0.5, z: view.z, heading: 0.4 });
+    game.update(H);
+    expect(view.x - from).toBeGreaterThan(0);
+    expect(view.x - from).toBeLessThan(0.2);
+    run(game, 0.6);
+    expect(view.x).toBeCloseTo(from + 0.5, 2);
+    expect(view.heading).toBeCloseTo(0.4, 2);
+    expect(npcs.mode('teacher')).toBe('day'); // still his day: nothing of his own here
+    // This player may still go and talk to him: then he is this game's (and sent from here).
+    expect(npcs.open('teacher')).toBe(true);
+    game.update(H);
+    expect(npcs.engaged('teacher')).toBe(true);
   });
 
   it('the teacher this player talks with is this game’s to send: engaged, with his snapshot', async () => {

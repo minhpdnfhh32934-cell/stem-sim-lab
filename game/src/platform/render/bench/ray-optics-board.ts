@@ -194,7 +194,7 @@ function rig(item: ItemDefinition): BenchRig {
   kit.group.position.set(x, y - item.visual.size[1] / 2, z);
 
   // The block: colourless, as real water, acrylic and glass are; only its opacity follows n.
-  const glass = own(
+  const glass = kit.mine(
     new THREE.MeshStandardMaterial({ color: '#e8f1f2', ...LOOKS.glass, depthWrite: false }),
   );
   const block = mesh(
@@ -258,7 +258,7 @@ function rig(item: ItemDefinition): BenchRig {
     new THREE.PlaneGeometry(1, RAY.width).rotateX(-Math.PI / 2).translate(0.5, RAY.lift, 0),
   );
   const ray = (name: string) => {
-    const material = own(
+    const material = kit.mine(
       new THREE.MeshBasicMaterial({
         color: '#ff3b24', // a red-filtered ray: it shows on the white disc
         transparent: true,

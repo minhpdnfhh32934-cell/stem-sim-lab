@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { Game } from '../../game/Game';
 import type { GraphicsQuality } from '../../persistence/settings';
 import { Particles } from './particles';
+import { AIR_LAYER } from './roomLights';
 
 /**
  * How fire is drawn under each preset (Phú, Phase E-2b): Low a few soft blobs and a little smoke;
@@ -17,12 +18,22 @@ interface Tier {
   readonly tongues: boolean;
   readonly bed: boolean;
   readonly light: boolean;
+  /** Max: the fire's smoke billows and is lit by its flames as it leaves them (`soot`). */
+  readonly soot: boolean;
 }
 const TIERS: Readonly<Record<GraphicsQuality, Tier>> = {
-  low: { flames: 45, smoke: 6, sparks: 0, tongues: false, bed: false, light: false },
-  medium: { flames: 110, smoke: 18, sparks: 0, tongues: false, bed: false, light: false },
-  high: { flames: 170, smoke: 26, sparks: 10, tongues: true, bed: false, light: false },
-  ultra: { flames: 260, smoke: 40, sparks: 22, tongues: true, bed: true, light: true },
+  low: { flames: 45, smoke: 6, sparks: 0, tongues: false, bed: false, light: false, soot: false },
+  medium: {
+    flames: 170,
+    smoke: 26,
+    sparks: 10,
+    tongues: true,
+    bed: false,
+    light: false,
+    soot: false,
+  },
+  high: { flames: 260, smoke: 40, sparks: 22, tongues: true, bed: true, light: true, soot: false },
+  ultra: { flames: 360, smoke: 60, sparks: 34, tongues: true, bed: true, light: true, soot: true },
 };
 const JET_PER_S = 70;
 /** At most this many ember beds drawn (the fires' own cap is 16). */
@@ -40,6 +51,7 @@ export class FireView {
     grow: 4,
     lift: 0.5,
     drag: 0.6,
+    air: 1,
   });
   /** Plain soft flames (Low, Medium). */
   private readonly blobs = new Particles(1200, '#ff6a14', true, {
@@ -53,6 +65,20 @@ export class FireView {
     grow: -0.6,
     lift: 1.2,
     drag: 1.5,
+  });
+  /**
+   * Max's smoke from a fire: billows (a ragged edge, curls turning inside), lit warm and sooty by
+   * the flames under it as it leaves them, greying as it rises, cools and thins. The plain pool
+   * above still takes the circuit bench's smoke.
+   */
+  private readonly soot = new Particles(1200, '#3b3835', false, {
+    opacity: 0.5,
+    grow: 4,
+    lift: 0.5,
+    drag: 0.6,
+    air: 1,
+    shape: 'puff',
+    ramp: ['#5c3a26', '#3a3633', '#5a5754'],
   });
   /** Tongues running white-yellow → orange → deep red as they rise (High, Ultra). */
   private readonly tongues = new Particles(2600, '#ff6a14', true, {
@@ -74,6 +100,7 @@ export class FireView {
     grow: 4,
     lift: 0.1,
     drag: 1.8,
+    air: 0.6,
   });
   private readonly pools: readonly Particles[];
   private readonly owed = new Map<string, number>();
@@ -89,7 +116,15 @@ export class FireView {
     parent: THREE.Object3D,
     private readonly game: Game,
   ) {
-    this.pools = [this.smoke, this.blobs, this.core, this.tongues, this.sparks, this.jet];
+    this.pools = [
+      this.smoke,
+      this.soot,
+      this.blobs,
+      this.core,
+      this.tongues,
+      this.sparks,
+      this.jet,
+    ];
     for (const pool of this.pools) parent.add(pool.points);
     for (let i = 0; i < BEDS; i++) {
       const material = new THREE.MeshBasicMaterial({
@@ -107,6 +142,7 @@ export class FireView {
     }
     this.light.visible = false;
     this.light.castShadow = false;
+    this.light.layers.enable(AIR_LAYER); // it lights its smoke at Ultra (gpu/air.ts)
     parent.add(this.light);
   }
 
@@ -171,7 +207,7 @@ export class FireView {
       if (Math.random() < tier.smoke / tier.flames) {
         const sy = (y ?? 0) + 0.25 + 0.4 * size;
         const s = (tier.bed ? 0.2 : 0.15) + 0.25 * size;
-        this.smoke.emit(px, sy, pz, 0, 0.35, 0, s, 4 + 2 * Math.random());
+        (tier.soot ? this.soot : this.smoke).emit(px, sy, pz, 0, 0.35, 0, s, 4 + 2 * Math.random());
       }
       if (tier.sparks > 0 && Math.random() < tier.sparks / tier.flames) {
         const jx = (Math.random() - 0.5) * 0.8;

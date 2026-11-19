@@ -45,6 +45,7 @@ import {
   localContextWindow,
   sentText,
   withoutBlockedQuestions,
+  withoutUnanswered,
   summaryBlock,
   withoutPictureAsks,
 } from './memory';
@@ -455,8 +456,9 @@ export async function askTeacher(
   if (!safety.aiAllowed) throw new Error(translate(locale, 'chat.errors.notAllowed'));
   const blocked = questionBlock(question, locale);
   if (blocked) throw blocked;
-  // Second layer: a blocked question saved by an older version never travels as history.
-  const sendable = withoutBlockedQuestions(records);
+  // A question with no answer (stopped, failed) and, second layer, a blocked question saved by
+  // an older version never travel as history.
+  const sendable = withoutBlockedQuestions(withoutUnanswered(records));
   const circled = options.boardSelection?.selection ?? null;
   if (circled) checkBoardText(circled, locale);
   const chat = useChatStore.getState();

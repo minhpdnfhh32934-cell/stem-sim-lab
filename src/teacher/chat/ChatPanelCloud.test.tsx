@@ -200,6 +200,40 @@ describe('AI Teacher chat panel with an online provider', () => {
     });
   });
 
+  it('"Viết tiếp" shows the rest as it is written, then joins it to the answer', async () => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q', role: 'user', content: 'Giải chi tiết' },
+        { id: 'a', role: 'assistant', content: 'Bước 1: đặt trục.', truncated: true },
+      ],
+    });
+    let finish: (r: ChatResponse) => void = () => undefined;
+    let push: (shown: string) => void = () => undefined;
+    stream = (_req, onText) => {
+      push = onText;
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    };
+    setTransportForTests(fake());
+    const user = userEvent.setup();
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    await user.click(screen.getByRole('button', { name: 'Viết tiếp' }));
+    await waitFor(() => {
+      expect(calls).toHaveLength(1);
+    });
+    push('Bước 2: viết');
+    expect(await screen.findByText('Bước 2: viết')).toBeInTheDocument();
+    expect(document.querySelector('.chat-message--streaming')).not.toBeNull();
+    finish({ content: 'Bước 2: viết phương trình.', model: 'gemini-model', durationMs: 1 });
+    await waitFor(() => {
+      expect(document.querySelector('.chat-message--streaming')).toBeNull();
+    });
+    expect(useChatStore.getState().messages[1]?.content).toBe(
+      'Bước 1: đặt trục. Bước 2: viết phương trình.',
+    );
+  });
+
   it('"Viết tiếp" written by the fallback names both models and keeps the "dự phòng" mark', async () => {
     useChatStore.setState({
       messages: [

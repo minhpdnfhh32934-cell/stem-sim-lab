@@ -16,12 +16,12 @@ test('the mirror shows the player: their shirt in front of it, the room from asi
   page,
 }) => {
   test.setTimeout(120_000);
-  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphicsQuality', 'high'));
+  await page.addInitScript(() => localStorage.setItem('simlab.settings.graphics', 'medium'));
   const errors = await continueInto(
     page,
     sceneSave('preparation-room', [-1.2, 0, 0.1], MIRROR_MIDDLE),
   );
-  await expectDebug(page, 'FPS', String.raw`.*graphics high`);
+  await expectDebug(page, 'FPS', String.raw`.*graphics medium`);
   await page.waitForTimeout(1500);
   const front = await pixel(page, CHEST.x, CHEST.y);
   await shot(page, 'mirror-front');

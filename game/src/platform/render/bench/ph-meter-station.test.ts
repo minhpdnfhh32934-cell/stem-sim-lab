@@ -62,10 +62,17 @@ afterEach(() => vi.unstubAllGlobals());
 
 const MASKS = [0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f];
 
+/** The rigs build() made, freed after each test (a shared material goes with its last owner). */
+const built: { dispose(): void }[] = [];
+afterEach(() => {
+  for (const kit of built.splice(0)) kit.dispose();
+});
+
 function build() {
   const painted = new THREE.MeshStandardMaterial();
   const frame = phMeterStation.frame(item, painted);
   const rig = phMeterStation.rig!(item);
+  built.push(frame, rig);
   const root = new THREE.Group();
   root.add(new THREE.Mesh(frame.body, painted), frame.parts, rig.group);
   const named = (name: string) => root.getObjectByName(name) as THREE.Mesh;

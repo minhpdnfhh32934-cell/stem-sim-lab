@@ -8,6 +8,12 @@ import { DEFAULT_PENUMBRA, LIGHT_SLOTS, type RoomLight } from '../../world/light
 const SHADOW_MAP = 1024;
 
 /**
+ * The layer of Ultra's light in the air (WebGPU, G2-2: gpu/air.ts): its pass draws only that layer,
+ * and three lights a pass with the lights on its layers. The lights that shine in it are on it too.
+ */
+export const AIR_LAYER = 8;
+
+/**
  * The room lights (world/lighting.ts) as a fixed set of spot lights: LIGHT_SLOTS.key that cast
  * shadows and LIGHT_SLOTS.other that do not, made once. Rooms come and go by filling and emptying
  * slots, never by adding lights, so a door opening changes no shader. An empty slot is dark and
@@ -130,6 +136,7 @@ const lightKey = (light: RoomLight) => `${light.roomId}|${light.position.join(',
 function spot(scene: THREE.Scene, key: boolean): THREE.SpotLight {
   const light = new THREE.SpotLight('#ffffff', 0, 0, Math.PI / 4, DEFAULT_PENUMBRA, 2);
   light.castShadow = key;
+  light.layers.enable(AIR_LAYER);
   light.shadow.autoUpdate = false;
   light.shadow.needsUpdate = true; // its map made on the first frame (see assign)
   if (key) {

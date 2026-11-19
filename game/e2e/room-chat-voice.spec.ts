@@ -51,6 +51,10 @@ test('room chat and push-to-talk voice between two players', async ({ browser })
   await expectDebug(b, 'Phase', 'playing');
   await expectDebug(a, 'Players', `${id} 2/8 · Bình`);
 
+  // Each is told how, as the room's world first shows (a line in the chat).
+  await expect(b.locator('.chat-line.system')).toHaveText(
+    'In this room: Enter to chat, hold V to talk (players near you hear you).',
+  );
   // Chat: Enter opens the line (the game goes on), Enter sends; both see it, the sender's own.
   await a.keyboard.press('Enter');
   const entry = a.locator('.chat-entry');
@@ -69,7 +73,7 @@ test('room chat and push-to-talk voice between two players', async ({ browser })
   await b.keyboard.press('Escape');
   await expect(b.locator('.chat-entry')).toBeHidden();
   await expect(b.locator('.pause')).toBeHidden();
-  await expect(a.locator('.chat-line')).toHaveCount(1);
+  await expect(a.locator('.chat-line:not(.system)')).toHaveCount(1);
   await shot(b, 'room-chat-1');
 
   // Voice: both microphones given; held V on A, B hears An; let go, silence.

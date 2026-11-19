@@ -120,7 +120,7 @@ function rig(item: ItemDefinition): BenchRig {
     ...LOOKS.glass,
     opacity: 0.85,
   });
-  own(glow);
+  kit.mine(glow);
   const bulb = mesh(keep(new THREE.SphereGeometry(0.024, 18, 12)), glow);
   bulb.name = 'bulb';
   bulb.position.set(0.17, BASE + 0.052, 0.1);

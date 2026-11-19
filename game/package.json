@@ -21,6 +21,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "bench": "playwright test -c playwright.bench.config.ts",
+    "live-still": "node scripts/live-still.mjs",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {

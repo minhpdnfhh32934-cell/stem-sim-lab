@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import { request, type IncomingMessage, type ServerResponse } from 'node:http';
+import { Agent, request, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { LanServer } from './lanDiscovery.ts';
 import {
+  BATCH_MAX,
   MESSAGE_MAX_CHARS,
   ROOM_CLIENT_HEADER,
   ROOM_PATH,
@@ -47,6 +48,8 @@ export function roomRoutes(hub = new RoomHub(), lan: () => LanServer[] = () => [
       res.writeHead(200, { 'content-type': 'application/json' }).end('{"rooms":true}');
     } else if (req.method === 'GET' && path === '/events') {
       const id = randomUUID();
+      // Each small message out at once, not held back to fill a packet (Nagle's algorithm).
+      res.socket?.setNoDelay(true);
       res.writeHead(200, {
         'content-type': 'text/event-stream',
         'cache-control': 'no-cache',
@@ -81,7 +84,12 @@ export function roomRoutes(hub = new RoomHub(), lan: () => LanServer[] = () => [
         } catch {
           return;
         }
-        hub.receive(client, data);
+        // Several messages in one POST (sent together while the one before was on its way).
+        if (Array.isArray(data)) {
+          for (const message of data.slice(0, BATCH_MAX)) hub.receive(client, message);
+        } else {
+          hub.receive(client, data);
+        }
       });
     } else {
       res.writeHead(404).end();
@@ -89,6 +97,9 @@ export function roomRoutes(hub = new RoomHub(), lan: () => LanServer[] = () => [
     return true;
   };
 }
+
+/** Connections to the other servers, kept open between requests. */
+const KEPT = new Agent({ keepAlive: true, maxSockets: 8 });
 
 /** Longer than the stream's keep-alive: a server gone quiet this long is gone. */
 const PROXY_IDLE_MS = 45_000;
@@ -111,6 +122,8 @@ function proxy(req: IncomingMessage, res: ServerResponse, at: string, what: stri
         headers:
           body === undefined ? headers : { ...headers, 'content-length': Buffer.byteLength(body) },
         timeout: PROXY_IDLE_MS,
+        // POSTs reuse their connections (a new one each time added a handshake to every move).
+        agent: KEPT,
       },
       (answer) => {
         const back: Record<string, string> = {};
@@ -118,12 +131,14 @@ function proxy(req: IncomingMessage, res: ServerResponse, at: string, what: stri
           const value = answer.headers[name];
           if (typeof value === 'string') back[name] = value;
         }
+        res.socket?.setNoDelay(true); // each small message on at once, not held to fill a packet
         res.writeHead(answer.statusCode ?? 502, back);
         res.flushHeaders();
         answer.pipe(res);
         answer.on('close', () => res.end());
       },
     );
+    upstream.on('socket', (socket) => socket.setNoDelay(true));
     upstream.on('timeout', () => upstream.destroy(new Error('timeout')));
     upstream.on('error', () => {
       if (!res.headersSent) res.writeHead(502).end();

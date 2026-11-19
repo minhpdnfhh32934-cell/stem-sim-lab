@@ -190,6 +190,39 @@ describe('what is worn (C-10)', () => {
     expect(least(outerMesh.geometry.getAttribute('color').array)).toBeLessThan(1);
     expect(least(jacket.shadows.body.geometry.getAttribute('color').array)).toBe(1);
   });
+
+  it('wraps sunglasses round the face, clear of it (Phú: from the side they seemed to slip off)', () => {
+    const points = (meshes: readonly THREE.Mesh[], surface: Surface) =>
+      meshes
+        .filter((m) => m.userData.surface === surface)
+        .flatMap((m) => {
+          const p = m.geometry.getAttribute('position');
+          return Array.from({ length: p.count }, (_, i) =>
+            new THREE.Vector3().fromBufferAttribute(p, i),
+          );
+        });
+    const meshes = buildBody({ ...MALE, glasses: 'shades' }, materials, SHADOW).meshes;
+    const eyes = points(meshes, 'iris');
+    const eyeY = eyes.reduce((s, v) => s + v.y, 0) / eyes.length;
+    // The glasses: the trim the same face without them has not (its pupils are trim too).
+    const bare = new Set(
+      points(buildBody(MALE, materials, SHADOW).meshes, 'trim').map((v) => v.toArray().join()),
+    );
+    const lens = points(meshes, 'trim').filter(
+      (v) => Math.abs(v.y - eyeY) < 0.02 && !bare.has(v.toArray().join()),
+    );
+    const skin = points(meshes, 'skin').filter((v) => Math.abs(v.y - eyeY) < 0.03);
+    // Its outer edges turned back towards the temples, at least 1.5 cm behind its middle.
+    const middle = Math.min(...lens.filter((v) => Math.abs(v.x) < 0.04).map((v) => v.z));
+    const edge = lens.filter((v) => Math.abs(v.x) > 0.05 && v.z < -0.05);
+    expect(Math.min(...edge.map((v) => v.z)) - middle).toBeGreaterThan(0.015);
+    // Their turned halves nowhere in the face: every point of them (not the arms back to the
+    // ears) at least 4 mm in front of the skin behind it.
+    for (const v of lens.filter((p) => Math.abs(p.x) > 0.032 && p.z < middle + 0.019)) {
+      const behind = skin.filter((s) => Math.hypot(s.x - v.x, s.y - v.y) < 0.006);
+      if (behind.length) expect(Math.min(...behind.map((s) => s.z)) - v.z).toBeGreaterThan(0.004);
+    }
+  });
 });
 
 describe('the body model (Phase H-1)', () => {

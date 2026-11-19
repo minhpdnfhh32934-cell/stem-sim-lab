@@ -138,6 +138,7 @@ describe('old and incomplete saves still load', () => {
       tasks: { active: null, done: [] }, // v5: no guided task
       papers: [], // v11: no test papers, no marks
       scores: [],
+      calls: {}, // v12: no call made to a squad
     });
   });
 

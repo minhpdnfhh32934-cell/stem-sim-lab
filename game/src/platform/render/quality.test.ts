@@ -327,15 +327,17 @@ describe('materials under every preset (render-quality audit §5, §7.7)', () =>
 });
 
 describe('glassware finishes (audit F4)', () => {
-  it('the palette’s clear glass alone: mirror, emblem glow, floor glass, amber reagent and specimen fluid keep their paint', () => {
+  it('the palette’s clear glass alone: mirror, emblem glow, floor glass, Biology’s door panes, amber reagent and specimen fluid keep their paint', () => {
     const palette = new Palette();
     const finishes = Object.keys(FINISHES) as Finish[];
     const seeThrough = finishes.filter((f) => FINISHES[f].look === 'glass').sort();
     expect(seeThrough).toEqual([
       'emblem-glow',
+      'etched-glass',
       'floor-glass',
       'glass',
       'mirror',
+      'pane-glass',
       'reagent-amber',
       'specimen-fluid',
     ]);
@@ -344,7 +346,7 @@ describe('glassware finishes (audit F4)', () => {
   });
 
   it('bench models: their clear glass vessels, tubes and slides, each with one sheen pass', async () => {
-    const { game, view } = await follow('high');
+    const { game, view } = await follow('medium');
     const found = new Set<string>();
     let batches = 0;
     for (const id of worldScenes(game)) {
@@ -383,7 +385,7 @@ describe('glassware finishes (audit F4)', () => {
     expect(batches, 'decor glassware was checked').toBeGreaterThan(0);
   });
 
-  it.each(['low', 'medium'] as const)(
+  it.each(['low'] as const)(
     '%s: no sheen pass is made, so its program is never compiled there',
     async (quality) => {
       const { game, view } = await follow(quality);
@@ -399,7 +401,7 @@ describe('glassware finishes (audit F4)', () => {
   );
 
   it('a sheen pass follows a geometry its builder swaps, and survives a clone', () => {
-    const finishes = new Finishes(QUALITY.high);
+    const finishes = new Finishes(QUALITY.medium);
     const glass = new THREE.Mesh<THREE.BufferGeometry, THREE.Material>(
       new THREE.BoxGeometry(0.1, 0.1, 0.1),
       new THREE.MeshStandardMaterial({ ...GLASSWARE_LOOK }),
@@ -415,8 +417,8 @@ describe('glassware finishes (audit F4)', () => {
   });
 });
 
-describe('Medium and High keep their lighting', () => {
-  it.each(['medium', 'high'] as const)(
+describe('Medium keeps its lighting (the former High, 2026-11-18)', () => {
+  it.each(['medium'] as const)(
     '%s: the room lights in every world scene, their keys casting, the player’s shadow drawn',
     async (quality) => {
       const { game, view, room } = await follow(quality);
@@ -432,9 +434,9 @@ describe('Medium and High keep their lighting', () => {
           id,
         ).toEqual([]);
         expect(casting, id).toBe(LIGHT_SLOTS.key);
-        // High alone reflects the room, at 0.08.
-        expect(view.scene.environment, id).toBe(quality === 'high' ? room : null);
-        expect(view.scene.environmentIntensity, id).toBe(quality === 'high' ? 0.08 : 0);
+        // It reflects the room, at 0.08.
+        expect(view.scene.environment, id).toBe(room);
+        expect(view.scene.environmentIntensity, id).toBe(0.08);
         expect(bodyCasting(view), id).toBe('all'); // the player's shadow, from the body
       }
     },
@@ -454,7 +456,7 @@ describe('pixel ratio by preset', () => {
   }
 
   it.each([
-    [2.5, { low: 1, medium: 1.5, high: 2, ultra: 2 }], // the config's cap (2) above Medium's and Low's
+    [2.5, { low: 1, medium: 2, high: 2, ultra: 2 }], // the config's cap (2) above Low's
     [1.25, { low: 1, medium: 1.25, high: 1.25, ultra: 1.25 }],
     [1, { low: 1, medium: 1, high: 1, ultra: 1 }],
   ] as const)('on a %s× screen: %o, set again when the preset changes', async (dpr, expected) => {
@@ -479,9 +481,9 @@ describe('pixel ratio by preset', () => {
     view.renderer = fake;
     view.deviceBox = { width: 2548, height: 1402 };
     for (const [quality, size] of [
-      ['high', [2548, 1402]],
-      ['low', [1699, 935]], // Low's one pixel per CSS pixel, the browser enlarging it
       ['medium', [2548, 1402]],
+      ['low', [1699, 935]], // Low's one pixel per CSS pixel, the browser enlarging it
+      ['high', [2548, 1402]],
     ] as const) {
       game.setGraphicsQuality(quality);
       expect(fake.getPixelRatio(), quality).toBe(1);
@@ -565,7 +567,7 @@ describe('the preset switch (audit §5.2): every finish set, and given back', ()
     expect(Math.min(...low.anisotropy)).toBeGreaterThanOrEqual(QUALITY.low.anisotropy);
     expect(low.shadowMaps).toEqual(Array(LIGHT_SLOTS.key).fill(1024));
     expect(low.sheen.every((shown) => !shown)).toBe(true); // Low: no sheen pass drawn
-    game.setGraphicsQuality('high'); // the menu's change, mid-game
+    game.setGraphicsQuality('medium'); // the menu's change, mid-game
     const high = finishes(view);
     expect(new Set(high.anisotropy)).toEqual(new Set([16]));
     expect(high.shadowMaps).toEqual(Array(LIGHT_SLOTS.key).fill(2048));
@@ -589,19 +591,19 @@ describe('the preset switch (audit §5.2): every finish set, and given back', ()
     finishes.texture(floor);
     finishes.texture(print);
     expect([floor.anisotropy, print.anisotropy]).toEqual([8, 4]);
-    finishes.set(QUALITY.high, null, 0);
-    finishes.texture(floor);
-    finishes.texture(print);
-    expect([floor.anisotropy, print.anisotropy]).toEqual([16, 16]);
     finishes.set(QUALITY.medium, null, 0);
     finishes.texture(floor);
     finishes.texture(print);
-    expect([floor.anisotropy, print.anisotropy]).toEqual([8, 8]);
+    expect([floor.anisotropy, print.anisotropy]).toEqual([16, 16]);
+    finishes.set(QUALITY.low, null, 0);
+    finishes.texture(floor);
+    finishes.texture(print);
+    expect([floor.anisotropy, print.anisotropy]).toEqual([8, 4]); // the floor's own 8 kept
     finishes.dispose();
   });
 
   it('hides a far glassware’s sheen and bench print, a few times a second, and shows them near', () => {
-    const finishes = new Finishes(QUALITY.high);
+    const finishes = new Finishes(QUALITY.medium);
     const root = new THREE.Group();
     const glass = new THREE.Mesh(
       new THREE.BoxGeometry(0.1, 0.1, 0.1),
@@ -900,7 +902,7 @@ describe('the light switch: lighting the switch’s room follows its state', () 
   );
 
   it('a dark lab seen from the lit hub stays dark; the hub stays lit (Phú, 2026-11-03)', async () => {
-    const { game, view } = await follow('high');
+    const { game, view } = await follow('medium');
     await game.scenes.load('simlab-hub');
     game.entityStates.set('chemistry-lab/light-switch', 'lightsOff', true); // left off earlier
     expect(await game.scenes.attach('chemistry-lab')).toBeNull(); // its door opened
@@ -919,7 +921,7 @@ describe('the light switch: lighting the switch’s room follows its state', () 
   });
 
   it('paints its print, marks and a thermometer’s spirit: lit by the room, never self-lit', async () => {
-    const { game, view } = await follow('high');
+    const { game, view } = await follow('medium');
     await game.scenes.load('chemistry-lab');
     const unlit: string[] = [];
     view.scene.traverse((o) => {

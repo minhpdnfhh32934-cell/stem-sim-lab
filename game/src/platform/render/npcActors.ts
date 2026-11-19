@@ -1,8 +1,10 @@
 import * as THREE from 'three';
+import type { PrepareReal } from './body/realBody';
 import type { Game } from '../../game/Game';
 import type { NpcView } from '../../gameplay/npc/NpcSystem';
 import { Actor } from './body/actor';
 import type { ContactShadows } from './contactShadows';
+import { QUALITY } from './quality';
 import type { PersonView } from './body/person';
 
 /** The soft shadow under a person's feet (m). */
@@ -21,19 +23,16 @@ type Writable<T> = { -readonly [K in keyof T]: T[K] };
  * body and style) for each person whose scene is resident, posed every frame from the NpcSystem's
  * view of them — where they stand or walk (their legs in step with the footsteps heard), seated,
  * what their hands do (a part pointed at, a card tapped on a door's reader), where they look — at
- * their scene's offset in the session frame. Made when their scene comes in, freed when it goes.
+ * their scene's offset in the session frame. Built during a load for its scene and the scenes next
+ * door (`prepare`), else when first seen; hidden (its buffers freed) while their scene is not
+ * resident; freed with the renderer. Built in a door's frame, the teacher took ~80 ms of it (RTX 5070, 2026-11-13).
  */
 export class NpcActors {
-  private readonly actors = new Map<
-    string,
-    {
-      actor: Actor;
-      person: Writable<PersonView>;
-      key: string;
-      bar: Bar | null;
-      desk: THREE.Mesh | null;
-    }
-  >();
+  /** Where a real person that did not load is reported (Max). */
+  private readonly warn = (message: string) => this.game.log.warn(message);
+  /** Makes a real person ready before it is shown (WorldRenderer), or none. */
+  prepareReal: PrepareReal | null = null;
+  private readonly actors = new Map<string, Entry>();
   private readonly shadow = new THREE.MeshBasicMaterial({ colorWrite: false });
   private readonly barBack = barMaterial(0x1d2433, 0.75);
   private readonly barFill = barMaterial(0x5fd38a, 1);
@@ -67,6 +66,18 @@ export class NpcActors {
     }
   }
 
+  /**
+   * Builds, hidden, the people of `sceneIds` not built yet: during a load, out of sight, so their
+   * programs compile with the scene's hidden parts and a door never builds one.
+   */
+  prepare(sceneIds: ReadonlySet<string>): void {
+    for (const view of this.game.npcs.views) {
+      if (sceneIds.has(view.sceneId) && !this.actors.has(view.npc.id)) {
+        this.entryOf(view).actor.group.visible = false;
+      }
+    }
+  }
+
   dispose(): void {
     for (const id of [...this.actors.keys()]) this.remove(id);
     this.shadow.dispose();
@@ -78,11 +89,44 @@ export class NpcActors {
 
   private pose(view: NpcView, dt: number): void {
     const offset = this.game.scenes.offsetOf(view.sceneId);
-    const id = view.npc.id;
     if (!offset) {
-      this.remove(id);
+      this.hide(view.npc.id);
       return;
     }
+    const entry = this.entryOf(view);
+    entry.actor.group.visible = true;
+    const person = entry.person;
+    person.x = view.x + offset[0];
+    person.z = view.z + offset[2];
+    person.heading = view.heading;
+    person.speed = view.speed;
+    person.sit = view.sit > 0.5;
+    person.gesture = view.gesture;
+    person.stride = view.stride;
+    person.card = view.card;
+    person.paper = view.paper === 'hand';
+    person.pen = view.pen === 'none' ? null : view.pen;
+    // Pointing at a part of the apparatus explained, or a card held to a door's reader: they
+    // look at it too.
+    let pointing = false;
+    if (view.reaching) {
+      this.target.set(view.reachX + offset[0], view.reachY, view.reachZ + offset[2]);
+      pointing = true;
+    } else if (view.point !== null) pointing = this.partAt(view.point, this.target);
+    this.look.x = pointing ? this.target.x : view.lookX + offset[0];
+    this.look.z = pointing ? this.target.z : view.lookZ + offset[2];
+    const look = pointing || view.looking ? this.look : null;
+    entry.actor.setMotion(QUALITY[this.game.graphicsQuality].motion);
+    entry.actor.setReal(QUALITY[this.game.graphicsQuality].realPeople, this.warn, this.prepareReal);
+    entry.actor.update(person, dt, this.time, look, pointing ? this.target : null);
+    this.contact.place(entry.key, person.x, 0, person.z, CONTACT_RADIUS);
+    this.progress(entry, view, person);
+    this.deskPaper(entry, view, offset);
+  }
+
+  /** Their actor, built the first time. */
+  private entryOf(view: NpcView): Entry {
+    const id = view.npc.id;
     let entry = this.actors.get(id);
     if (!entry) {
       const actor = new Actor(view.npc.character, this.shadow, 3);
@@ -115,31 +159,22 @@ export class NpcActors {
       };
       this.actors.set(id, entry);
     }
-    const person = entry.person;
-    person.x = view.x + offset[0];
-    person.z = view.z + offset[2];
-    person.heading = view.heading;
-    person.speed = view.speed;
-    person.sit = view.sit > 0.5;
-    person.gesture = view.gesture;
-    person.stride = view.stride;
-    person.card = view.card;
-    person.paper = view.paper === 'hand';
-    person.pen = view.pen === 'none' ? null : view.pen;
-    // Pointing at a part of the apparatus explained, or a card held to a door's reader: they
-    // look at it too.
-    let pointing = false;
-    if (view.reaching) {
-      this.target.set(view.reachX + offset[0], view.reachY, view.reachZ + offset[2]);
-      pointing = true;
-    } else if (view.point !== null) pointing = this.partAt(view.point, this.target);
-    this.look.x = pointing ? this.target.x : view.lookX + offset[0];
-    this.look.z = pointing ? this.target.z : view.lookZ + offset[2];
-    const look = pointing || view.looking ? this.look : null;
-    entry.actor.update(person, dt, this.time, look, pointing ? this.target : null);
-    this.contact.place(entry.key, person.x, 0, person.z, CONTACT_RADIUS);
-    this.progress(entry, view, person);
-    this.deskPaper(entry, view, offset);
+    return entry;
+  }
+
+  /**
+   * Their scene is not resident: kept, hidden (built again it would cost a door's frame), its
+   * buffers freed — uploaded again when next drawn (a few ms), so what a scene holds on the GPU
+   * does not grow with the props they happened to use elsewhere (resources.spec).
+   */
+  private hide(id: string): void {
+    const entry = this.actors.get(id);
+    if (!entry?.actor.group.visible) return;
+    entry.actor.group.visible = false;
+    entry.actor.group.traverse((o) => (o as Partial<THREE.Mesh>).geometry?.dispose());
+    if (entry.bar) entry.bar.back.visible = false;
+    if (entry.desk) entry.desk.visible = false;
+    this.contact.remove(entry.key);
   }
 
   /**
@@ -233,4 +268,13 @@ function barMaterial(color: number, opacity: number): THREE.SpriteMaterial {
     toneMapped: false,
     fog: false,
   });
+}
+
+/** A person's actor and what is drawn with it. */
+interface Entry {
+  actor: Actor;
+  person: Writable<PersonView>;
+  key: string;
+  bar: Bar | null;
+  desk: THREE.Mesh | null;
 }

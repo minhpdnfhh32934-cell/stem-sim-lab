@@ -87,6 +87,7 @@ describe('SaveSystem', () => {
         tasks: { active: null, done: [] },
         papers: [],
         scores: [],
+        calls: {},
       },
     });
 
@@ -143,7 +144,7 @@ describe('SaveSystem', () => {
     const v9 = { ...saves.capture(), version: 9 };
     const parsed = parseSave(JSON.stringify(v9));
     if (!parsed.ok) throw new Error(parsed.error);
-    expect(parsed.value).toEqual({ ...v9, version: 11 });
+    expect(parsed.value).toEqual({ ...v9, version: 12 });
     expect(parsed.value.player.custom).toBeUndefined();
   });
 
@@ -161,9 +162,32 @@ describe('SaveSystem', () => {
     };
     const parsed = parseSave(JSON.stringify(v10));
     if (!parsed.ok) throw new Error(parsed.error);
-    expect(parsed.value.version).toBe(11);
+    expect(parsed.value.version).toBe(12);
     expect(parsed.value.progression.papers).toEqual([]);
     expect(parsed.value.progression.scores).toEqual([]);
+  });
+
+  it('upgrades a version 11 save with no call made to a squad yet (v12)', () => {
+    const { saves } = setup();
+    const data = saves.capture();
+    const progression: Partial<typeof data.progression> = { ...data.progression };
+    delete progression.calls;
+    const v11 = { ...data, version: 11, progression };
+    const parsed = parseSave(JSON.stringify(v11));
+    if (!parsed.ok) throw new Error(parsed.error);
+    expect(parsed.value.version).toBe(12);
+    expect(parsed.value.progression.calls).toEqual({});
+  });
+
+  it('keeps the calls made to each squad (v12)', () => {
+    const { saves, state } = setup();
+    state.progression.calls = { 'fire-squad': 3, 'police-squad': 1 };
+    expect(saves.save('slot').ok).toBe(true);
+    const loaded = saves.load('slot');
+    if (!loaded.ok) throw new Error(loaded.error);
+    const fresh = createGameState();
+    applySave(fresh, loaded.value);
+    expect(fresh.progression.calls).toEqual({ 'fire-squad': 3, 'police-squad': 1 });
   });
 
   it('keeps test papers, their answers and marks, and the scores (v11)', () => {
@@ -306,6 +330,7 @@ describe('save versioning', () => {
         tasks: { active: null, done: [] },
         papers: [],
         scores: [],
+        calls: {},
       },
     });
   });
@@ -330,10 +355,10 @@ describe('save versioning', () => {
     };
     const parsed = parseSave(JSON.stringify(v2));
     if (!parsed.ok) throw new Error(parsed.error);
-    expect(SAVE_VERSION).toBe(11);
+    expect(SAVE_VERSION).toBe(12);
     expect(parsed.value).toEqual({
       ...v2,
-      version: 11,
+      version: 12,
       player: {
         ...v2.player,
         ...PHYSICS_DOOR, // v6: a player inside a lab stands at its hub door
@@ -341,7 +366,13 @@ describe('save versioning', () => {
       },
       // v7: the Physics wing rebuilt, its stations' settings reset
       world: { entityStates: {}, containers: {}, objects: {}, clockS: 300 },
-      progression: { ...v2.progression, tasks: { active: null, done: [] }, papers: [], scores: [] },
+      progression: {
+        ...v2.progression,
+        tasks: { active: null, done: [] },
+        papers: [],
+        scores: [],
+        calls: {},
+      },
     });
   });
 
@@ -365,10 +396,16 @@ describe('save versioning', () => {
     if (!parsed.ok) throw new Error(parsed.error);
     expect(parsed.value).toEqual({
       ...v3,
-      version: 11,
+      version: 12,
       player: { ...v3.player, ...CHEMISTRY_DOOR },
       world: { ...v3.world, containers: {}, objects: {}, clockS: 300 },
-      progression: { ...v3.progression, tasks: { active: null, done: [] }, papers: [], scores: [] },
+      progression: {
+        ...v3.progression,
+        tasks: { active: null, done: [] },
+        papers: [],
+        scores: [],
+        calls: {},
+      },
     });
   });
 
@@ -396,10 +433,16 @@ describe('save versioning', () => {
     if (!parsed.ok) throw new Error(parsed.error);
     expect(parsed.value).toEqual({
       ...v4,
-      version: 11,
+      version: 12,
       player: { ...v4.player, ...CHEMISTRY_DOOR },
       world: { ...v4.world, objects: {}, clockS: 300 }, // v6: the flask goes home, still holding what it held
-      progression: { ...v4.progression, tasks: { active: null, done: [] }, papers: [], scores: [] },
+      progression: {
+        ...v4.progression,
+        tasks: { active: null, done: [] },
+        papers: [],
+        scores: [],
+        calls: {},
+      },
     });
   });
 
@@ -442,7 +485,7 @@ describe('save versioning', () => {
     if (!parsed.ok) throw new Error(parsed.error);
     expect(parsed.value).toEqual({
       ...v5,
-      version: 11,
+      version: 12,
       player: { ...v5.player, position: [4, 0, 0], yaw: 1.5708, pitch: 0 },
       world: {
         clockS: 300, // v9: a game before the clock continues at 08:00
@@ -456,7 +499,7 @@ describe('save versioning', () => {
         containers: { [FLASK]: MID_FILL },
         objects: { 'preparation-room/beaker': POSE },
       },
-      progression: { ...v5.progression, papers: [], scores: [] }, // v11: no paper, no mark
+      progression: { ...v5.progression, papers: [], scores: [], calls: {} }, // v11: no paper, no mark
     });
     // Outside the labs nothing moves.
     const hub = parseSave(
@@ -493,13 +536,14 @@ describe('save versioning', () => {
         tasks: { active: null, done: [] },
         papers: [],
         scores: [],
+        calls: {},
       },
     };
     const parsed = parseSave(JSON.stringify(v7));
     if (!parsed.ok) throw new Error(parsed.error);
     expect(parsed.value).toEqual({
       ...v7,
-      version: 11,
+      version: 12,
       player: { ...v7.player, ...CHEMISTRY_DOOR },
       world: { ...v7.world, objects: { 'preparation-room/desk-lamp': POSE }, clockS: 300 },
     });
@@ -540,13 +584,14 @@ describe('save versioning', () => {
         tasks: { active: null, done: [] },
         papers: [],
         scores: [],
+        calls: {},
       },
     };
     const parsed = parseSave(JSON.stringify(v6));
     if (!parsed.ok) throw new Error(parsed.error);
     expect(parsed.value).toEqual({
       ...v6,
-      version: 11,
+      version: 12,
       player: { ...v6.player, ...PHYSICS_DOOR },
       world: {
         clockS: 300, // v9: a game before the clock continues at 08:00

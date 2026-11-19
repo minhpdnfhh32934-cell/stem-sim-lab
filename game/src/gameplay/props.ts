@@ -80,6 +80,9 @@ export const PROPS = [
   // Phase U: the doors between a subject's rooms
   'starship-leaf',
   'starship-frame',
+  // Biology's: the same doors in wood and glass (platform/render/props/greenhouse.ts)
+  'greenhouse-leaf',
+  'greenhouse-frame',
   // UX3 rooms: the teacher's washroom, and ceiling details shared by the rooms
   'toilet',
   'wall-basin',

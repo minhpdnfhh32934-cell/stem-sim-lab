@@ -13,6 +13,17 @@ const TURN = Math.PI * 2;
 const LEFT_DOWN = Math.PI / 2;
 const RIGHT_DOWN = (3 * Math.PI) / 2;
 
+/** How much of a run (0 a walk … 1 a run) the body draws at `speed` (m/s): from 2.4 to 3.6. */
+export function runShare(speed: number): number {
+  const t = Math.min(1, Math.max(0, (speed - 2.4) / 1.2));
+  return t * t * (3 - 2 * t);
+}
+
+/** A step's length (m) as the body draws it at `speed` (m/s): 0.75 walking, longer running. */
+export function stepLength(speed: number): number {
+  return 0.75 + 0.6 * runShare(speed);
+}
+
 /**
  * The walk's rhythm from the feet's own movement: the speed they move at (eased) and the swing's
  * phase, a stride per half turn. One for the player (`GaitSystem`): the body's legs swing by it

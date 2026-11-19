@@ -345,4 +345,66 @@ describe('ContainerViews', () => {
     expect(stream.visible).toBe(false);
     views.dispose();
   });
+
+  it('Ultra: the meniscus and ripples where a stream falls in, dying away; other levels unchanged', () => {
+    const pouring: ContainerDefinition = {
+      ...beaker,
+      pour: {
+        spout: [0, 0.05, 0.03],
+        trigger: 'tilt',
+        minTiltDeg: 70,
+        fullTiltDeg: 115,
+        rateMlPerS: 8,
+      },
+    };
+    const states = { a: containerOf('water', 50_000), b: containerOf('water', 20_000) };
+    const { source, bump } = fakeSource(states);
+    const pour = { pouringFrom: 'a' as string | null, pouringInto: 'b' as string | null };
+    const { views } = make(source, pour);
+    mount(views, entity('a', pouring));
+    const target = mount(views, entity('b', beaker));
+    const sheen = child(target.group, 'liquid-surface').material as THREE.MeshStandardMaterial;
+    const uniforms = () => {
+      const shader = {
+        uniforms: {} as Record<string, { value: unknown }>,
+        vertexShader: THREE.ShaderLib.physical.vertexShader,
+        fragmentShader: THREE.ShaderLib.physical.fragmentShader,
+      };
+      sheen.onBeforeCompile(shader as never, {} as never);
+      return shader;
+    };
+    // Below Ultra: no define, nothing drawn differently.
+    expect(sheen.defines ?? {}).not.toHaveProperty('LIQUID_DETAIL');
+    views.setDetail(true);
+    expect(sheen.defines).toHaveProperty('LIQUID_DETAIL');
+    const shader = uniforms();
+    expect(shader.fragmentShader).toContain(
+      'normal = normalize( normal - slope.x * vAcross - slope.y * vAlong );',
+    );
+    expect(shader.fragmentShader.indexOf('#include <normal_fragment_begin>')).toBeLessThan(
+      shader.fragmentShader.indexOf('float rise = smoothstep'),
+    );
+    // Poured into: stirred where the stream meets it (the spout's foot, in the disc's own units).
+    bump('a');
+    views.update(1 / 60);
+    const u = shader.uniforms as unknown as {
+      uRipple: { value: number };
+      uImpact: { value: THREE.Vector2 };
+      uMeniscus: { value: number };
+    };
+    expect(u.uRipple.value).toBeGreaterThan(0.9);
+    expect(u.uImpact.value.length()).toBeGreaterThan(0.1); // the spout is off the middle
+    expect(u.uMeniscus.value).toBeGreaterThan(0.03);
+    // Its ripples drawn by the see-through pass (effectsPass.ts) while it is stirred, only then.
+    expect(views.stirred().map((e) => e.cap)).toEqual([child(target.group, 'liquid-surface')]);
+    // The pour stops: the ripples die away within a few seconds.
+    pour.pouringFrom = null;
+    for (let i = 0; i < 300; i++) views.update(1 / 60);
+    expect(u.uRipple.value).toBeLessThan(0.01);
+    for (let i = 0; i < 300; i++) views.update(1 / 60);
+    expect(views.stirred()).toEqual([]);
+    views.setDetail(false);
+    expect(sheen.defines).not.toHaveProperty('LIQUID_DETAIL');
+    views.dispose();
+  });
 });

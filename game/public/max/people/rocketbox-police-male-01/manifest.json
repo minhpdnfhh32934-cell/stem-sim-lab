@@ -1,0 +1,29 @@
+{
+  "source": "Police_Male_01",
+  "parts": {
+    "body": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "head": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "equipment": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 1024
+    },
+    "pistol": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 1024
+    }
+  }
+}

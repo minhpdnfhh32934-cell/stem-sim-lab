@@ -1,0 +1,29 @@
+{
+  "source": "Fire_Male_05",
+  "parts": {
+    "body": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "head": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 2048
+    },
+    "helmet": {
+      "normal": true,
+      "rough": true,
+      "alpha": false,
+      "size": 1024
+    },
+    "opacity": {
+      "normal": true,
+      "rough": true,
+      "alpha": true,
+      "size": 512
+    }
+  }
+}

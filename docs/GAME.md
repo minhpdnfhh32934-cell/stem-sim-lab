@@ -26,6 +26,14 @@ Có tiếng Việt và tiếng Anh.
   - `public/models` (mô hình MediaPipe; muốn dùng "khuôn mặt từ ảnh" khi chạy game độc lập thì tải lại theo báo cáo giai đoạn F của game).
 - **Texture Ultra** (`game/public/ultra`, 107 MB, ambientCG CC0) có trong kho để mã nguồn đủ và test `surfaces.test.ts` của game đạt (người dùng chọn ngày 13/11/2026). App **không** dùng các texture này: `npm run build:game` bỏ chúng khỏi `public/game/`.
 
+### Bản cập nhật 19/11/2026
+
+- Tệp `D:\SimLab 3D.zip` người dùng đưa ngày 19/11/2026 (16:08, 1,7 GB): "Đây là bản cập nhật mới của game, bạn hãy add vào". `game/` được thay bằng bản này. Thêm mới, theo báo cáo giai đoạn trong `game/docs/` (`phase-g2-report.md`, `phase-max-report.md`, `phase-w-report.md`): vụ khẩn cấp (cháy, đội ứng cứu), bảng tuần hoàn (dữ liệu PubChem, có ghi nguồn trong `game/src/content/periodic-table.json`), màn mở đầu tên lửa, nhân vật và chuyển động mới, menu sống động, video giới thiệu, mức đồ hoạ Ultra mới.
+- Người dùng chọn (19/11/2026) "Mã + tài nguyên game dùng". **Không đưa vào kho:** `promo/` (845 MB), `node_modules`, `dist*`, `.git`, `.claude`, `graphify-out`, `public/models` (như trước), `public/audio-trial` và `sound-compare.html` (thử âm thanh), vỏ desktop Electron (`electron/`, `npm run app`, `test:app`, `playwright.app.config.ts`, `e2e/*.app.ts`, `scripts/desktop-app.ps1`, `scripts/make-icon.mjs`) và phần đóng gói hình nền Lively (`vite.wallpaper.config.ts`, `wallpaper.html`, `scripts/wallpaper*`). Mã cảnh nền `src/platform/wallpaper` vẫn giữ vì menu sống động dùng nó. Electron được bỏ khỏi `game/package.json`; `game/package-lock.json` tạo lại (chỉ bớt các gói của Electron).
+- Video giới thiệu `game/public/video/simlab3d-gioi-thieu.mp4` (57 MB): người dùng xác nhận ngày 19/11/2026 là do mình làm, được phát hành cùng app.
+- Mô hình người Microsoft Rocketbox (`game/public/max/people`, MIT) và vải, vết mòn (`game/public/max/textures`) chỉ dùng ở mức Ultra: có trong mã nguồn, **không** đóng gói vào app (`npm run build:game` bỏ `max`).
+- Bốn chỗ `VITE_SIMLAB_EMBED` của bản nhúng (bảng dưới) không có trong bản zip mới (bản zip làm tiếp từ kho riêng của game) và đã được làm lại trên mã mới.
+
 ## Dựng lại bản dùng trong SimLab (`public/game/`)
 
 ```
@@ -38,7 +46,7 @@ npm run build:game
 2. Dựng game với `VITE_SIMLAB_EMBED=1` và `--base ./` vào `public/game/`.
 3. Bỏ hai thư mục `ultra` và `models`.
 
-Kết quả khoảng 22 MB: JS, Rapier wasm, mô hình glTF của thành phố dưới sàn sảnh, âm thanh. Ngày 13/11/2026, dựng lại từ `game/` cho ra **đúng từng byte** bản đã có trong `public/game/` (`git status` sạch). Vì vậy bản cài 0.8.1 khớp với mã nguồn này.
+Kết quả khoảng 22 MB: JS, Rapier wasm, mô hình glTF của thành phố dưới sàn sảnh, âm thanh. Ngày 13/11/2026, dựng lại từ `game/` cho ra **đúng từng byte** bản đã có trong `public/game/` (`git status` sạch). Vì vậy bản cài 0.8.1 khớp với mã nguồn này. Từ bản cập nhật 19/11/2026 bản dựng khoảng **80 MB**: thêm video giới thiệu (57 MB) và ảnh menu sống động; bỏ `ultra`, `max`, `models`.
 
 Game có kiểm tra riêng: trong `game/` chạy `npm run check` (typecheck, ESLint, Prettier, Vitest). Kiểm tra chung của SimLab bỏ qua `game/` (`eslint.config.js`, `.prettierignore`); Vitest và tsconfig của SimLab vốn chỉ đọc `src` và `tests`.
 
@@ -55,7 +63,7 @@ Cờ đọc lúc dựng (`import.meta.env.VITE_SIMLAB_EMBED === '1'`). Bản đ�
 | -------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Khuôn mặt từ ảnh** (camera + MediaPipe Face Landmarker / Hair Segmenter) | `game/src/platform/ui/characterPage/Customiser.ts` | CLAUDE.md: không chạy thêm mô hình nào trong app nếu chưa hỏi người dùng; quyền riêng tư camera. Mã đọc ảnh không được đưa vào bản dựng (không có `tasks-vision`), thư mục `models/` bị bỏ |
 | **Chơi nhiều người qua LAN và trò chuyện bằng giọng**                      | `game/src/platform/ui/PlayPages.ts`                | Cần máy chủ phòng của dev server (không có trong app); trò chuyện với người lạ, micro. Trang "Chơi" chỉ còn "Chơi đơn". Mã LAN và giọng nói vẫn nằm trong gói JS nhưng không tới được      |
-| **Chất lượng đồ hoạ Ultra**                                                | `game/src/platform/ui/settings.ts`                 | 107 MB texture PBR (CC0) làm bộ cài và bản cập nhật web nặng gấp nhiều lần; ba mức Thấp / Trung bình / Cao vẫn còn                                                                         |
+| **Chất lượng đồ hoạ Ultra**                                                | `game/src/platform/ui/settings.ts`                 | 107 MB texture PBR (CC0) và 94 MB người thật, vải (`max`) làm bộ cài và bản cập nhật web nặng gấp nhiều lần; ba mức Thấp / Trung bình / Cao vẫn còn                                        |
 
 Ngoài ra không sửa gì khác trong game.
 
@@ -83,6 +91,8 @@ Game không tải gì từ mạng. Phần tìm phòng LAN chỉ hỏi chính tra
 - Tài nguyên, tất cả CC0 1.0:
   - âm thanh Kenney (`public/game/audio/CREDITS.md`);
   - mô hình thành phố Quaternius "Downtown City MegaKit" (`public/game/hub-city/README.md`).
+- Video giới thiệu: do người dùng làm (xác nhận 19/11/2026).
+- Chỉ trong mã nguồn, không đóng gói: người Microsoft Rocketbox (MIT, `game/public/max/people/LICENSE-Rocketbox.md`).
 
 Xem `docs/THIRD_PARTY.md`.
 

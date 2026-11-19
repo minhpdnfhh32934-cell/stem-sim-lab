@@ -45,6 +45,14 @@ export type Floor = (typeof FLOORS)[number];
 export const ROOM_STYLES = ['plain', 'starship-deck', 'orbital-module', 'greenhouse'] as const;
 export type RoomStyle = (typeof ROOM_STYLES)[number];
 
+/**
+ * The colour of a room's picture at Ultra on WebGPU (Phase G2-2, `platform/render/postLook.ts`):
+ * `neutral` as drawn (the labs: colours read true); `hall` warmer by day, cooler at night (the hub,
+ * which sees the sky).
+ */
+export const ROOM_GRADES = ['neutral', 'hall'] as const;
+export type RoomGrade = (typeof ROOM_GRADES)[number];
+
 export const RoomDefinitionSchema = z.object({
   id: IdSchema,
   displayName: z.string().min(1),
@@ -56,6 +64,7 @@ export const RoomDefinitionSchema = z.object({
   wallColor: ColorSchema.default('#dfe5ea'),
   floor: z.enum(FLOORS).default('vinyl'),
   style: z.enum(ROOM_STYLES).default('plain'),
+  grade: z.enum(ROOM_GRADES).default('neutral'),
   /**
    * A glass area in the floor over a city far below (Phase V, the hub): its x and z ranges in the
    * room's coordinates, inside its bounds. Drawn under High and Ultra only; walked on as floor.
@@ -99,7 +108,6 @@ export const RoomDefinitionSchema = z.object({
 const HexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'must be #rrggbb');
 
 export const LAB_TYPES = ['physics', 'chemistry', 'biology', 'interdisciplinary'] as const;
-export type LabType = (typeof LAB_TYPES)[number];
 
 export const LaboratoryDefinitionSchema = z.object({
   id: IdSchema,

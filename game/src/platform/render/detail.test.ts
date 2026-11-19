@@ -112,6 +112,31 @@ describe('merged parts (props, decor, room dressing)', () => {
     expect(nutCount).toBeGreaterThan(0);
   });
 
+  it('keeps a bench model’s vertex colours: a one-colour piece rebuilt in its colour', () => {
+    const coloured = (g: THREE.BufferGeometry, rgb: [number, number, number]) => {
+      const n = g.getAttribute('position').count;
+      const c = new Float32Array(n * 3);
+      for (let v = 0; v < n; v++) c.set(rgb, v * 3);
+      return g.setAttribute('color', new THREE.BufferAttribute(c, 3));
+    };
+    const box = coloured(new THREE.BoxGeometry(0.4, 0.2, 0.3), [1, 0, 0]);
+    const can = coloured(
+      new THREE.CylinderGeometry(0.05, 0.05, 0.1, 16).translate(0.5, 0, 0),
+      [0, 0, 1],
+    );
+    const { geometry } = part('steel', true, [box, can]);
+    const out = detailed(geometry);
+    expect(out).not.toBeNull(); // it was null, and three logged an error (Ultra, the chemistry benches)
+    const colour = out!.getAttribute('color');
+    const position = out!.getAttribute('position');
+    expect(colour.count).toBe(position.count);
+    // Every vertex is one of the two pieces' colours.
+    for (let v = 0; v < colour.count; v++) {
+      const rgb = [colour.getX(v), colour.getY(v), colour.getZ(v)].join(',');
+      expect(['1,0,0', '0,0,1']).toContain(rgb);
+    }
+  });
+
   it('leaves a merge with nothing to round as it is', () => {
     const { geometry } = part('steel', true, [new THREE.CylinderGeometry(0.01, 0.01, 0.01, 6)]);
     expect(detailed(geometry)).toBeNull();
@@ -233,7 +258,7 @@ describe('laid on models, and taken off', () => {
   });
 
   it('is Ultra only', () => {
-    expect(QUALITY.ultra.modelDetail).toBe(true);
-    for (const q of ['low', 'medium', 'high'] as const) expect(QUALITY[q].modelDetail).toBe(false);
+    expect(QUALITY.high.modelDetail).toBe(true);
+    for (const q of ['low', 'medium'] as const) expect(QUALITY[q].modelDetail).toBe(false);
   });
 });

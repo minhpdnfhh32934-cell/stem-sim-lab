@@ -6,7 +6,7 @@ import type { Floor } from '../world/definitions';
 import type { WorldEntity } from '../world/World';
 import type { ExperimentEndReason } from '../simulation/ExperimentRuntime';
 import type { SessionState } from '../simulation/ExperimentSession';
-import type { GraphicsQuality } from '../persistence/settings';
+import type { GraphicsQuality, MenuBackground } from '../persistence/settings';
 import type { RunRecord } from '../simulation/RunRecord';
 
 export type ExperimentCommandName =
@@ -32,6 +32,11 @@ export type ContainerAction =
   | 'record';
 
 export interface GameEvents {
+  /**
+   * Going into a world from the menu, as its entering transition shows it: the portal opening
+   * (the screen covered while the world loads), then the world shown.
+   */
+  WorldEntry: { step: 'opening' | 'shown' };
   SceneLoading: { sceneId: string };
   SceneLoaded: { sceneId: string; kind: 'menu' | 'world' };
   SceneUnloaded: { sceneId: string };
@@ -118,7 +123,7 @@ export interface GameEvents {
   /** A fire started on an entity, or went out there. */
   FireChanged: { entityId: string; burning: boolean };
   /** What the player is told about fire: too close, the extinguisher empty, all out, the brigade. */
-  FireNotice: { what: 'too-close' | 'empty' | 'out' | 'brigade-arrived' };
+  FireNotice: { what: 'too-close' | 'empty' | 'out' };
   /** The hub's laptop opened (E): its view starts it up (Phase F-2). */
   LaptopOpened: { entityId: string };
   /** The player asks to sit or lie on a piece of furniture (the RestSystem decides). */
@@ -136,10 +141,15 @@ export interface GameEvents {
   /** A call made on the player's phone and how it went (Phase E-2). */
   EmergencyCall: {
     number: string;
-    outcome: 'dispatched' | 'already-coming' | 'false-alarm' | 'other-service' | 'no-answer';
+    outcome: 'dispatched' | 'already-coming' | 'other-service' | 'no-answer';
   };
   /** A walk-through door's travel action; DoorSystem decides. */
   DoorRequested: { entityId: string };
+  /**
+   * Someone walked by the game (a person of the world, a responder) is going through a walk-through
+   * door's doorway this frame: it stays open for them (Phú 2026-11-19: never shut on them).
+   */
+  DoorPassing: { entityId: string };
   DoorChanged: {
     doorIds: readonly [string, string];
     state: 'closed' | 'preparing' | 'opening' | 'open' | 'closing' | 'blocked';
@@ -294,6 +304,10 @@ export interface GameEvents {
   GraphicsQualityChanged: { quality: GraphicsQuality; lowered?: boolean };
   /** Rooms out of sight drawn again (off) or left out (on): Settings. */
   RoomSleepChanged: { on: boolean };
+  /** The main menu's background changed in the settings (the menu follows). */
+  MenuBackgroundChanged: { background: MenuBackground };
+  /** The player has been shown the way to the live menu background: its red dots go. */
+  LiveHintSeen: Record<string, never>;
   /** A look setting changed (`Game.controls`): the settings and the touch controls follow. */
   ControlSettingsChanged: Record<string, never>;
   /**

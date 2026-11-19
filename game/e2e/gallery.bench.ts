@@ -45,7 +45,7 @@ for (const s of stations.filter((x) => !only || only.test(x.experiment))) {
     const stand: Vec3 = [x + Math.sin(turn) * far, 0, z + Math.cos(turn) * far];
     const look: Vec3 = [x, 1.15, z];
     await page.addInitScript(() => {
-      localStorage.setItem('simlab.settings.graphicsQuality', 'high');
+      localStorage.setItem('simlab.settings.graphics', 'medium');
     });
     await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), {
       key: 'simlab.save.slot-1',

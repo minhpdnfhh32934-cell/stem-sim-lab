@@ -541,7 +541,7 @@ async function prepare(page: Page) {
   const quality = process.env.BENCH_GRAPHICS;
   if (quality) {
     await page.addInitScript(
-      (value) => localStorage.setItem('simlab.settings.graphicsQuality', value),
+      (value) => localStorage.setItem('simlab.settings.graphics', value),
       quality,
     );
   }

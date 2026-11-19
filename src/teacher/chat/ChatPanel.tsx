@@ -36,7 +36,7 @@ import {
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, answersPicture, asksAboutPicture, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
-import { toast } from '@/ui/toast';
+import { dismissToast, toast } from '@/ui/toast';
 import { useT, type MessageKey } from '@/app/i18n';
 import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
 import { openTopic, useActiveTopic } from '@/app/topics';
@@ -338,6 +338,11 @@ export function ChatPanel({
         // The rest of an answer about part of the board stays a chat answer.
         board: board && message.mode !== 'aside',
         signal: controller.signal,
+        // The rest shows as it is written, like any answer (machine B's sweep 19/11: 15–21 s of
+        // "đang suy nghĩ" before it all came at once).
+        onPartial: (text) => {
+          if (!controller.signal.aborted) setStreaming(text || null);
+        },
       });
       if (cleared()) {
         endAnswer(answer);
@@ -367,6 +372,7 @@ export function ChatPanel({
         setError(failureOf(e, { kind: 'continue', id: message.id }));
       }
     } finally {
+      setStreaming(null);
       setBusy(false);
     }
   };
@@ -437,13 +443,22 @@ export function ChatPanel({
     setError(null);
     if (messages.length === 0) return;
     // One click must not lose a conversation: "Hoàn tác" brings it back while nothing new was asked.
-    toast(t('chat.cleared'), 'info', 8000, {
+    const UNDO_MS = 8000;
+    const id = toast(t('chat.cleared'), 'info', UNDO_MS, {
       label: t('chat.undoClear'),
       run: () => {
         if (useChatStore.getState().messages.length === 0)
           useChatStore.setState({ messages, summary, summarySkip });
       },
     });
+    // A new question ends the offer: the button goes rather than do nothing (sweep 19/11).
+    const stop = useChatStore.subscribe((s) => {
+      if (s.messages.length > 0) {
+        dismissToast(id);
+        stop();
+      }
+    });
+    window.setTimeout(stop, UNDO_MS);
   };
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.

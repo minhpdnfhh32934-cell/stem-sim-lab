@@ -4,7 +4,7 @@ import type { Game } from '../../game/Game';
 import { bootTestGame } from '../../game/testing';
 import type { SceneDefinition } from '../../world/definitions';
 import { LIGHT_SLOTS } from '../../world/lighting';
-import { WorldRenderer } from './WorldRenderer';
+import { warmBatch, warmEnd, WorldRenderer } from './WorldRenderer';
 
 // Characterization: the lights setLighting gives each world scene — since phase UX2 each room's own
 // lights under its fixtures (world/lighting.ts) in a fixed pool, no sun — and the graphics
@@ -121,8 +121,7 @@ describe('WorldRenderer lighting (characterization)', () => {
   });
 
   it.each([
-    ['medium', 0.8],
-    ['high', 0.408], // 0.8 − 4.9 × 0.08: the hemisphere gives way to the room light
+    ['medium', 0.408], // 0.8 − 4.9 × 0.08: the hemisphere gives way to the room light
   ] as const)(
     'physics-lab at %s quality: room lights, three key shadows, hemisphere %s',
     (quality, sky) => {
@@ -225,5 +224,131 @@ describe('the PPE cabinet’s hinged doors', () => {
     const doors = renderer as unknown as Doors;
     doors.addEntity(game.world.entity(CABINET));
     expect(degrees(doors.views.get(CABINET)!)).toEqual([-110, 110]);
+  });
+});
+
+describe('entity paints', () => {
+  /** The private parts of WorldRenderer read here. */
+  interface Paints {
+    addEntity(entity: unknown): void;
+    removeEntity(entityId: string): void;
+    refresh(entityId: string): void;
+    focusedId: string | null;
+    readonly views: Map<
+      string,
+      { mesh: THREE.Mesh; group: THREE.Group; shared: THREE.Material | null }
+    >;
+  }
+  /** The materials of `group`'s meshes. */
+  const materialsOf = (group: THREE.Object3D) => {
+    const out = new Set<THREE.Material>();
+    group.traverse((o) => {
+      const m = (o as Partial<THREE.Mesh>).material;
+      if (m && !Array.isArray(m)) out.add(m);
+    });
+    return out;
+  };
+
+  /** How many of `group`'s meshes wear `material`. */
+  const paintedBy = (group: THREE.Object3D, material: THREE.Material | null) => {
+    let n = 0;
+    group.traverse((o) => {
+      if ((o as Partial<THREE.Mesh>).material === material) n++;
+    });
+    return n;
+  };
+
+  it('one material per look and colour, a copy of its own while focused or charred, then shared again', async () => {
+    await game.newGame('researcher-male');
+    await game.scenes.load('physics-lab');
+    const renderer = new WorldRenderer({} as HTMLElement, game, {} as HTMLCanvasElement);
+    renderers.push(renderer);
+    const paints = renderer as unknown as Paints;
+    // Without a DOM: no entity that draws a canvas (screens, labels, rulers on the rigs).
+    for (const entity of game.world.allEntities()) {
+      const { item } = entity;
+      if (item.visual.screen || item.visual.label || item.pendulum || item.dropTower) continue;
+      if (item.springStand || item.bench) continue;
+      paints.addEntity(entity);
+    }
+    const views = [...paints.views.entries()];
+    const shared = views.filter(([, v]) => v.shared);
+    const distinct = new Set(shared.map(([, v]) => v.mesh.material));
+    expect(shared.length).toBeGreaterThan(distinct.size * 2); // most entities share their paint
+    // A rig (its frame's parts painted with the body's material) that shares it with another.
+    const [id, view] =
+      shared.find(
+        ([, v]) =>
+          paintedBy(v.group, v.shared) > 1 &&
+          shared.some(([, w]) => w !== v && w.shared === v.shared),
+      ) ?? [];
+    if (!id || !view?.shared) throw new Error('no shared entity with parts');
+    const parts = paintedBy(view.group, view.shared);
+    const other = shared.find(([k, v]) => k !== id && v.shared === view.shared)?.[1];
+
+    paints.focusedId = id;
+    paints.refresh(id);
+    const copy = view.mesh.material as THREE.MeshStandardMaterial;
+    expect(copy).not.toBe(view.shared);
+    expect(paintedBy(view.group, copy)).toBe(parts); // every painted part: the copy
+    expect(copy.emissive.getHexString()).toBe('2a3440'); // the focus glow on the copy only
+    expect((view.shared as THREE.MeshStandardMaterial).emissive.getHexString()).toBe('000000');
+    expect(other?.mesh.material).toBe(view.shared);
+
+    let disposed = false;
+    copy.addEventListener('dispose', () => (disposed = true));
+    paints.focusedId = null;
+    paints.refresh(id);
+    expect(view.mesh.material).toBe(view.shared);
+    expect(materialsOf(view.group).has(copy)).toBe(false);
+    expect(disposed).toBe(true);
+
+    game.entityStates.set(id, 'charred', true);
+    paints.refresh(id);
+    const sooty = view.mesh.material as THREE.MeshStandardMaterial;
+    expect(sooty).not.toBe(view.shared);
+    expect(sooty.color.r).toBeCloseTo((view.shared as THREE.MeshStandardMaterial).color.r * 0.2, 6);
+    game.entityStates.set(id, 'charred', false);
+    paints.refresh(id);
+    expect(view.mesh.material).toBe(view.shared);
+
+    // Freed with its last owner.
+    let freed = false;
+    view.shared.addEventListener('dispose', () => (freed = true));
+    for (const [k, v] of views) if (v.shared === view.shared && k !== id) paints.removeEntity(k);
+    expect(freed).toBe(false);
+    paints.removeEntity(id);
+    expect(freed).toBe(true);
+  });
+});
+
+describe('the warm-up before a door opens', () => {
+  it('draws fewer a frame after slow frames, but only for a second: then more, whatever the frames', () => {
+    const usual = 0.06; // ~17 FPS before the scene behind came
+    expect(warmBatch(8, 0.1, usual, 0.1)).toBe(4); // a slow frame: fewer
+    expect(warmBatch(1, 0.1, usual, 0.9)).toBe(1);
+    expect(warmBatch(8, 0.08, usual, 0.2)).toBe(8); // a little over the usual: as many
+    expect(warmBatch(4, 0.05, usual, 0.2)).toBe(8); // quick: more
+    // Frames slow anyway (SwiftShader ~9 FPS): past a second it grows to the most a frame.
+    let batch = 1;
+    let drawn = 0;
+    let elapsed = 1;
+    for (let frame = 0; drawn < 121; frame++) {
+      elapsed += 0.1;
+      batch = warmBatch(batch, 0.1, usual, elapsed);
+      drawn += batch;
+      expect(frame).toBeLessThan(8); // 121 objects in a few frames, not 121
+    }
+    expect(batch).toBe(40);
+  });
+
+  it('uploads at most 8 MB of new textures a frame, but always draws one', () => {
+    const objects = [3, 4, 2, 9, 0, 0, 1].map((mb) => Object.assign(new THREE.Object3D(), { mb }));
+    const bytes = (o: THREE.Object3D) => (o as THREE.Object3D & { mb: number }).mb * 1e6;
+    expect(warmEnd(objects, 0, 40, bytes)).toBe(2); // 3 + 4; with 2 more it is 9
+    expect(warmEnd(objects, 2, 40, bytes)).toBe(3); // 2, then 9 is over
+    expect(warmEnd(objects, 3, 40, bytes)).toBe(4); // 9 alone: still drawn
+    expect(warmEnd(objects, 4, 2, bytes)).toBe(6); // the batch's count still holds
+    expect(warmEnd(objects, 6, 40, bytes)).toBe(7);
   });
 });

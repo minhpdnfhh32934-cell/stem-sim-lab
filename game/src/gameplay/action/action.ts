@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { Vec3 } from '../../core/math';
 import { IdSchema, Vec3Schema } from '../../core/schema';
 import { WORN_ON } from '../item';
 
@@ -261,12 +260,4 @@ export function startsAtTarget(sequence: ActionSequence): boolean {
     return key.left?.at === 'target' || key.right?.at === 'target';
   }
   return false;
-}
-
-/** A world point `offset` from the target's centre (`at: 'target'`), into `out`. */
-export function targetPoint(centre: Readonly<Vec3>, offset: Readonly<Vec3>, out: Vec3): Vec3 {
-  out[0] = centre[0] + offset[0];
-  out[1] = centre[1] + offset[1];
-  out[2] = centre[2] + offset[2];
-  return out;
 }

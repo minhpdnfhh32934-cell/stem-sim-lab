@@ -12,9 +12,8 @@ type Books = typeof BooksModule;
 
 const SUBJECTS: readonly BookSubject[] = ['physics', 'chemistry', 'biology'];
 const GRADES = [10, 11, 12] as const;
-/** The start-up's length (ms), and how long the last screen fades (ms). */
+/** The start-up's length (ms). */
 const BOOT_MS = 5600;
-const FADE_MS = 500;
 
 /**
  * The hub's laptop (Phú, Phase F-2): E on it opens this view over the game. It starts up (the
@@ -450,5 +449,3 @@ function subjectGlyph(subject: BookSubject): SVGSVGElement {
   );
   return image;
 }
-
-export { FADE_MS };

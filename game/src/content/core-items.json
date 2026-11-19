@@ -838,7 +838,8 @@
       "size": [5.2, 5.6, 5.2],
       "color": "#4fb3d9",
       "material": "light",
-      "prop": "emblem"
+      "prop": "emblem",
+      "hanging": true
     }
   },
   {
@@ -968,31 +969,6 @@
         },
         "color": "#ffffff",
         "background": "#3a4652"
-      }
-    }
-  },
-  {
-    "id": "hub-directory",
-    "displayName": "Directory",
-    "vi": {
-      "displayName": "Bảng chỉ dẫn"
-    },
-    "category": "structure",
-    "tags": ["decor"],
-    "physical": {
-      "massKg": 60
-    },
-    "visual": {
-      "shape": "box",
-      "size": [1.4, 2.2, 0.3],
-      "color": "#26323d",
-      "label": {
-        "text": "SIMLAB HUB\n↑  Chemistry Laboratory\n→  Physics Laboratory\n←  Biology Laboratory\n↓  Preparation Room",
-        "vi": {
-          "text": "SẢNH SIMLAB\n↑  Phòng thí nghiệm Hóa học\n→  Phòng thí nghiệm Vật lý\n←  Phòng thí nghiệm Sinh học\n↓  Phòng chuẩn bị"
-        },
-        "color": "#ffffff",
-        "background": "#26323d"
       }
     }
   },
@@ -1420,7 +1396,7 @@
       "displayName": "Bảng tuần hoàn"
     },
     "category": "structure",
-    "tags": ["decor"],
+    "tags": ["decor", "periodic-table"],
     "physical": {
       "massKg": 25,
       "body": "none"

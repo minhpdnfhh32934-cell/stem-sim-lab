@@ -430,8 +430,10 @@ function rig(item: ItemDefinition): BenchRig {
   const plastic = own(
     new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, ...LOOKS.plastic }),
   );
-  const solid = own(new THREE.MeshStandardMaterial({ color: OTHER_CUBE.color, ...LOOKS.matte }));
-  const liquid = own(
+  const solid = kit.mine(
+    new THREE.MeshStandardMaterial({ color: OTHER_CUBE.color, ...LOOKS.matte }),
+  );
+  const liquid = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#cfe6f2',
       ...LOOKS.glass,

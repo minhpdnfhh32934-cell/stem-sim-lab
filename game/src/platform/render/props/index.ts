@@ -3,6 +3,7 @@ import type { ItemDefinition } from '../../../gameplay/item';
 import type { Prop } from '../../../gameplay/props';
 import { castsShadowIn, FINISHES, type Palette } from '../palette';
 import { DOOR_PROPS } from './doors';
+import { GREENHOUSE_PROPS } from './greenhouse';
 import { CEILING_PROPS } from './ceiling';
 import { CIRCUIT_PROPS } from './circuit';
 import { LAPTOP_PROPS } from './laptop';
@@ -27,6 +28,7 @@ export interface Leaf {
 export const PROP_BUILDERS: Partial<Record<Prop, PropBuilder>> = {
   ...HUB_PROPS,
   ...STARSHIP_PROPS,
+  ...GREENHOUSE_PROPS,
   ...LAB_PROPS,
   ...ROOM_PROPS,
   ...PREPARATION_PROPS,

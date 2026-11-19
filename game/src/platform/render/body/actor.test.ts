@@ -27,6 +27,26 @@ const person = (more: Partial<PersonView> = {}): PersonView => ({
   ...more,
 });
 
+describe('a body drawn the first time', () => {
+  it('has its bounding spheres already, around the body at rest (three never skins every vertex for them)', () => {
+    const actor = new Actor(character, new THREE.MeshBasicMaterial(), 0);
+    const skinned: THREE.SkinnedMesh[] = [];
+    actor.group.traverse((o) => {
+      if ((o as Partial<THREE.SkinnedMesh>).isSkinnedMesh) skinned.push(o as THREE.SkinnedMesh);
+    });
+    expect(skinned.length).toBeGreaterThan(3);
+    const height = character.appearance.heightM;
+    for (const mesh of skinned) {
+      const sphere = mesh.boundingSphere;
+      expect(sphere, mesh.name).not.toBeNull();
+      expect(sphere.radius, mesh.name).toBeGreaterThan(0);
+      expect(sphere.center.y, mesh.name).toBeGreaterThan(0);
+      expect(sphere.center.y, mesh.name).toBeLessThan(height);
+    }
+    actor.dispose();
+  });
+});
+
 describe('another player acted out', () => {
   it('the head follows their view down', () => {
     const actor = new Actor(character, new THREE.MeshBasicMaterial(), 0);

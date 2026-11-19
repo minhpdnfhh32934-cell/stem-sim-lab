@@ -298,16 +298,25 @@ export async function walkUntil(page: Page, key: string, done: (p: Vec3) => bool
  * key can overshoot by ~0.6 m (4 Hz debug text), a 120 ms tap by ~0.25 m at most.
  */
 export async function approach(page: Page, aim: Aim, x: number, z: number, within = 0.3) {
+  // Metres a millisecond of W moved last time, coasting included: at SwiftShader's few frames a
+  // second a 120 ms tap moved centimetres (pendulum.spec spent 56 s on 5 m). Walking speed first.
+  let rate = 2.2 / 1000;
   for (let i = 0; i < 80; i++) {
     const p = await position(page);
-    if (Math.hypot(p[0] - x, p[2] - z) < within) return;
+    const left = Math.hypot(p[0] - x, p[2] - z);
+    if (left < within) return;
     // Aimed again each tap: one aim at the start missed the point when a collider pushed the
     // player aside, and walked on past it (preparation.spec, the glove dispenser to the door).
     await aim.at([x, EYE_HEIGHT, z], p);
+    // Held for half the way left at the rate measured, so never past the point.
+    const held = Math.min(3000, Math.max(120, left / 2 / rate));
     await page.keyboard.down('w');
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(held);
     await page.keyboard.up('w');
     await page.waitForTimeout(300); // debug text refresh
+    const q = await position(page);
+    const moved = Math.hypot(q[0] - p[0], q[2] - p[2]);
+    if (moved > 0.02) rate = moved / held; // pushed aside or blocked: the last rate stands
   }
   throw new Error(`did not reach (${x}, ${z})`);
 }
@@ -558,16 +567,23 @@ export async function openSolo(page: Page): Promise<void> {
   await page.getByRole('button', { name: /^(Single player|Chơi đơn)/ }).click();
 }
 
-/** The menu's way into a new single-player game. */
+/** The menu's way into a new single-player game (on once the entering effect has gone). */
 export async function menuNewGame(page: Page): Promise<void> {
   await openSolo(page);
   await page.getByRole('button', { name: /^(New game|Chơi mới)$/ }).click();
+  await entered(page);
+}
+
+/** The entering effect played to its end (its white light gone): the world is what shows. */
+async function entered(page: Page): Promise<void> {
+  await expect(page.locator('.enter-transition')).toHaveCount(0, { timeout: 120_000 });
 }
 
 /** The menu's way into the last single-player game. */
 export async function menuContinue(page: Page): Promise<void> {
   await openSolo(page);
   await page.getByRole('button', { name: /^(Continue|Chơi tiếp)$/ }).click();
+  await entered(page);
 }
 
 /** Back from Play's pages to the menu's panel. */

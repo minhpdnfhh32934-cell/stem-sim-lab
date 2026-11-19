@@ -3,28 +3,15 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import type { RoomGrade } from '../../world/definitions';
+import { EffectsPass, type SeeThrough } from './effectsPass';
+import { type Grade, gradeOf, POST } from './postLook';
 
-/**
- * Ultra's post-processing (Phase G, docs/phase-g-ultra-contract.md §4.1), in a chunk of its own
- * loaded only when Ultra is chosen: the scene drawn into a half-float target, then ambient
- * occlusion where things meet, bloom on what glows brighter than the room, tone mapping and sRGB
- * (three applies neither when drawing into a target), and SMAA last (the canvas's own MSAA does not
- * reach a target; 4× MSAA on the half-float target cost 60–100 ms a frame at 2561×1601 on the RTX
- * 5070 Laptop under ANGLE/D3D11, SMAA a millisecond or two). The outlines' stencil is kept.
- */
-export const POST = {
-  /** GTAO: radius in metres (a bench's contact, not a room's corner), how strongly it darkens. */
-  ao: { radius: 0.35, distanceExponent: 1.5, thickness: 1, scale: 1, blend: 1 },
-  /**
-   * Bloom on lamps, lit screens and the laser only. Threshold in linear units of the half-float
-   * target: at 1.1 the labs' lit white walls passed it, and bloom's low-resolution blur laid over
-   * the whole room made distant things look soft, as if drawn at a low resolution (Phú, on the
-   * real display); at 2 the walls stay sharp and the light strips still glow.
-   */
-  bloom: { strength: 0.35, radius: 0.45, threshold: 2 },
-} as const;
+/** Ultra's post-processing under WebGL (Phase G): its look is postLook.ts, shared with gpu/pipeline.ts. */
+export { POST };
 
 /**
  * GTAO that leaves out see-through objects: glass and liquids would darken what is behind them
@@ -80,12 +67,55 @@ const BASE_OVERRIDE = (
 export interface Post {
   /** What the scene is drawn into first (the shader warm-up draws there too: same programs). */
   readonly target: THREE.WebGLRenderTarget;
-  render(dt: number): void;
+  /** A frame, `dt` s after the last; under Max, coloured as a room of `grade` at `daylight` (0…1). */
+  render(dt: number, grade?: RoomGrade, daylight?: number): void;
   /** A scene drawn first, behind the world (the city under the hub's glass), or none. */
   setUnder(scene: THREE.Scene | null, camera: THREE.Camera | null): void;
   setSize(width: number, height: number): void;
   dispose(): void;
 }
+
+/** What Max adds to Ultra's chain (quality.ts `grade`, `aoSamples`, `effects`). */
+export interface PostOptions {
+  readonly grade: boolean;
+  readonly aoSamples: number;
+  /** The glassware for the see-through pass (effectsPass.ts), or null: no such pass. */
+  readonly seeThrough: SeeThrough | null;
+}
+
+/**
+ * The room's grade (Max; postLook.ts, the same look as gpu/pipeline.ts): white balance, saturation
+ * and contrast, on the picture as shown (after tone mapping and sRGB), before SMAA.
+ */
+const GRADE_SHADER = {
+  uniforms: {
+    tDiffuse: { value: null },
+    warmth: { value: 0 },
+    saturation: { value: 1 },
+    contrast: { value: 1 },
+  },
+  vertexShader: /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`,
+  fragmentShader: /* glsl */ `
+uniform sampler2D tDiffuse;
+uniform float warmth;
+uniform float saturation;
+uniform float contrast;
+varying vec2 vUv;
+void main() {
+  vec4 c = texture2D(tDiffuse, vUv);
+  vec3 balanced = c.rgb * vec3(1.0 + 0.06 * warmth, 1.0, 1.0 - 0.06 * warmth);
+  vec3 saturated = mix(vec3(dot(balanced, vec3(0.2126, 0.7152, 0.0722))), balanced, saturation);
+  gl_FragColor = vec4(clamp((saturated - 0.5) * contrast + 0.5, 0.0, 1.0), c.a);
+}`,
+};
+
+/** Under this from neutral, the grade pass is skipped (a neutral lab draws no extra pass). */
+const NEUTRAL_EPS = 0.002;
 
 export function createPost(
   renderer: THREE.WebGLRenderer,
@@ -93,6 +123,7 @@ export function createPost(
   camera: THREE.PerspectiveCamera,
   width: number,
   height: number,
+  options: PostOptions = { grade: false, aoSamples: 16, seeThrough: null },
 ): Post {
   const target = new THREE.WebGLRenderTarget(width, height, {
     type: THREE.HalfFloatType,
@@ -113,9 +144,16 @@ export function createPost(
     distanceExponent: POST.ao.distanceExponent,
     thickness: POST.ao.thickness,
     scale: POST.ao.scale,
+    samples: options.aoSamples,
   });
+  if (options.aoSamples !== 16) ao.updatePdMaterial({ samples: options.aoSamples });
   ao.blendIntensity = POST.ao.blend;
   composer.addPass(ao);
+  // Right after the AO: it leaves the world pass's picture in the buffer it swapped out.
+  const effects = options.seeThrough
+    ? new EffectsPass(camera, ao.depthTexture, options.seeThrough, width, height)
+    : null;
+  if (effects) composer.addPass(effects);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(width, height),
     POST.bloom.strength,
@@ -124,12 +162,32 @@ export function createPost(
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
+  const gradePass = new ShaderPass(GRADE_SHADER);
+  gradePass.enabled = false;
+  if (options.grade) composer.addPass(gradePass);
   composer.addPass(new SMAAPass());
+  const to: Grade = { warmth: 0, saturation: 1, contrast: 1 };
+  const u = gradePass.uniforms as Record<'warmth' | 'saturation' | 'contrast', { value: number }>;
   return {
     get target() {
       return composer.readBuffer;
     },
-    render: (dt) => composer.render(dt),
+    render: (dt, grade = 'neutral', daylight = 1) => {
+      if (options.grade) {
+        gradeOf(grade, daylight, to);
+        // Eased towards the room's (a door crossed): POST.gradeEase s most of the way.
+        const k = dt > 0 ? 1 - Math.exp(-dt / POST.gradeEase) : 1;
+        u.warmth.value += (to.warmth - u.warmth.value) * k;
+        u.saturation.value += (to.saturation - u.saturation.value) * k;
+        u.contrast.value += (to.contrast - u.contrast.value) * k;
+        gradePass.enabled =
+          Math.abs(u.warmth.value) > NEUTRAL_EPS ||
+          Math.abs(u.saturation.value - 1) > NEUTRAL_EPS ||
+          Math.abs(u.contrast.value - 1) > NEUTRAL_EPS;
+      }
+      effects?.hide(); // drawn in their own pass, not the world pass
+      composer.render(dt);
+    },
     setUnder: (s, c) => {
       under.enabled = s !== null && c !== null;
       if (s && c) [under.scene, under.camera] = [s, c];

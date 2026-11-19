@@ -637,7 +637,7 @@ function rig(item: ItemDefinition): BenchRig {
   const A = new THREE.Vector3(tx, ty, tz);
 
   // The heating plate (a dull warmth while heating), the pilot light.
-  const hot = own(
+  const hot = kit.mine(
     new THREE.MeshStandardMaterial({
       color: '#4a4f55',
       ...LOOKS.satin,

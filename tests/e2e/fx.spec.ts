@@ -7,6 +7,17 @@ import { expect, test, type Page } from '@playwright/test';
  */
 test.use({ viewport: { width: 1366, height: 768 } });
 
+// A slow CI runner may measure as "low" quality, where the effects are off (data-fx="off"): the
+// specs that expect them pin the tier, as the 3D specs do (seen on PR #337's CI, 19/11/2026).
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.perf',
+      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+    );
+  });
+});
+
 const intro = (page: Page) => page.locator('.fx-intro');
 
 /**
