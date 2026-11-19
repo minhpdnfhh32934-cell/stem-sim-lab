@@ -33,3 +33,4 @@ Bản dựng sẵn của game phòng thí nghiệm 3D (thêm ngày 12/11/2026):
 - **Không đóng gói:**
   - texture Ultra (ambientCG, CC0), vì quá nặng; chúng chỉ nằm trong mã nguồn `game/public/ultra` (nguồn từng bộ ở README trong đó);
   - mô hình MediaPipe Face Landmarker / Hair Segmenter (Apache-2.0), vì không chạy mô hình trong app khi chưa hỏi người dùng.
+- **Máy chủ phòng chơi chung qua LAN (#339, `src-tauri/src/rooms/`):** axum 0.8 (MIT), thư viện máy chủ HTTP có Server-Sent Events, để không tự viết giao thức HTTP. Ngoài axum chỉ kéo thêm axum-core (MIT), matchit (MIT và BSD-3-Clause) và httpdate (MIT hoặc Apache-2.0). futures-util (MIT hoặc Apache-2.0) đã có sẵn trong cây phụ thuộc. Tra ngày 2026-11-19.
