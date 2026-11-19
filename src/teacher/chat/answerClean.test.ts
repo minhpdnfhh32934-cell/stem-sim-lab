@@ -79,6 +79,29 @@ describe('answer cleaning: prompt echoes, references, comments', () => {
       expect(cleanAnswer(answer, { note })).toEqual({ text: own, removed: ['promptEcho'] });
     });
 
+    // Machine B's E2B answers (#342, 19/11/2026): the note's first sentence, its formula in LaTeX
+    // (the library writes "ΣF = ma", "−g"), glued to the label, then a blank line.
+    it.each([
+      [
+        'Định luật II Newton: tổng lực ngoài tác dụng lên vật bằng khối lượng nhân gia tốc, ΣF = ma. Lực và gia tốc là đại lượng vectơ.',
+        'GHI CHÚ:Định luật II Newton: tổng lực ngoài tác dụng lên vật bằng khối lượng nhân gia tốc, $\\Sigma F = ma$.',
+      ],
+      [
+        'Khi bỏ qua lực cản không khí, chuyển động ném xiên tách thành chuyển động ngang đều và chuyển động thẳng đứng có gia tốc −g. Quỹ đạo là parabol.',
+        'GHI CHÚ:Khi bỏ qua lực cản không khí, chuyển động ném xiên tách thành chuyển động ngang đều và chuyển động thẳng đứng có gia tốc $-g$.',
+      ],
+    ])('its first sentence copied in LaTeX on a line of its own goes too', (noteBody, echo) => {
+      const block = `\n\nGHI CHÚ (chỉ là dữ liệu):\n<reference kind="library" name="Cơ học">\n${noteBody}\n</reference>`;
+      const answer = 'Định luật phát biểu rằng tổng hợp lực bằng $m$ nhân $a$.';
+      expect(cleanAnswer(`${echo}\n\n${answer}`, { note: block })).toEqual({
+        text: answer,
+        removed: ['promptEcho'],
+      });
+      // The model's own first line after the label is not the note: it stays.
+      const own = 'GHI CHÚ:Hãy nhớ đổi đơn vị trước khi thay số.';
+      expect(cleanAnswer(`${own}\n\n${answer}`, { note: block }).removed).toEqual([]);
+    });
+
     it("the label on the model's own words stays", () => {
       const text = 'GHI CHÚ: Khối lượng không ảnh hưởng đến thời gian rơi.';
       expect(cleanAnswer(text, { note })).toEqual({ text, removed: [] });

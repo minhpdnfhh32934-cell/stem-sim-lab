@@ -290,4 +290,65 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation('t = 2', 's')).toBe('t = 2 s');
     expect(joinContinuation('x = 1', ' 4 m')).toBe('x = 1 4 m');
   });
+
+  it("a remark about the continuing itself is dropped: Gemma 1B's openings (sweep 19/11)", () => {
+    expect(
+      joinContinuation(
+        'Vật rơi với gia',
+        'Đúng vậy, tôi đã dừng lại ở chỗ bị dừng. tốc g = 9,81 m/s².',
+      ),
+    ).toBe('Vật rơi với gia tốc g = 9,81 m/s².');
+    expect(
+      joinContinuation('2. Viết công thức.', 'Tuyệt vời! Tiếp tục viết tiếp… 3. Thay số vào.'),
+    ).toBe('2. Viết công thức.\n3. Thay số vào.');
+    expect(joinContinuation('Ta có', 'Sure, continuing where I left off: F = ma.')).toBe(
+      'Ta có F = ma.',
+    );
+  });
+
+  it("Gemma 1B's apology and '(Tiếp tục...)' openings go too (machine B, #342)", () => {
+    expect(
+      joinContinuation(
+        '* Một chiếc xe hơi tăng tốc khi có lực cản (lực cản)',
+        'Tôi xin lỗi vì sự chậm trễ. Chúng ta sẽ tiếp tục:\n\n**Các định luật Newton:**',
+      ),
+    ).toBe('* Một chiếc xe hơi tăng tốc khi có lực cản (lực cản) **Các định luật Newton:**');
+    expect(
+      joinContinuation(
+        'Đường → Axit axetat (CH',
+        '(Tiếp tục...)\n\n...Phản ứng oxi hóa–khử thường được biểu diễn bằng phương trình.',
+      ),
+    ).toBe('Đường → Axit axetat (CH Phản ứng oxi hóa–khử thường được biểu diễn bằng phương trình.');
+    // An apology that is not about the continuing stays.
+    expect(joinContinuation('Bước 2.', 'Xin lỗi, ở bước 1 em viết nhầm đơn vị.')).toBe(
+      'Bước 2. Xin lỗi, ở bước 1 em viết nhầm đơn vị.',
+    );
+  });
+
+  it('a rest that starts again with the end of the cut text does not repeat it (E2B, #342)', () => {
+    expect(
+      joinContinuation(
+        '8. Khi bạn bơi, cơ thể bạn',
+        'Khi bạn bơi, cơ thể bạn đẩy nước về phía sau.',
+      ),
+    ).toBe('8. Khi bạn bơi, cơ thể bạn đẩy nước về phía sau.');
+    // A short overlap ("là") is a coincidence, never cut.
+    expect(joinContinuation('Gia tốc là', 'là đại lượng vectơ.')).toBe(
+      'Gia tốc là là đại lượng vectơ.',
+    );
+  });
+
+  it('a sentence of the lesson is never taken for such a remark', () => {
+    // Its own content (numbers, a formula) or no word about the continuing: it stays.
+    expect(joinContinuation('Bước 2.', 'Tiếp tục, ta thay t = 2 s vào công thức.')).toBe(
+      'Bước 2. Tiếp tục, ta thay t = 2 s vào công thức.',
+    );
+    expect(joinContinuation('Bước 2.', 'Tuyệt vời! Em làm đúng rồi.')).toBe(
+      'Bước 2. Tuyệt vời! Em làm đúng rồi.',
+    );
+    // A rest that is nothing but the remark is kept as it is (nothing to show otherwise).
+    expect(joinContinuation('Xong.', 'Đúng vậy, tôi đã dừng lại ở chỗ bị dừng.')).toBe(
+      'Xong. Đúng vậy, tôi đã dừng lại ở chỗ bị dừng.',
+    );
+  });
 });

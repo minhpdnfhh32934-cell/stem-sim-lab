@@ -10,6 +10,14 @@ export function tightDecimalCommas(tex: string): string {
 }
 
 /**
+ * Vietnamese letters inside \text{…} ("\text{tổng}") have no KaTeX font metrics; the browser draws
+ * them with the UI font, which is what we want, so they are not warned about (KaTeX reported
+ * 'unknownSymbol' or 'symbolNotInFont' once per letter: dozens of console lines, #342).
+ */
+export const KATEX_STRICT = (code: string): 'ignore' | 'warn' =>
+  code === 'unknownSymbol' || code === 'symbolNotInFont' ? 'ignore' : 'warn';
+
+/**
  * Loads KaTeX (and its CSS/fonts) on first use only — keeps app start fast. A failed load (a
  * chunk that could not be fetched) is forgotten, so a later call tries again instead of failing
  * at once for the rest of the session.

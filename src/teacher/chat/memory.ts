@@ -306,13 +306,62 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
   en: 'Your last answer stopped in the middle because it was too long. Continue exactly where it stopped, without repeating what you wrote and without greeting again.',
 };
 
+/** Words about the continuing itself ("chỗ bị dừng", "viết tiếp", "where I left off"). */
+const RESUME_REMARK =
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$)/iu;
+/**
+ * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
+ * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
+ */
+const ASSENT =
+  /^(?:(?:tuyệt vời|đúng vậy|vâng|dạ|được rồi|được|ok(?:ay)?|sure|great|alright)(?=[\s,.!…:]|$)[\s,.!…:]*|(?:(?:tôi|mình|em) )?xin lỗi[^.!?\n]{0,60}[.!?]\s*|sorry[^.!?\n]{0,60}[.!?]\s*)/iu;
+
+/**
+ * Gemma 1B sometimes opens the rest with a remark on the continuing itself ("Đúng vậy, tôi đã dừng
+ * lại ở chỗ bị dừng.", "Tuyệt vời! Tiếp tục viết tiếp…": machine B's sweep 19/11/2026); that
+ * opening goes. Only positive evidence: its first sentence names the continuing and has no digit
+ * or formula of its own. A praise alone stays, and a rest that is nothing but the remark stays whole.
+ */
+function withoutResumeRemark(rest: string): string {
+  const text = rest.trimStart();
+  const assent = ASSENT.exec(text)?.[0] ?? '';
+  const after = text.slice(assent.length);
+  // A sentence, or a remark in brackets ("(Tiếp tục...)").
+  const sentence = /^\([^)\n]{0,30}\)|^[^.!?…:\n]*[.!?…:]+\)?/u.exec(after)?.[0];
+  if (!sentence || !RESUME_REMARK.test(sentence) || /[\d=$\\]/u.test(sentence)) return rest;
+  // What follows, without the dots that open it ("...Phản ứng").
+  const remainder = after
+    .slice(sentence.length)
+    .trimStart()
+    .replace(/^(?:\.{2,}|…)\s*/u, '');
+  return remainder ? remainder : rest;
+}
+
 /**
  * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
  * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
  * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
  * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
  */
-export function joinContinuation(previous: string, rest: string): string {
+/** At least this much of the cut text, repeated at the start of the rest, is a repeat. */
+const MIN_REPEAT = 12;
+
+/**
+ * E2B sometimes starts the rest again with the end of the cut text ("…cơ thể bạn" + "Khi bạn bơi,
+ * cơ thể bạn đẩy nước…": machine B's sweep, #342): the repeated part goes, once.
+ */
+function withoutRepeat(previous: string, rest: string): string {
+  const next = rest.trimStart();
+  const end = previous.trimEnd();
+  for (let n = Math.min(200, end.length, next.length); n >= MIN_REPEAT; n -= 1) {
+    const after = next.slice(n).trimStart();
+    if (end.endsWith(next.slice(0, n))) return after ? ` ${after}` : rest;
+  }
+  return rest;
+}
+
+export function joinContinuation(previous: string, cut: string): string {
+  const rest = withoutRepeat(previous, withoutResumeRemark(cut));
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;

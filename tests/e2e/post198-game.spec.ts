@@ -21,6 +21,12 @@ test('SimLab 3D opens over the lab, rooms without voice, and closes back to the 
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
+  // The game's plain menu background, not the live rooftop scene: drawn in software it kept the
+  // page so busy that a click on "Về SimLab" never went through (CI of #343, 19/11/2026). This
+  // spec checks the dialog, not the menu's look.
+  await page.addInitScript(() => {
+    localStorage.setItem('simlab.settings.menuBackground', 'default');
+  });
   await openLab(page);
   await page
     .getByRole('complementary', { name: 'Thư viện chủ đề' })

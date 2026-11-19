@@ -135,7 +135,8 @@ function renderMdLines(lines: string[], keyPrefix: string): ReactNode[] {
       const Tag = level === 1 ? 'h2' : level === 2 ? 'h3' : 'h4';
       out.push(
         <Tag key={`${keyPrefix}-h${i}`} className="msg-heading">
-          {renderInline(heading[2] ?? '', `${keyPrefix}-h${i}`)}
+          {/* "# # Rơi Tự Do" (E2B, #342): the second mark is not a word. */}
+          {renderInline((heading[2] ?? '').replace(/^#+\s*/u, ''), `${keyPrefix}-h${i}`)}
         </Tag>,
       );
       return;

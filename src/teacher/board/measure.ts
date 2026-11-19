@@ -5,7 +5,7 @@
  */
 import '@fontsource/patrick-hand/400.css';
 import '@fontsource/pangolin/400.css';
-import { loadKatex, tightDecimalCommas } from '@/science-card/katex';
+import { KATEX_STRICT, loadKatex, tightDecimalCommas } from '@/science-card/katex';
 import type { Measure } from './layout';
 
 export const HAND_FONT = '"Patrick Hand", "Segoe Print", cursive';
@@ -67,6 +67,7 @@ export const browserMeasure: Measure = {
           throwOnError: false,
           displayMode: false,
           trust: false,
+          strict: KATEX_STRICT,
         });
         document.body.appendChild(probe);
         const r = probe.getBoundingClientRect();
@@ -87,5 +88,6 @@ export function renderMath(tex: string): string {
     throwOnError: false,
     displayMode: false,
     trust: false,
+    strict: KATEX_STRICT,
   });
 }

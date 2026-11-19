@@ -519,7 +519,8 @@ export function markdownToScript(markdown: string, locale: Locale = 'vi'): Parse
       b.after = source.slice(range.end);
       const heading = /^\s*#{1,6}\s+(.*)$/.exec(line);
       if (heading) {
-        b.heading(heading[1] ?? '');
+        // "# # Rơi Tự Do" (E2B, #342): a repeated mark is not part of the heading.
+        b.heading((heading[1] ?? '').replace(/^#+\s*/u, ''));
         continue;
       }
       // Bullets are written without their marker.
