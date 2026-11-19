@@ -7,78 +7,9 @@
   --fx-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── Screen change (screenChange): the new screen opens as a circle from the press ── */
-::view-transition-old(root),
-::view-transition-new(root) {
-  mix-blend-mode: normal;
-}
-::view-transition-old(root) {
-  animation: fx-recede 560ms var(--fx-ease) both;
-}
-::view-transition-new(root) {
-  animation: fx-iris 560ms var(--fx-ease) both;
-}
-:root[data-motion='reduce']::view-transition-old(root) {
-  animation: none;
-}
-:root[data-motion='reduce']::view-transition-new(root) {
-  animation: fx-fade-in 160ms linear both;
-}
-@keyframes fx-recede {
-  to {
-    transform: scale(0.97);
-    filter: brightness(0.9);
-  }
-}
-@keyframes fx-iris {
-  from {
-    clip-path: circle(0 at var(--fx-x, 50%) var(--fx-y, 50%));
-  }
-  to {
-    clip-path: circle(var(--fx-r, 150vmax) at var(--fx-x, 50%) var(--fx-y, 50%));
-  }
-}
 @keyframes fx-fade-in {
   from {
     opacity: 0;
-  }
-}
-
-/* The logo's orbit flying out with the circle (ScreenPortal), inside its edge. */
-.fx-portal {
-  position: fixed;
-  top: var(--fx-y, 50%);
-  left: var(--fx-x, 50%);
-  z-index: 1100;
-  width: calc(var(--fx-r, 100vmax) * 1.6);
-  aspect-ratio: 1;
-  pointer-events: none;
-  animation: fx-portal 620ms var(--fx-ease) forwards;
-}
-.fx-portal svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 0.5;
-  filter: drop-shadow(0 0 1.2px var(--accent));
-}
-.fx-portal circle {
-  fill: var(--accent);
-  stroke: none;
-}
-@keyframes fx-portal {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(0.05) rotate(-50deg);
-  }
-  70% {
-    opacity: 0.85;
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
   }
 }
 

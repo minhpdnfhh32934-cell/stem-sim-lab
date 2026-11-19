@@ -411,13 +411,11 @@ Lấy ý từ trò chơi SimLab 3D. Hiệu ứng chỉ để đẹp: không ch�
   đường ném, chữ "SimLab" hiện từng chữ rồi mờ vào trang mở đầu (khoảng 2,5 giây). Bấm chuột hoặc
   gõ phím bất kỳ để bỏ qua. Lần đầu dùng app (màn làm quen) hay khi có hộp cập nhật, màn mở đầu tự
   nhường.
-- **Chuyển cảnh:** khi vào Virtual Lab, AI Teacher, Science Studio, về trang chủ hay mở một bài, màn
-  mới mở ra thành vòng tròn từ chỗ bạn bấm, kèm vòng quỹ đạo của logo bay ra (khoảng nửa giây).
 - **Nền động và hiện dần:** trang mở đầu có bình hóa chất, chuỗi ADN, quả táo, nguyên tử, nam
   châm, kính hiển vi và một con lắc trôi chậm phía sau (chỉ để trang trí, không phải mô phỏng). Chữ,
   thẻ, nhóm cài đặt và thông báo hiện dần; biểu tượng trên nút nảy nhẹ khi bấm.
-- **Chuyển động: Giảm** (Cài đặt → Giao diện): màn mở đầu chỉ còn hình đứng yên rồi mờ đi, chuyển
-  cảnh chỉ còn mờ dần, nền đứng yên. Ở chất lượng hiển thị **Thấp** (hoặc khi app đã hạ chất lượng
+- **Chuyển động: Giảm** (Cài đặt → Giao diện): màn mở đầu chỉ còn hình đứng yên rồi mờ đi, nền
+  đứng yên. Ở chất lượng hiển thị **Thấp** (hoặc khi app đã hạ chất lượng
   vì máy chậm) các hiệu ứng tắt hẳn.
 
 ## Thẻ Khoa học và mức tin cậy
