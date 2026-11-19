@@ -85,6 +85,11 @@ export async function refreshStatus(): Promise<UpdateStatus | null> {
 }
 
 const fromStore = (status: UpdateStatus | null) => status?.channel === 'store';
+/**
+ * `npm run tauri dev` serves the dev server's files: there is no built web part, so the app
+ * reports "0.0.0" (webupdate.rs) and every release would look newer and mandatory.
+ */
+const devCopy = (status: UpdateStatus | null) => status?.running === '0.0.0';
 
 let checkSeq = 0;
 
@@ -97,17 +102,21 @@ export async function checkForUpdate(quiet = false): Promise<void> {
   if (!updatesSupported()) return;
   const mine = ++checkSeq;
   if (!quiet) useUpdateStore.setState({ dialogOpen: true });
-  if (fromStore(useUpdateStore.getState().status ?? (await refreshStatus()))) {
+  const known = useUpdateStore.getState().status ?? (await refreshStatus());
+  if (fromStore(known)) {
     // The Store installs updates; a quiet start-up check has nothing to say.
     if (!quiet) useUpdateStore.setState({ phase: 'store', error: null });
     return;
   }
+  // A development copy: no start-up check, and "Kiểm tra cập nhật" never locks the window.
+  const dev = devCopy(known);
+  if (dev && quiet) return;
   useUpdateStore.setState({ phase: 'checking', error: null });
   try {
     const r = await invoke<CheckResult>('web_update_check');
     if (mine !== checkSeq) return;
     const phase = r.available ? 'available' : r.needsInstaller ? 'needsInstaller' : 'upToDate';
-    const required = r.required === true && phase !== 'upToDate';
+    const required = !dev && r.required === true && phase !== 'upToDate';
     useUpdateStore.setState((s) => ({
       status: r.status,
       manifest: r.manifest,

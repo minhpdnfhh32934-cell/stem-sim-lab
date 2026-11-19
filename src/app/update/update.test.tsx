@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 // The desktop backend (src-tauri/src/webupdate.rs) is replaced by a fake answer.
 const answer = { current: {} as Record<string, unknown> };
 const channel = { current: 'github' };
+const running = { current: '0.3.0' };
 const invoke = vi.fn((cmd: string) =>
   Promise.resolve(
     cmd === 'web_update_check'
@@ -13,7 +14,7 @@ const invoke = vi.fn((cmd: string) =>
           native: '0.3.0',
           embedded: '0.3.0',
           downloaded: null,
-          running: '0.3.0',
+          running: running.current,
           channel: channel.current,
         },
   ),
@@ -46,6 +47,7 @@ async function startUpCheck(over: Record<string, unknown>) {
 describe('update window at start-up (in-app updates)', () => {
   beforeEach(() => {
     channel.current = 'github';
+    running.current = '0.3.0';
     invoke.mockClear();
     useUpdateStore.setState({
       phase: 'idle',
@@ -146,6 +148,26 @@ describe('update window at start-up (in-app updates)', () => {
     expect(screen.queryByRole('button', { name: 'Đóng' })).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: 'Mở trang tải bộ cài' }));
     expect(invoke).toHaveBeenCalledWith('open_releases_page');
+  });
+
+  it('npm run tauri dev (no built web part: "0.0.0") checks nothing at start-up', async () => {
+    running.current = '0.0.0';
+    await startUpCheck({ required: true });
+    expect(invoke).not.toHaveBeenCalledWith('web_update_check');
+    expect(useUpdateStore.getState().dialogOpen).toBe(false);
+  });
+
+  it('"Kiểm tra cập nhật" in npm run tauri dev is never mandatory: "Để sau" closes it', async () => {
+    const user = userEvent.setup();
+    running.current = '0.0.0';
+    answer.current = result({ required: true });
+    render(<UpdateDialog />);
+    await act(async () => {
+      await checkForUpdate();
+    });
+    expect(useUpdateStore.getState().required).toBe(false);
+    await user.click(screen.getByRole('button', { name: 'Để sau' }));
+    expect(useUpdateStore.getState().dialogOpen).toBe(false);
   });
 
   it('a Microsoft Store copy never checks GitHub: the Store updates it', async () => {
