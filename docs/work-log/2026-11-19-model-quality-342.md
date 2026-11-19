@@ -107,3 +107,31 @@ Lệnh đã chạy (kết quả thật):
 - `npx vitest run`: 510 tệp, 5 841 bài đạt, 3 bỏ qua có sẵn.
 - `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
 - `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
+
+## Lượt 4: máy bàn thử lại #345 (20/11/2026)
+
+Bằng chứng ở `D:\Projects\simlab-work\issue-342-2026-11-19\retest-345\` trên máy bàn (main 2c5ec4fe).
+
+Kết quả thử lại "Viết tiếp" ("Ngắn"): câu dẫn ĐẠT (0/5 lần), khối chép lại ĐẠT, KaTeX ĐẠT. Còn LỖI nhẹ:
+E2B lần 2 dừng ở "2. **Định luật II Newton ($\Sigma F = ma$):**" + "* **Ví dụ:**" rồi viết lại đúng tiêu đề
+đó với "**Ví dụ 11:**", nên tiêu đề hiện hai lần. Dòng bị cắt không phải mục có số, và phần chép chỉ
+khoảng 45 kí tự (dưới mức 80 của khối chép, mức 40 kí tự gồm cả nhãn thì chưa tới vì không tính dấu).
+
+Đã sửa (`memory.ts` `rewriteStart`, `sameStart`):
+
+- Dòng bị cắt là một nhãn trống ngắn kết thúc bằng ":" ("Ví dụ:") thì khớp với dòng mở bằng cùng
+  nhãn có thêm số ("Ví dụ 11:").
+- Phần viết lại ngắn hơn 40 kí tự chỉ được nhận khi có từ hai dòng trở lên và mọi dòng (trừ dòng bị
+  cắt) giống từng chữ; "Định luật I" → "Định luật II" không bị gộp.
+
+Không sửa: nhãn "**GHI CHÚ:**" ở giữa phần viết tiếp của 1B, theo sau là lời của chính mô hình: quy
+tắc của #128 giữ nhãn có nội dung riêng ("Ghi chú:" cũng là tiêu đề của giáo viên). 1B đánh số lại
+từ 1 và bỏ dở câu cuối: chất lượng mô hình.
+
+Lệnh đã chạy (kết quả thật):
+
+- `npx vitest run src/teacher/chat/memory.test.ts`: 36 đạt.
+- `npx vitest run` toàn bộ: 5 841 đạt, 1 hỏng là `src/physics/interference/engine.test.ts` "beats"
+  (18 s, quá giờ khi cả bộ chạy song song); chạy riêng: 9/9 đạt, cả khi bỏ thay đổi này.
+- `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
+- `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.

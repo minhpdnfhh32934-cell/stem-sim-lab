@@ -404,6 +404,19 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation(previous, short)).toBe(`${previous} ${short}`);
   });
 
+  it('E2B writing a heading and its bare label again replaces them (retest of #345)', () => {
+    // The cut and the rest's opening are machine B's; the example after "Ví dụ 11:" stands for its own.
+    const before = '1. **Định luật I Newton:** Vật giữ nguyên vận tốc khi hợp lực bằng 0.';
+    const previous = `${before}\n\n2. **Định luật II Newton ($\\Sigma F = ma$):**\n    *   **Ví dụ:**`;
+    const rest =
+      '\n2. **Định luật II Newton ($\\Sigma F = ma$):**\n    *   **Ví dụ 11:** Đẩy xe nặng hơn cần lực lớn hơn.';
+    expect(joinContinuation(previous, rest)).toBe(`${before}\n\n${rest.trimStart()}`);
+    // A next section that only looks like it ("Định luật I" → "II") is not written again.
+    const law1 = 'Mở đầu.\n\n**Định luật I**\n*   **Ví dụ:**';
+    const law2 = '**Định luật II**\n*   **Ví dụ:** Quả táo rơi xuống đất.';
+    expect(joinContinuation(law1, law2)).toBe(`${law1} ${law2}`);
+  });
+
   it('a next item that only looks like the last one is not a rewrite', () => {
     const previous =
       '*   **Ví dụ 2:** Khi bạn đẩy một chiếc xe đẩy hàng, xe chuyển động về phía trước.';

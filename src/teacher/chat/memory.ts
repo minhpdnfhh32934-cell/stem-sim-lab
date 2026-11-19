@@ -409,14 +409,21 @@ const sameLine = (a: string, b: string) =>
 const itemNumber = (key: string) => /^(\d+)[.)]/u.exec(key)?.[1] ?? '';
 /** How much of an item's start must be alike when the item is started again. */
 const ITEM_START = 30;
+/** A cut line this short ending in ":" is a bare label ("* **Ví dụ:**"). */
+const LABEL = 20;
 
 /**
  * The cut line comes back as the start of a new line: the same words, or the same numbered item
  * started again in other words ("20. **Khi bạn cố gắng kéo một vật nặng:** Để kéo vật đó…" →
- * "20. Khi bạn cố gắng kéo một vật nặng, để đạt được…": E2B, machine B's retest of #344).
+ * "20. Khi bạn cố gắng kéo một vật nặng, để đạt được…": E2B, machine B's retest of #344), or a
+ * bare label again with its number ("**Ví dụ:**" → "**Ví dụ 11:** …": retest of #345).
  */
 function sameStart(cut: string, line: string): boolean {
   if (sameLine(cut, line.slice(0, cut.length))) return true;
+  const label = cut.replace(/\d/gu, '');
+  if (cut.length <= LABEL && cut.endsWith(':') && line.replace(/\d/gu, '').startsWith(label)) {
+    return true;
+  }
   const n = itemNumber(cut);
   return (
     n !== '' &&
@@ -450,11 +457,16 @@ function rewriteStart(previous: string, rest: string): number {
       .slice(j)
       .filter((l) => l.trim())
       .map(lineKey);
-    if (keys.length > next.length || keys.join('').length < MIN_REWRITE) continue;
+    if (keys.length > next.length) continue;
+    // Shorter than MIN_REWRITE: only two lines or more, all but the cut one word for word (a
+    // heading and the label under it: "2. **Định luật II Newton …:**" + "* **Ví dụ:**", #345).
+    const short = keys.join('').length < MIN_REWRITE;
+    if (short && keys.length < 2) continue;
     const last = keys.length - 1;
     const again = keys.every((key, k) => {
       const line = next[k] ?? '';
-      return k === last ? sameStart(key, line) : sameLine(key, line);
+      if (k === last) return sameStart(key, line);
+      return short ? key === line : sameLine(key, line);
     });
     if (again) return starts[j] ?? -1;
   }
