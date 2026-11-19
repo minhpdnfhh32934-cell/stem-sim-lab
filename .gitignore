@@ -38,3 +38,8 @@ public/ort/
 store/out/
 # Local knowledge graph (graphify), rebuilt per machine
 graphify-out/
+
+# llama-server for "Qwen trong app" (#190), fetched by scripts/llama/fetch-llama-server.mjs;
+# the llama.cpp licence that ships beside it stays in git
+src-tauri/binaries/llama-server/*
+!src-tauri/binaries/llama-server/LICENSE-llama.cpp.txt

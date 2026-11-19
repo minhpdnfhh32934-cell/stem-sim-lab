@@ -259,18 +259,27 @@ export function ChatNotices({
           <ShieldCheck size={14} /> {t('chat.localOnly')}
         </p>
       )}
-      {!notice && targets.length === 0 && engine === 'local' && localSelection && (
+      {!notice && targets.length === 0 && engine === 'local' && localSelection?.builtin && (
         <p className="chat-panel__local-note">
-          <ShieldCheck size={14} />{' '}
-          {/* "không gửi lên mạng" only while nothing else goes online (the voice below). */}
-          {t(voiceOnline ? 'chat.localRuntimeHere' : 'chat.localOnlyRuntime', {
-            name: runtimeName(locale, localSelection.kind),
-            address: localSelection.baseUrl.replace(/^http:\/\//, ''),
-          })}
-          {/* SimLab promises only what it sends itself: a generic server may relay online. */}
-          {localSelection.kind === 'openAiCompatible' && ` ${t('localRuntime.relayNote')}`}
+          <ShieldCheck size={14} /> {t(voiceOnline ? 'builtinAi.chatHere' : 'builtinAi.chatOnly')}
         </p>
       )}
+      {!notice &&
+        targets.length === 0 &&
+        engine === 'local' &&
+        localSelection &&
+        !localSelection.builtin && (
+          <p className="chat-panel__local-note">
+            <ShieldCheck size={14} />{' '}
+            {/* "không gửi lên mạng" only while nothing else goes online (the voice below). */}
+            {t(voiceOnline ? 'chat.localRuntimeHere' : 'chat.localOnlyRuntime', {
+              name: runtimeName(locale, localSelection.kind),
+              address: localSelection.baseUrl.replace(/^http:\/\//, ''),
+            })}
+            {/* SimLab promises only what it sends itself: a generic server may relay online. */}
+            {localSelection.kind === 'openAiCompatible' && ` ${t('localRuntime.relayNote')}`}
+          </p>
+        )}
       {/* Not connected: nothing is sent, so no "sent to" line (#205 B5). */}
       {!notice && !noApi && targets.length > 0 && (
         <p className="chat-panel__local-note chat-panel__local-note--online">

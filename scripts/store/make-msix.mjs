@@ -11,12 +11,16 @@
  *   --test         use a local test identity instead of store/identity.json (the package can
  *                  then be registered on this PC for a try-out; it cannot go to the Store)
  *
+ * The package also holds src-tauri/binaries/llama-server/ (Qwen in the app, #190), fetched first
+ * with `node scripts/llama/fetch-llama-server.mjs`.
+ *
  * The package is not signed: Microsoft signs it after Store certification. Needs makeappx.exe
  * from the Windows SDK (found automatically, or set MAKEAPPX). Steps: docs/STORE.md.
  */
 import { execFileSync } from 'node:child_process';
 import {
   copyFileSync,
+  cpSync,
   existsSync,
   mkdirSync,
   readdirSync,
@@ -79,6 +83,11 @@ const version = JSON.parse(
 const targetDir = process.env.CARGO_TARGET_DIR ?? join(root, 'src-tauri', 'target');
 const exe = resolve(option('--exe') ?? join(targetDir, 'release', 'stem-sim-lab.exe'));
 if (!existsSync(exe)) fail(`${exe} not found — run "npx tauri build --no-bundle" first`);
+// Qwen in the app (#190): the fetched llama-server folder sits beside the exe, as in the installer.
+const llama = join(root, 'src-tauri', 'binaries', 'llama-server');
+if (!existsSync(join(llama, 'llama-server.exe'))) {
+  fail(`${llama} has no llama-server.exe — run "node scripts/llama/fetch-llama-server.mjs" first`);
+}
 const makeappx = findMakeappx();
 if (!makeappx) fail('makeappx.exe not found: install the Windows SDK or set MAKEAPPX');
 
@@ -87,6 +96,7 @@ const layout = join(out, test ? 'layout-test' : 'layout');
 rmSync(layout, { recursive: true, force: true });
 mkdirSync(join(layout, 'Assets'), { recursive: true });
 copyFileSync(exe, join(layout, 'stem-sim-lab.exe'));
+cpSync(llama, join(layout, 'llama-server'), { recursive: true });
 for (const asset of ASSETS) {
   copyFileSync(join(root, 'src-tauri', 'icons', asset), join(layout, 'Assets', asset));
 }

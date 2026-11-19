@@ -1,5 +1,7 @@
 import { ProblemDialog } from '@/app/ai/ProblemDialog';
 import { useCommandPalette } from '@/app/command/commands';
+import { Intro } from '@/app/fx/Intro';
+import { ScreenPortal } from '@/app/fx/ScreenPortal';
 import { GameDialog } from '@/app/game/GameDialog';
 import { useT } from '@/app/i18n';
 import { Onboarding } from '@/app/learner/Onboarding';
@@ -58,6 +60,8 @@ export function ShellOverlays({ presentation }: { presentation: boolean }) {
       <GameDialog />
       {paletteLoaded && palette.Component && <palette.Component />}
       {!presentation && <GpuRestartReminder />}
+      <ScreenPortal />
+      <Intro />
     </>
   );
 }

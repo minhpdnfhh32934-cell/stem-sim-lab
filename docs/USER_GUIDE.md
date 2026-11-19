@@ -190,6 +190,28 @@ Ollama (chạy trên ollama.com) bị từ chối. Ảnh chỉ gửi cho mô hì
 SimLab không chọn được card đồ họa cho chương trình đó (chỉnh trong chính chương trình). Có nút
 **Khôi phục mặc định** và mục **Gặp lỗi? Cách xử lý**.
 
+### Qwen 3.5 9B chạy ngay trong SimLab (máy có card đồ họa rời)
+
+Trên Windows, nếu máy có **card đồ họa rời từ 8 GB bộ nhớ riêng** (NVIDIA, AMD hoặc Intel Arc), AI
+Teacher có thể trả lời bằng Qwen 3.5 9B, một mô hình lớn hơn Gemma, chạy ngay trong SimLab: không
+cần mạng, không cần khóa, không phải cài thêm chương trình nào.
+
+1. Vào Cài đặt → **Gemma cục bộ**, thẻ **Qwen 3.5 9B (mạnh hơn Gemma)**. Thẻ ghi dung lượng tải về
+   (khoảng 5,6 GB), chỗ trống còn lại trên ổ đĩa, card đồ họa của máy và giấy phép (Qwen: Apache-2.0;
+   bộ chạy llama.cpp: MIT).
+2. Bấm **Tải về**. Thanh tiến độ có thời gian còn lại; **Hủy tải** giữ phần đã tải, lần sau bấm **Tải
+   tiếp**. Tải xong, app kiểm lại tệp; tệp sai bị xóa.
+3. Bấm **Dùng cho AI Teacher**. Lần đầu app nạp Qwen lên card đồ họa (vài giây đến vài chục giây).
+   **Giải phóng bộ nhớ card** tắt Qwen ngay; Qwen cũng tự tắt khi đóng SimLab hoặc sau 10 phút không
+   dùng. **Bỏ chọn** trả AI Teacher về lựa chọn cũ; **Xóa Qwen** xóa tệp đã tải.
+
+Máy chỉ có card tích hợp, hoặc card rời dưới 8 GB: thẻ nói rõ lí do và không cho tải hay chạy (card
+tích hợp luôn bị chặn để máy không bị treo). Nếu card gặp lỗi khi chạy Qwen, app tắt Qwen và chỉ bật
+lại khi em bấm **Bật lại Qwen**. Khi Qwen lỗi hoặc chưa sẵn sàng, app nói rõ và **không gửi câu hỏi
+lên mạng**; Think và Tra thêm Wikipedia chỉ chạy khi em bật. Qwen và Gemma không chạy cùng lúc trên
+card. Nếu thẻ báo thiếu bộ chạy, có thể phần mềm diệt virus đã cách ly tệp `llama-server.exe`: kiểm
+tra lịch sử của phần mềm đó, hoặc cài lại SimLab.
+
 ### Giảng trên bảng
 
 Ở trang AI Teacher, chọn tab **02 Bảng giảng** (hàng tab dưới đầu trang; quả cầu thu nhỏ về góc trái).
@@ -375,6 +397,24 @@ lần mở sau.
 Khi máy chậm, thanh trạng thái ghi rõ **Chuyển động chậm ×… để giữ độ chính xác** hoặc **Đã hạ chất
 lượng hiển thị để giữ độ mượt (số liệu không đổi)**: app chỉ hy sinh độ mượt, không bao giờ âm thầm
 giảm độ chính xác.
+
+## Hiệu ứng
+
+Lấy ý từ trò chơi SimLab 3D. Hiệu ứng chỉ để đẹp: không chạy bên trong hình của bài học và không
+đổi con số nào.
+
+- **Màn mở đầu:** mỗi lần bật app, logo SimLab hiện ra, quỹ đạo xoay vào chỗ, một viên bi bay theo
+  đường ném, chữ "SimLab" hiện từng chữ rồi mờ vào trang mở đầu (khoảng 2,5 giây). Bấm chuột hoặc
+  gõ phím bất kỳ để bỏ qua. Lần đầu dùng app (màn làm quen) hay khi có hộp cập nhật, màn mở đầu tự
+  nhường.
+- **Chuyển cảnh:** khi vào Virtual Lab, AI Teacher, Science Studio, về trang chủ hay mở một bài, màn
+  mới mở ra thành vòng tròn từ chỗ bạn bấm, kèm vòng quỹ đạo của logo bay ra (khoảng nửa giây).
+- **Nền động và hiện dần:** trang mở đầu có bình hóa chất, chuỗi ADN, quả táo, nguyên tử, nam
+  châm, kính hiển vi và một con lắc trôi chậm phía sau (chỉ để trang trí, không phải mô phỏng). Chữ,
+  thẻ, nhóm cài đặt và thông báo hiện dần; biểu tượng trên nút nảy nhẹ khi bấm.
+- **Chuyển động: Giảm** (Cài đặt → Giao diện): màn mở đầu chỉ còn hình đứng yên rồi mờ đi, chuyển
+  cảnh chỉ còn mờ dần, nền đứng yên. Ở chất lượng hiển thị **Thấp** (hoặc khi app đã hạ chất lượng
+  vì máy chậm) các hiệu ứng tắt hẳn.
 
 ## Thẻ Khoa học và mức tin cậy
 
@@ -804,8 +844,9 @@ Cài đặt chia thành các trang nhỏ, chọn ở cột bên trái (màn hìn
 tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
 
 - **Giao diện:** chế độ Cơ bản / Nâng cao; sáng / tối / theo hệ thống; cỡ chữ 90–140 %; ngôn ngữ;
-  chuyển động (Theo hệ thống / Giảm / Đầy đủ: "Giảm" tắt mọi hiệu ứng và việc tự chạy trong app dù
-  Windows để thế nào, "Đầy đủ" giữ chúng dù Windows đặt giảm); khôi phục bố cục.
+  chuyển động (Theo hệ thống / Giảm / Đầy đủ: "Giảm" tắt mọi chuyển động và việc tự chạy trong app dù
+  Windows để thế nào, chỉ còn mờ dần khi đổi màn hình và ở màn mở đầu; "Đầy đủ" giữ chúng dù Windows
+  đặt giảm); khôi phục bố cục.
 - **Mô phỏng & hiệu năng:** chất lượng hiển thị (Tự động / Thấp / Trung bình / Cao, nút Đo lại — chỉ
   ảnh hưởng hình ảnh, không ảnh hưởng số liệu); g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s², chỉ dùng
   khi đề không cho g).

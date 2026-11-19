@@ -16,6 +16,14 @@ const PAGES: &[(&str, &str)] = &[
         "gemma4-e2b",
         "https://huggingface.co/onnx-community/gemma-4-E2B-it-ONNX",
     ),
+    // Qwen in the app (#190): the model's page (licence Apache-2.0 on its card), that licence,
+    // and the licence of the bundled llama.cpp runtime (MIT).
+    ("qwen-model", "https://huggingface.co/Qwen/Qwen3.5-9B"),
+    ("apache-2", "https://www.apache.org/licenses/LICENSE-2.0"),
+    (
+        "llama-cpp-licence",
+        "https://github.com/ggml-org/llama.cpp/blob/master/LICENSE",
+    ),
     // AI Teacher's voice: the Vietnamese on-device voice model and its licence, and the
     // Windows page where a Vietnamese voice is added (Time & language → Speech).
     ("mms-tts-vie", "https://huggingface.co/facebook/mms-tts-vie"),
@@ -60,6 +68,9 @@ mod tests {
             page_url("store-updates"),
             Some("ms-windows-store://downloadsandupdates")
         );
+        assert!(page_url("qwen-model").is_some_and(|u| u.starts_with("https://huggingface.co/")));
+        assert!(page_url("llama-cpp-licence")
+            .is_some_and(|u| u.starts_with("https://github.com/ggml-org/llama.cpp/")));
         assert_eq!(page_url("https://evil.example"), None);
         assert_eq!(page_url(""), None);
     }

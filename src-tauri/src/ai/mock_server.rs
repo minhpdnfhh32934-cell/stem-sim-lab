@@ -13,6 +13,8 @@ use serde_json::Value;
 pub(crate) struct Req {
     pub method: String,
     pub path: String,
+    /// The request line and headers, as sent.
+    pub head: String,
     pub body: String,
 }
 
@@ -80,6 +82,7 @@ fn read_request(s: &mut TcpStream) -> Option<Req> {
     Some(Req {
         method,
         path,
+        head,
         body: String::from_utf8_lossy(&body).into_owned(),
     })
 }

@@ -93,6 +93,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # Qwen in the app (#190): checks the pinned llama-server download (size, SHA-256, files)
+      # on every push, not only at release time.
+      - name: Fetch llama-server
+        if: runner.os == 'Windows'
+        run: node scripts/llama/fetch-llama-server.mjs
       - run: cargo fmt --check
         working-directory: src-tauri
       - run: cargo clippy --all-targets -- -D warnings

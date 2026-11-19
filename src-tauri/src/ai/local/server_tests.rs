@@ -1246,3 +1246,48 @@ fn a_structured_answer_that_is_json_is_kept_as_sent() {
     let (r, _) = chat(&mock, &request(RuntimeKind::Ollama, &mock), quick());
     assert_ne!(r.unwrap().content, json_text);
 }
+
+/// Qwen inside the app (#190): its server wants the key on every request, and the client made
+/// for it sends it every time (`ai::builtin` passes it; the page never sees it).
+#[test]
+fn the_in_app_server_gets_its_key_with_every_request() {
+    use std::sync::{Arc, Mutex};
+    let models =
+        json!({"object": "list", "data": [{"id": "qwen3.5-9b", "object": "model"}]}).to_string();
+    let without_key = Arc::new(Mutex::new(Vec::<String>::new()));
+    let missed = without_key.clone();
+    let mock = serve(move |r| {
+        if !r.head.lines().any(|l| l == "authorization: Bearer k3y") {
+            missed.lock().unwrap().push(r.path.clone());
+            return json_answer("401 Unauthorized", r#"{"error":"Invalid API Key"}"#);
+        }
+        match r.path.as_str() {
+            "/props" => json_answer("200 OK", PROPS),
+            "/health" => json_answer("200 OK", r#"{"status":"ok"}"#),
+            "/v1/models" => json_answer("200 OK", &models),
+            "/v1/chat/completions" => vec![
+                stream_head("text/event-stream"),
+                Step::Send(SSE.as_bytes().to_vec()),
+            ],
+            _ => not_found(),
+        }
+    });
+    let mut req = request(RuntimeKind::LlamaCpp, &mock);
+    req.model = "qwen3.5-9b".into();
+    let http = endpoint::loopback_client_with_bearer("k3y").unwrap();
+    let mut emit = |_: LocalEvent| {};
+    let r = tauri::async_runtime::block_on(run_chat(
+        &http,
+        runtime(RuntimeKind::LlamaCpp),
+        &mock.base(),
+        &req,
+        quick(),
+        &mut emit,
+    ));
+    assert!(r.is_ok(), "{r:?}");
+    assert!(mock.seen().iter().any(|s| s == "POST /v1/chat/completions"));
+    assert_eq!(*without_key.lock().unwrap(), Vec::<String>::new());
+    // The usual client sends no key: the same server refuses it.
+    let (r, _) = chat(&mock, &req, quick());
+    assert_eq!(tag_of(&r.unwrap_err()), NEEDS_AUTH);
+}

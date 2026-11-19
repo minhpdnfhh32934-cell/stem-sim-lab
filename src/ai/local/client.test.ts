@@ -108,6 +108,27 @@ describe('desktop client for local runtimes', () => {
     expect(tauri.calls).toEqual([]);
   });
 
+  it('sends "Qwen trong app" to builtin_ai_chat with no address (Rust uses its own server)', async () => {
+    tauri.handler = () => Promise.resolve(answer('Lực là tác dụng đẩy hoặc kéo.'));
+    const c = new TauriLocalClient();
+    const r = await c.chat({
+      ...request,
+      kind: 'llamaCpp',
+      baseUrl: 'builtin:qwen',
+      builtin: true,
+    });
+    expect(r.content).toBe('Lực là tác dụng đẩy hoặc kéo.');
+    expect(tauri.calls.map((x) => x.cmd)).toEqual(['builtin_ai_chat']);
+    const sent = tauri.calls[0]?.args.request as Record<string, unknown>;
+    expect(sent).not.toHaveProperty('builtin');
+    expect(sent.baseUrl).toBe('builtin:qwen');
+    // The browser client never runs it.
+    const browser = new FetchLocalClient();
+    await expect(browser.chat({ ...request, builtin: true })).rejects.toMatchObject({
+      code: 'unavailable',
+    });
+  });
+
   it('streams the whole text so far through the channel; the final content wins', async () => {
     tauri.handler = (cmd, args) => {
       const ch = channelOf(args);

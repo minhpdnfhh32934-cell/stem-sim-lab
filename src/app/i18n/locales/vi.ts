@@ -1827,6 +1827,8 @@ const vi = {
     cloud: 'AI trực tuyến',
     gemma: 'Gemma cục bộ',
     local: 'AI trên máy khác',
+    /** The engine menu's short name for Qwen inside SimLab (the AI label keeps the full name). */
+    builtin: 'Qwen trong SimLab',
     localMissingNotice:
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
     localOnlyRuntime:
@@ -1979,6 +1981,23 @@ const vi = {
         '{name} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trên máy khác để kiểm tra.',
       localUpdate:
         'Ứng dụng trên máy này cần được cập nhật mới dùng được AI trên máy khác. Hãy cài bản SimLab mới.',
+      builtinUnsupported:
+        'Qwen trong app chỉ chạy trong ứng dụng SimLab trên Windows, nên chưa có câu hỏi nào được gửi đi.',
+      builtinNoRuntime:
+        'Mình chưa thấy bộ chạy Qwen trong bản SimLab này (có thể phần mềm diệt virus đã cách ly nó), nên chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinNoCard:
+        'Máy này chưa có card đồ họa rời từ 8 GB bộ nhớ riêng, nên Qwen chưa chạy được và chưa có câu hỏi nào được gửi đi. Xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinNoModel:
+        'Em chưa tải Qwen về máy, nên chưa có câu hỏi nào được gửi đi. Tải ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinGpuFault:
+        'Card đồ họa vừa gặp lỗi khi chạy Qwen, nên mình đã tắt Qwen cho máy an toàn. Không có câu hỏi nào được gửi lên mạng. Em có thể bật lại ở thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinStartFailed:
+        'Mình chưa nạp được Qwen lên card đồ họa. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinBusy: 'Qwen đang tải về hoặc đang trả lời. Em đợi xong rồi thử lại nhé.',
+      builtinNoAnswer:
+        'Qwen chưa viết ra câu trả lời nào. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
+      builtinFailed:
+        'Qwen gặp lỗi khi trả lời, và không có gì được gửi lên mạng. Em hỏi lại nhé; nếu lặp lại, xem thẻ Qwen trong Cài đặt → Gemma cục bộ.',
       /**
        * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
        * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is
@@ -2196,6 +2215,67 @@ const vi = {
       unknownCard: 'đồ họa',
       integratedHint:
         'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
+    },
+  },
+  /** "Qwen trong app" (#190): the Qwen card on Settings → Gemma cục bộ, and its answers. */
+  builtinAi: {
+    answerLabel: 'Qwen 3.5 9B · trong SimLab',
+    pillHint:
+      'Qwen chạy ngay trong SimLab trên card đồ họa của máy em. SimLab không gửi đề bài lên mạng, và chỉ hỏi Qwen khi em dùng AI.',
+    chatOnly: 'Qwen trả lời ngay trong SimLab trên máy này, không gửi lên mạng.',
+    chatHere: 'Qwen trả lời ngay trong SimLab trên máy này.',
+    runtimesNote:
+      'AI Teacher đang dùng Qwen trong app (thẻ Qwen ở Cài đặt → Gemma cục bộ). Chọn một chương trình dưới đây sẽ thay Qwen.',
+    title: 'Qwen 3.5 9B (mạnh hơn Gemma)',
+    intro:
+      'Mô hình lớn hơn Gemma, chạy ngay trong SimLab trên card đồ họa rời của máy em: không cần mạng, không cần khóa, không phải cài thêm phần mềm. Câu hỏi không gửi lên mạng.',
+    checking: 'Đang kiểm tra máy này…',
+    size: 'Dung lượng tải về: {size}. Ổ đĩa còn trống: {free}.',
+    sizeOnly: 'Dung lượng tải về: {size}.',
+    needs: 'Cần card đồ họa rời có từ 8 GB bộ nhớ riêng; card tích hợp luôn bị chặn.',
+    needsHere: 'Cần card đồ họa rời có từ 8 GB bộ nhớ riêng. Máy này dùng {name} ({gb} GB).',
+    notDesktop: 'Qwen trong app chỉ có trong ứng dụng SimLab trên Windows.',
+    noRuntime:
+      'Bản SimLab này thiếu bộ chạy Qwen (tệp llama-server.exe). Có thể phần mềm diệt virus đã cách ly nó, hoặc cần cài lại SimLab.',
+    ineligible: {
+      noDiscrete:
+        'Máy này không có card đồ họa rời, nên Qwen không chạy được ở đây. Card tích hợp luôn bị chặn để máy không bị treo.',
+      tooSmall:
+        '{name} có {gb} GB bộ nhớ riêng, còn Qwen cần từ 8 GB, nên Qwen không chạy được trên máy này.',
+      notListed:
+        'Bộ chạy Qwen chưa nhận ra {name}. Em thử cập nhật driver card đồ họa rồi mở lại SimLab.',
+      unknownKind:
+        'SimLab chưa biết {name} là card rời hay card tích hợp, nên không chạy Qwen trên card này.',
+    },
+    gpuFault:
+      'Card đồ họa đã gặp lỗi khi chạy Qwen, nên Qwen đang tắt. Em nên khởi động lại máy hoặc cập nhật driver trước khi bật lại.',
+    enable: 'Bật lại Qwen',
+    download: 'Tải về',
+    resume: 'Tải tiếp ({done} / {size})',
+    cancel: 'Hủy tải',
+    progress: 'Đang tải Qwen',
+    ready: 'Đã tải Qwen về máy này.',
+    use: 'Dùng cho AI Teacher',
+    inUse: 'AI Teacher đang dùng Qwen.',
+    starting: 'Đang nạp Qwen lên card đồ họa…',
+    running: 'AI Teacher đang dùng Qwen, chạy trên {name}.',
+    unselect: 'Bỏ chọn',
+    stop: 'Giải phóng bộ nhớ card',
+    remove: 'Xóa Qwen',
+    terms:
+      'Qwen 3.5 9B dùng giấy phép Apache-2.0; bộ chạy llama.cpp đi kèm SimLab dùng giấy phép MIT. Mô hình tải từ HuggingFace.',
+    openModel: 'Trang mô hình Qwen',
+    openApache: 'Giấy phép Apache-2.0',
+    openLlama: 'Giấy phép llama.cpp',
+    failed: 'Mình chưa làm được việc này ({detail}).',
+    downloadError: {
+      noSpace: 'Ổ đĩa không đủ chỗ: cần {need}, còn trống {free}.',
+      offline: 'Mất kết nối khi đang tải. Bấm “Tải tiếp” để tải phần còn lại.',
+      stalled: 'Mạng ngừng gửi dữ liệu quá lâu. Bấm “Tải tiếp” để tải phần còn lại.',
+      http: 'HuggingFace trả lỗi {status}. Em thử lại sau nhé.',
+      badFile: 'Tệp tải về không đúng tệp đã kiểm, nên mình đã xóa nó. Em thử tải lại nhé.',
+      cancelled: 'Đã hủy. Phần đã tải được giữ lại để tải tiếp.',
+      disk: 'Mình chưa ghi được tệp vào ổ đĩa ({detail}).',
     },
   },
   localRuntime: {

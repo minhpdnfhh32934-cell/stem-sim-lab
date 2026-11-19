@@ -612,3 +612,26 @@ describe('dependency checks', () => {
     }
   });
 });
+
+describe('Qwen in the app (#190)', () => {
+  const FETCH = 'node scripts/llama/fetch-llama-server.mjs';
+
+  it('fetches the pinned llama-server before the installers and the Store package are built', () => {
+    const release = read('release.yml');
+    const job = release.slice(release.indexOf('\n  windows:'), release.indexOf('\n  publish:'));
+    const at = job.indexOf(FETCH);
+    expect(at).toBeGreaterThan(-1);
+    expect(at).toBeLessThan(job.indexOf('npx tauri build'));
+    expect(at).toBeLessThan(job.indexOf('node scripts/store/make-msix.mjs'));
+  });
+
+  it('checks the same download in CI before the Windows Rust checks', () => {
+    const ci = read('ci.yml');
+    const at = ci.indexOf(FETCH);
+    expect(at).toBeGreaterThan(-1);
+    expect(at).toBeLessThan(ci.indexOf('cargo clippy'));
+    expect(ci.slice(ci.lastIndexOf('- name: Fetch llama-server', at), at)).toContain(
+      "if: runner.os == 'Windows'",
+    );
+  });
+});

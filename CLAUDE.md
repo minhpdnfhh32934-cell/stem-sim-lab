@@ -71,6 +71,19 @@ release history and old work-logs keep the old name). The user accepted:
   bundled llama.cpp engine: ask the user first. `merge_lora.py`, `swap_weights.py` and
   `q4_identity.py` apply to E2B only. Adopt it only if it clearly wins on the held-out set. Legal
   list: `docs/LEGAL_COMPLIANCE.md` §2h.
+- **Qwen inside the app (user decisions 10–11/11/2026, #190):** the base Qwen 3.5 9B runs in the
+  app through a bundled llama.cpp `llama-server` (b12246, Vulkan, MIT), never with `--lora`. Only a
+  discrete card with ≥ 8 GB of its own memory (`src-tauri/src/ai/builtin/device.rs`); integrated
+  cards are always refused. Rust downloads the pinned GGUF (repo, revision, file, SHA-256, size in
+  `builtin/model.rs` and `docs/AI_TUTOR.md`) from HuggingFace only; the page never downloads it
+  (CSP unchanged). The server is loopback with a key only Rust knows (port and key never reach the
+  page), one at a time, stopped on exit or after 10 minutes idle, never together with Gemma; a card
+  fault turns it off until "Bật lại". Questions go through the local route (`builtin_ai_chat` →
+  `local::chat_cancellable`): `BUILTIN_SELECTION` (`src/ai/builtin/types.ts`) is a local choice,
+  never counted, never online. Every `builtin_ai_*` command needs the 18+ gate. Settings card:
+  `QwenSettings.tsx` on "Gemma cục bộ". `scripts/llama/fetch-llama-server.mjs` fetches the runtime
+  (`release.yml`, `ci.yml`, `make-msix.mjs`; the folder is git-ignored except its licence).
+  Legal list: `docs/LEGAL_COMPLIANCE.md` §2i.
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
   (`tests/tauri-config.test.ts` pins the list). Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
@@ -575,6 +588,13 @@ Progress log: `docs/PROGRESS.md`.
   callbacks, never during render), `Celebrate` for a reached goal (no scores/streaks); floating
   overlays use the `--glass-*` tokens (back with the classic window, #263). Ctrl+K palette: `src/app/command/` (lazy; topics come from
   `CATALOG`, Settings pages from `src/app/settings/sectionMeta.ts`).
+- Effects after the SimLab 3D game (user request 2026-11-19, `docs/EFFECTS.md`, `src/app/fx/`):
+  opening `Intro`, screen change `screenChange` (View Transitions: circle from the press + the
+  logo's orbit, `ScreenPortal`), launch-page drift and reveals (`fx.css`). `data-fx` is `off` in
+  unit tests, automated browsers (unless `?fx=1`, `tests/e2e/fx.spec.ts`) and on the Low tier;
+  reduced motion keeps only fades. With effects on, `screenChange` runs its update one frame later:
+  a navigation function sets everything inside it (e.g. `openTeacherOn('board')`, never
+  `openTeacher()` then a layout). No sound effects, no cursor trail (user choice).
 
 ## Learning (3b.5, `src/learn/`)
 

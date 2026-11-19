@@ -50,8 +50,21 @@ function contextFull(use: LocalUse): LocalFailure {
     : { key: 'chat.errors.localContextTask', section: 'runtimes', retry: false };
 }
 
+/** "Qwen trong app" (#190): Rust's `builtin-*` tags; the AI local page (its card) helps. */
+const BUILTIN: Record<string, LocalFailure> = {
+  'builtin-unsupported': { key: 'chat.errors.builtinUnsupported', section: null, retry: false },
+  'builtin-no-runtime': { key: 'chat.errors.builtinNoRuntime', section: 'local', retry: false },
+  'builtin-no-card': { key: 'chat.errors.builtinNoCard', section: 'local', retry: false },
+  'builtin-no-model': { key: 'chat.errors.builtinNoModel', section: 'local', retry: false },
+  'builtin-gpu-fault': { key: 'chat.errors.builtinGpuFault', section: 'local', retry: false },
+  'builtin-start-failed': { key: 'chat.errors.builtinStartFailed', section: 'local', retry: true },
+  'builtin-busy': { key: 'chat.errors.builtinBusy', section: 'local', retry: true },
+};
+
 /** The sentence and Settings page for whatever a local runtime call threw. */
 export function localFailure(e: unknown, use: LocalUse = 'chat'): LocalFailure {
+  const builtin = BUILTIN[toAiError(e).message.split(':')[0]?.trim() ?? ''];
+  if (builtin) return builtin;
   const kind = aiErrorKind(e);
   const runtimes = 'runtimes' as const;
   switch (kind) {
@@ -103,6 +116,18 @@ export function localFailure(e: unknown, use: LocalUse = 'chat'): LocalFailure {
   // A runtime that says the question did not fit its window (llama.cpp, LM Studio).
   if (CONTEXT_FULL.test(toAiError(e).message)) return contextFull(use);
   return { key: 'chat.errors.localFailed', section: runtimes, retry: true };
+}
+
+/**
+ * The same failure for Qwen inside SimLab (#190): a runtime's sentence would send the learner to
+ * "AI trên máy khác", where nothing helps; the Qwen card does.
+ */
+export function builtinFailure(failure: LocalFailure): LocalFailure {
+  if (failure.key === 'chat.errors.localNoAnswer') {
+    return { key: 'chat.errors.builtinNoAnswer', section: 'local', retry: true };
+  }
+  if (failure.section !== 'runtimes') return failure;
+  return { key: 'chat.errors.builtinFailed', section: 'local', retry: failure.retry };
 }
 
 /** The failure's sentence, naming the runtime. */

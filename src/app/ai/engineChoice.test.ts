@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { BUILTIN_SELECTION } from '@/ai/builtin/types';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { analysisEngine, analysisEngineFor, engineKind } from './engineChoice';
@@ -66,6 +67,15 @@ describe('analysisEngine() reads the stores', () => {
     await expect(analysisEngine()).resolves.toBe('local-missing');
     useLocalAiStore.getState().select(selection);
     await expect(analysisEngine()).resolves.toBe('local');
+  });
+
+  it('"Qwen trong app" is a local choice: kept as the fixed choice, never cloud', async () => {
+    useChatStore.setState({ engine: 'local', engineChosen: true });
+    // Whatever was stored with it, the choice is the fixed one (no address from storage).
+    useLocalAiStore.getState().select({ ...BUILTIN_SELECTION, baseUrl: 'http://192.168.1.5:80' });
+    expect(useLocalAiStore.getState().selected).toEqual(BUILTIN_SELECTION);
+    await expect(analysisEngine()).resolves.toBe('local');
+    expect(analysisEngineFor('local', true, false, true)).toBe('local');
   });
 
   it('a saved address off this computer is dropped, so nothing is sent', async () => {
