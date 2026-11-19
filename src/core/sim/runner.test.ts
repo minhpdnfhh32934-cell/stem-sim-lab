@@ -84,7 +84,8 @@ describe('EngineRunner', () => {
   });
 
   it('reports real-time speed on high-refresh screens (no false slow motion)', () => {
-    const runner = new EngineRunner(new OscillatorEngine(params));
+    // Wide budget: this checks the substep cap, not wall-clock time (a slow CI frame went over 8 ms).
+    const runner = new EngineRunner(new OscillatorEngine(params), 1000);
     let steps = 0;
     for (let i = 0; i < 144; i++) {
       const f = runner.frame(1 / 144, 1);
