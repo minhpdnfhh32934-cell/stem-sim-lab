@@ -312,7 +312,10 @@ export function GemmaSettings() {
               ? t('chatSettings.webgpuRequired')
               : readyMap[gemmaModel]
                 ? t('chatSettings.modelReady')
-                : t('chatSettings.modelMissing')}
+                : // Never "not downloaded" while it is being downloaded (machine B's sweep 19/11).
+                  gemmaWorking === gemmaModel
+                  ? t('chatSettings.downloading')
+                  : t('chatSettings.modelMissing')}
         </p>
       </fieldset>
 
