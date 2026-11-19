@@ -719,6 +719,7 @@ export async function askTeacher(
   const drafted = cleanAnswer(draft.content, {
     note: prompt.note,
     ...(compact ? { instructions: baseSystem } : {}),
+    ...(options.continues ? { continues: true } : {}),
   });
   let raw = draft.content;
   let cleaned = drafted;

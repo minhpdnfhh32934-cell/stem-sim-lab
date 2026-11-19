@@ -18,6 +18,20 @@ describe("a model's download as one number", () => {
     expect(last).toEqual({ loaded: 3_930, total: 3_930 });
   });
 
+  it("the model's known size is the least total, so the bar never falls back (E2B from OPFS)", () => {
+    const update = downloadTotals(3_760);
+    // A small file opens and finishes before the large ones are counted: not 99 %.
+    expect(update({ status: 'progress', file: 'config.json', loaded: 18, total: 18 })).toEqual({
+      loaded: 18,
+      total: 3_760,
+    });
+    update({ status: 'progress', file: 'decoder.onnx_data', loaded: 0, total: 2_070 });
+    // The real sum, once larger than the known size, is the total.
+    expect(
+      update({ status: 'progress', file: 'vision.onnx_data', loaded: 0, total: 1_880 }),
+    ).toEqual({ loaded: 18, total: 3_968 });
+  });
+
   it('ignores events of no file and other statuses; an unknown size is null', () => {
     const update = downloadTotals();
     expect(update({ status: 'progress' })).toBeNull();

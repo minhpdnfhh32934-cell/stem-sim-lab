@@ -7,6 +7,7 @@
 /// <reference lib="webworker" />
 import { downloadTotals, type ProgressInfo } from './downloadProgress';
 import { modelStore, opfsAvailable } from './modelStore';
+import { webGemmaModel } from './webGemmaModels';
 import {
   AutoModelForCausalLM,
   AutoProcessor,
@@ -282,7 +283,7 @@ async function disposeEngine(): Promise<void> {
 }
 
 function progressFor(modelId: string, post: (out: OutMessage) => void) {
-  const totals = downloadTotals();
+  const totals = downloadTotals(webGemmaModel(modelId)?.bytes);
   return (info: ProgressInfo) => {
     const now = totals(info);
     if (now) post({ kind: 'load-progress', modelId, ...now });
