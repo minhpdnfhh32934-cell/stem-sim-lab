@@ -313,13 +313,20 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
  * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays.
  */
 const RESUME_REMARK =
-  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
 /**
  * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
  * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
  */
 const ASSENT =
   /^(?:(?:tuyệt vời|đúng vậy|vâng|dạ|được rồi|được|ok(?:ay)?|sure|great|alright)(?=[\s,.!…:]|$)[\s,.!…:]*|(?:(?:tôi|mình|em) )?xin lỗi[^.!?\n]{0,60}[.!?]\s*|sorry[^.!?\n]{0,60}[.!?]\s*)/iu;
+
+/**
+ * After a praise ("Tuyệt vời!"), "Chúng ta cần tiếp tục <anything>" is that remark too: "Tuyệt
+ * vời! Chúng ta cần tiếp tục phân tích về Định luật II Newton, …" (1B, machine B's retest of #344).
+ */
+const GOES_ON =
+  /^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?![\p{L}\p{M}])/iu;
 
 /**
  * Gemma 1B sometimes opens the rest with a remark on the continuing itself ("Đúng vậy, tôi đã dừng
@@ -333,7 +340,8 @@ function withoutResumeRemark(rest: string): string {
   const after = text.slice(assent.length);
   // A sentence, or a remark in brackets ("(Tiếp tục...)").
   const sentence = /^\([^)\n]{0,30}\)|^[^.!?…:\n]*[.!?…:]+\)?/u.exec(after)?.[0];
-  if (!sentence || !RESUME_REMARK.test(sentence) || /[\d=$\\]/u.test(sentence)) return rest;
+  if (!sentence || /[\d=$\\]/u.test(sentence)) return rest;
+  if (!RESUME_REMARK.test(sentence) && !(assent && GOES_ON.test(sentence))) return rest;
   // What follows, without the dots that open it ("...Phản ứng").
   const remainder = after
     .slice(sentence.length)
@@ -397,6 +405,26 @@ const REWRITE_LINES = 15;
 const sameLine = (a: string, b: string) =>
   a.replace(/\D/gu, '') === b.replace(/\D/gu, '') && likeness(a, b) >= REWRITE_LIKENESS;
 
+/** A list item's number ("20." → "20"), or ''. */
+const itemNumber = (key: string) => /^(\d+)[.)]/u.exec(key)?.[1] ?? '';
+/** How much of an item's start must be alike when the item is started again. */
+const ITEM_START = 30;
+
+/**
+ * The cut line comes back as the start of a new line: the same words, or the same numbered item
+ * started again in other words ("20. **Khi bạn cố gắng kéo một vật nặng:** Để kéo vật đó…" →
+ * "20. Khi bạn cố gắng kéo một vật nặng, để đạt được…": E2B, machine B's retest of #344).
+ */
+function sameStart(cut: string, line: string): boolean {
+  if (sameLine(cut, line.slice(0, cut.length))) return true;
+  const n = itemNumber(cut);
+  return (
+    n !== '' &&
+    itemNumber(line) === n &&
+    likeness(cut.slice(0, ITEM_START), line.slice(0, ITEM_START)) >= REWRITE_LIKENESS
+  );
+}
+
 /**
  * Where the rest starts writing the cut text's last lines again, with its own typos corrected
  * ("Quá tính" → "Quán tính", "Ví ví dụ" → "Ví dụ": machine B's E2B, #342): the index in
@@ -426,11 +454,39 @@ function rewriteStart(previous: string, rest: string): number {
     const last = keys.length - 1;
     const again = keys.every((key, k) => {
       const line = next[k] ?? '';
-      return sameLine(key, k === last ? line.slice(0, key.length) : line);
+      return k === last ? sameStart(key, line) : sameLine(key, line);
     });
     if (again) return starts[j] ?? -1;
   }
   return -1;
+}
+
+/** A block this long, copied word for word from earlier in the answer, is a copy. */
+const MIN_COPY = 80;
+
+/**
+ * Gemma 1B sometimes starts the rest with a block copied word for word from the middle of the cut
+ * text (a lesson's "Định nghĩa" part again, ~370 characters: machine B's retest of #344): those
+ * lines go when they come in the same order there, over at least MIN_COPY characters. A rest that
+ * is nothing but the copy stays whole.
+ */
+function withoutCopiedBlock(previous: string, rest: string): string {
+  const before = previous.split('\n').map(lineKey);
+  const lines = rest.trimStart().split('\n');
+  let k = 0;
+  let copied = 0;
+  let at = -1;
+  for (; k < lines.length; k += 1) {
+    const key = lineKey(lines[k] ?? '');
+    if (!key) continue;
+    const found = before.indexOf(key, at + 1);
+    // The next copied line must follow the last one there (blank lines aside).
+    if (found < 0 || (at >= 0 && before.slice(at + 1, found).some(Boolean))) break;
+    at = found;
+    copied += key.length;
+  }
+  const remainder = lines.slice(k).join('\n');
+  return copied >= MIN_COPY && remainder.trim() ? remainder : rest;
 }
 
 /**
@@ -444,7 +500,7 @@ export function joinContinuation(previous: string, cut: string): string {
   const remarkless = withoutResumeRemark(cut);
   const rewrite = rewriteStart(previous, remarkless);
   if (rewrite >= 0) return `${previous.slice(0, rewrite)}${remarkless.trimStart()}`;
-  const rest = withoutRepeat(previous, remarkless);
+  const rest = withoutRepeat(previous, withoutCopiedBlock(previous, remarkless));
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;
