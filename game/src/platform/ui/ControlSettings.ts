@@ -101,11 +101,13 @@ export class ControlSettings implements GameSystem {
       this.root.append(this.tilt);
     }
     this.root.append(this.padHelp);
+    // Worded before it is added: the settings name its tab from the legend as it arrives (added
+    // first, the Controls tab stayed blank until the language changed).
+    this.words();
+    this.show();
     this.settings.addSection(this.root);
     this.subscriptions.add(game.events.subscribe('LanguageChanged', () => this.words()));
     this.subscriptions.add(game.events.subscribe('ControlSettingsChanged', () => this.show()));
-    this.words();
-    this.show();
   }
 
   dispose(): void {

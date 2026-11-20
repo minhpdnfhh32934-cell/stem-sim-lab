@@ -67,6 +67,20 @@ Cờ đọc lúc dựng (`import.meta.env.VITE_SIMLAB_EMBED === '1'`). Bản đ�
 
 Ngoài ra trong game chỉ có phần nối phòng LAN với SimLab (`game/src/platform/net/simlabHost.ts`, mục "Chơi chung qua LAN").
 
+### Sửa giao diện game trong SimLab (20/11/2026)
+
+Người dùng báo giao diện lỗi sau khi cài 0.12.0. Ba chỗ sửa trong mã game, áp dụng cho cả bản độc lập:
+
+- Menu sống động (`liveMenu.css`, `liveMenu.ts`): trên cửa sổ thấp (máy xách tay 125–150 %, cộng
+  thanh của SimLab phía trên game) nút "Cài đặt" bị cắt ở mép dưới và không cuộn tới được. Khi cửa sổ
+  cao dưới 760 px, các nút gọn lại (nút 52 px, nút Chơi 72 px). Cửa sổ thấp hơn nữa thì nhóm nút
+  và tên được đẩy lên, theo chiều cao đo được (`--controls-h`, `--brand-h`), để nút cuối luôn nằm
+  trong khung ở cả ba góc nhìn.
+- Trong đoạn mở đầu, các nút menu tuy ẩn nhưng vẫn bấm được (bấm vào bên trái màn hình là vào game).
+  Giờ chúng ẩn hẳn (`visibility: hidden`) cho tới khi menu hiện.
+- Cài đặt → thẻ "Điều khiển" không có chữ: phần này được thêm vào trước khi có tên
+  (`ControlSettings.ts`).
+
 ## Chơi chung qua LAN (#339, người dùng quyết ngày 19/11/2026)
 
 - Máy chủ phòng nằm trong SimLab (Rust, `src-tauri/src/rooms/`, cổng cố định 5189), làm theo đúng giao

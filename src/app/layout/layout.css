@@ -344,7 +344,9 @@ body[data-resizing] .splitter {
   gap: var(--space-2);
   margin: var(--space-2) var(--space-2) 0;
   padding: 0 var(--space-2);
-  height: 2.143rem;
+  /* As tall as the full-size search field inside it (ui.css, #205 A3): a shorter box let the
+     field stick out over the first topics of the list. */
+  height: var(--target);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--bg-panel-2);
@@ -358,6 +360,9 @@ body[data-resizing] .splitter {
 .sidebar__search input {
   flex: 1;
   min-width: 0;
+  /* The box above is the 40 px target; the field fills it inside its border. */
+  min-height: 0;
+  align-self: stretch;
   border: 0;
   outline: none;
   background: none;
@@ -644,6 +649,10 @@ body[data-resizing] .splitter {
    free at its bottom. */
 .shell[data-bubble]:not([data-inspector]) .shell__center {
   padding-bottom: calc(var(--chat-bubble) + 2 * var(--chat-bubble-gap));
+}
+/* On the lab home that strip is the home's own colour, not a darker band cutting the cards. */
+.shell__center:has(> .home) {
+  background: var(--bg-stage);
 }
 .science-intro {
   margin: 0 0 var(--space-3);
