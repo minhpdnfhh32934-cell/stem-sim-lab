@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## 0.12.1 - Đã gộp, chưa phát hành
+## [0.12.1] - 2026-11-21
 
-_Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành trên GitHub: lượt Release publish=true do người dùng chạy (Claude thử chạy hộ khi người dùng nhờ "publish bản cập nhật mới lên ms store và github" nhưng lệnh bị chặn, nên chỉ chạy lượt dựng thử publish=false 44773060452 để có gói Store). Gói Microsoft Store SimLab\_0.12.1.0\_x64.msix lấy từ lượt dựng thử đó: bản nộp 7 trong docs/STORE.md. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1._
+_Phát hành 21/11/2026 lúc 05:58 giờ Việt Nam (22:58 UTC ngày 20/11) từ main @ 392681b1 (lượt Release 44830235120, người dùng chạy; Claude thử chạy hộ khi người dùng nhờ "publish bản cập nhật mới lên ms store và github" nhưng lệnh bị chặn). Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1. Không bắt buộc cập nhật: minRequired giữ 0.12.0 của bản trước. Gói Microsoft Store SimLab\_0.12.1.0\_x64.msix lấy từ lượt dựng thử 44773060452 (publish=false, main 1ad03e90; từ 1ad03e90 tới 392681b1 chỉ thêm tài liệu, #354): bản nộp 7 trong docs/STORE.md, gửi duyệt 21/11/2026._
 
 Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiện đủ nút trên màn hình máy xách tay, và vài chỗ hiển thị trong SimLab gọn gàng hơn.
 
@@ -836,6 +836,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[0.12.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.12.1
 [0.12.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.12.0
 [0.11.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.11.0
 [0.10.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0
