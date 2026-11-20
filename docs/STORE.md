@@ -61,6 +61,7 @@ Quyết định của người dùng (13/10/2026):
   select Publish now". Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp
   dưới 10 MB) rồi nộp. Còn lại cho người dùng: duyệt xong (thường vài giờ, có khi tới 3 ngày làm việc)
   thì bấm **Publish now** trên trang Overview. Ảnh chụp giữ 7 ảnh của bản nộp 4.
+- Bản nộp 6, làm lại với gói `SimLab_0.12.1.0_x64.msix`: **đang chuẩn bị** (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn hình máy xách tay, PR #353), nên hủy lượt duyệt của bản nộp 6, thay gói bằng 0.12.1.0 và nộp lại. Lõi lên 0.12.1 chỉ để Store nhận gói (không có thay đổi mã Rust); chữ "Có gì mới" thành mục "— bản 0.12.1" trong hai tệp listing.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4

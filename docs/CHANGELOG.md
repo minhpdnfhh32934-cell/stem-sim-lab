@@ -4,7 +4,7 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## 0.12.1 - Đã gộp, chưa phát hành
 
-_Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Chỉ phần web lên 0.12.1 (không có thay đổi Rust sau v0.12.0); phần lõi vẫn 0.12.0, nên web-update.json ghi minNative 0.12.0 và ứng dụng 0.12.0 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.12.0. Bản Microsoft Store không nhận bản web: sửa này lên Store ở lần nộp có lõi mới._
+_Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1._
 
 Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiện đủ nút trên màn hình máy xách tay, và vài chỗ hiển thị trong SimLab gọn gàng hơn.
 

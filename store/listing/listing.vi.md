@@ -42,9 +42,9 @@ trên bảng trắng.
 
 vật lý, hóa học, sinh học, mô phỏng, học tập
 
-## Có gì mới (What's new) — bản 0.12.0
+## Có gì mới (What's new) — bản 0.12.1
 
-Bản 0.12.0 (gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0):
+Bản 0.12.1 (gồm cả 0.9.0, 0.9.1, 0.10.0, 0.11.0 và 0.12.0):
 
 - Đủ các bài lí thuyết lớp 10, 11 và 12 theo sách Kết nối tri thức cho Vật lí, Hóa học và Sinh học; số liệu lấy theo sách giáo khoa.
 - AI Teacher: thêm Qwen 3.5 9B chạy ngay trên máy em, tải về khi em chọn (cần card đồ họa rời có từ 8 GB bộ nhớ). Trong phòng thí nghiệm, khung AI Teacher là một cột riêng, không còn che mô phỏng.
@@ -54,6 +54,7 @@ Bản 0.12.0 (gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0):
 - Gemma: "Viết tiếp" nối liền mạch hơn; thanh tải mô hình không còn nhảy lùi.
 - Giao diện cửa sổ quen thuộc trở lại; Ctrl+/ mở danh sách phím tắt; Cài đặt → Chuyển động cho chọn giảm chuyển động.
 - Nhiều sửa lỗi cho AI Teacher và cập nhật các thư viện dùng chung.
+- Sửa lỗi giao diện: menu SimLab 3D hiện đủ nút trên màn hình máy xách tay, bấm chuột lúc mở đầu không còn vô tình vào game, và vài chỗ hiển thị trong SimLab gọn hơn.
 
 ## Yêu cầu hệ thống (gợi ý)
 

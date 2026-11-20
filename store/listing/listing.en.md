@@ -42,9 +42,9 @@ on a whiteboard.
 
 physics, chemistry, biology, simulation, learning
 
-## What's new — 0.12.0
+## What's new — 0.12.1
 
-Version 0.12.0 (includes 0.9.0, 0.9.1, 0.10.0 and 0.11.0):
+Version 0.12.1 (includes 0.9.0, 0.9.1, 0.10.0, 0.11.0 and 0.12.0):
 
 - Every theory lesson of grades 10, 11 and 12 in the Kết nối tri thức textbooks for Physics, Chemistry and Biology, with values taken from the textbooks.
 - AI Teacher: Qwen 3.5 9B runs right on your computer, downloaded when you choose it (it needs a discrete graphics card with 8 GB of memory or more). In the lab, the AI Teacher panel is a column of its own and no longer covers the simulation.
@@ -54,6 +54,7 @@ Version 0.12.0 (includes 0.9.0, 0.9.1, 0.10.0 and 0.11.0):
 - Gemma: "Continue" joins more smoothly; the model download bar no longer jumps back.
 - The familiar window layout is back; Ctrl+/ lists the shortcuts; Settings → Motion lets you reduce motion.
 - Many AI Teacher fixes and updated shared libraries.
+- Layout fixes: the SimLab 3D menu shows every button on a laptop screen, a click during the opening no longer starts the game by accident, and a few spots in SimLab look tidier.
 
 ## System requirements (suggested)
 

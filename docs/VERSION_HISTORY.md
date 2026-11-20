@@ -91,7 +91,7 @@ Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiệ
 
 - Trạng thái: Đã gộp, chưa phát hành.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Chỉ phần web lên 0.12.1 (không có thay đổi Rust sau v0.12.0); phần lõi vẫn 0.12.0, nên web-update.json ghi minNative 0.12.0 và ứng dụng 0.12.0 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.12.0. Bản Microsoft Store không nhận bản web: sửa này lên Store ở lần nộp có lõi mới.
+- Ghi chú trạng thái: Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1.
 - Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
@@ -124,7 +124,7 @@ Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiệ
 - lastCommit: bc31bcea 2026-11-20T19:10:46+07:00 (#353, sửa giao diện); commit nâng số 0.12.1 nằm trong cùng PR
 - merged: #353 (sửa giao diện và nâng số) chưa gộp khi viết mục này; giờ gộp ghi khi phát hành
 - PR gộp sau 0.12.0: #351 (tài liệu Store), #352 (0.12.0 đã phát hành); rồi #353
-- Không có thay đổi Rust: git diff --stat v0.12.0..main -- src-tauri trống
+- Không có thay đổi mã Rust: git diff --stat v0.12.0..main -- src-tauri chỉ có số phiên bản (tauri.conf.json, Cargo.toml, Cargo.lock: 0.12.0 → 0.12.1, cho gói Store 0.12.1.0)
 - Lỗi do người dùng báo (ảnh hộp chọn lớp và menu SimLab 3D, 20/11/2026); đo lại trong trình duyệt ở 1366×768 (khung game cao 711 px: nút cuối ở 683 px, trước là 735 px)
 
 ### 0.12.0 (Đã phát hành)
@@ -1996,7 +1996,7 @@ Chưa có mục nào.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.12.1** (Đã gộp, chưa phát hành): Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Chỉ phần web lên 0.12.1 (không có thay đổi Rust sau v0.12.0); phần lõi vẫn 0.12.0, nên web-update.json ghi minNative 0.12.0 và ứng dụng 0.12.0 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.12.0. Bản Microsoft Store không nhận bản web: sửa này lên Store ở lần nộp có lõi mới.
+- **0.12.1** (Đã gộp, chưa phát hành): Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1.
 - **0.8.0** (Đã gộp, chưa phát hành): PR phiên bản (#92) gộp vào main ngày 28/10/2026; không phát hành riêng. Toàn bộ nội dung gộp vào 0.8.1 (issue #194, kế hoạch người dùng đã duyệt). Bộ cài 0.8.0 chỉ dùng cho máy demo 07/11/2026. notesReady giữ false để hộp "Có gì mới" không hiện hai lần cùng một nội dung.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
