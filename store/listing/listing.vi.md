@@ -42,16 +42,18 @@ trên bảng trắng.
 
 vật lý, hóa học, sinh học, mô phỏng, học tập
 
-## Có gì mới (What's new) — bản 0.8.2
+## Có gì mới (What's new) — bản 0.12.0
 
-Bản 0.8.2:
+Bản 0.12.0 (gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0):
 
-- Ảnh bìa cho mọi thẻ bài Hóa học, Sinh học và bài Hoạ âm và chuỗi Fourier, chụp từ chính mô phỏng của bài.
-- Thẻ Khoa học của Ném ngang, Rơi tự do và Các định luật Newton hiện đúng phương trình của bài; sai lệch kiểm chứng ghi theo cách viết số thông thường.
-- AI Teacher: "Suy nghĩ kĩ (Think)" nay tên là "Deepthink"; bỏ nhãn "Là một AI" ở đầu trang (mỗi câu trả lời vẫn có nhãn "AI hỗ trợ").
-- Dung lượng mô hình AI và khối lượng mol dùng dấu phẩy thập phân.
-- Bài Tinh thể kim loại và NaCl hiện lại hình 3D đầy khung; ô nhập số hiện đủ giá trị (hằng số Coulomb); giao diện tiếng Anh không còn chữ tiếng Việt.
-- Cập nhật hai thư viện mạng có lỗ hổng đã biết.
+- Đủ các bài lí thuyết lớp 10, 11 và 12 theo sách Kết nối tri thức cho Vật lí, Hóa học và Sinh học; số liệu lấy theo sách giáo khoa.
+- AI Teacher: thêm Qwen 3.5 9B chạy ngay trên máy em, tải về khi em chọn (cần card đồ họa rời có từ 8 GB bộ nhớ). Trong phòng thí nghiệm, khung AI Teacher là một cột riêng, không còn che mô phỏng.
+- SimLab 3D: chơi chung với bạn trong cùng mạng LAN, thấy nhau di chuyển, thấy tên và trò chuyện bằng chữ. Lần đầu tạo phòng, Windows có thể hỏi về tường lửa: chọn mạng riêng tư.
+- Phòng thí nghiệm: Sổ ghi các lần chạy, Quét tham số (chế độ Nâng cao) và Theo dõi một hạt trong hộp khí.
+- App tính được số oxi hóa trong các muối như CuSO₄, AgNO₃, NH₄Cl.
+- Gemma: "Viết tiếp" nối liền mạch hơn; thanh tải mô hình không còn nhảy lùi.
+- Giao diện cửa sổ quen thuộc trở lại; Ctrl+/ mở danh sách phím tắt; Cài đặt → Chuyển động cho chọn giảm chuyển động.
+- Nhiều sửa lỗi cho AI Teacher và cập nhật các thư viện dùng chung.
 
 ## Yêu cầu hệ thống (gợi ý)
 

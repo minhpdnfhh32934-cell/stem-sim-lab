@@ -51,6 +51,15 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **gửi duyệt ngày 15/11/2026** (chi tiết ở mục bản
   nộp 5 phía trên). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh
   của bản nộp 4.
+- Bản nộp 6 (gói `SimLab_0.12.0.0_x64.msix`, gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0): **đang chuẩn
+  bị** (20/11/2026). Gói lấy từ artifact **simlab-store** của lượt Release 44681373015 (dựng thử
+  `publish=false`, main 0a662998; tệp .msix 110 MB vì có kèm `llama-server` cho Qwen; danh tính
+  `FPTTECH.SimLab`, `Version="0.12.0.0"`). Claude dùng bản nháp Submission 6 có sẵn trong Partner
+  Center (tạo 15/11/2026, chưa đổi gì): gỡ gói 0.8.2.0, điền chữ "Có gì mới" (mục "— bản 0.12.0"
+  trong hai tệp listing, vi và en); tùy chọn phát hành giữ "Don't publish this submission until I
+  select Publish now". Còn lại cho người dùng: kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ
+  gửi được tệp dưới 10 MB), đợi "Validated", bấm **Save**, rồi **Submit for certification**; duyệt
+  xong thì bấm **Publish now**. Ảnh chụp giữ 7 ảnh của bản nộp 4.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
