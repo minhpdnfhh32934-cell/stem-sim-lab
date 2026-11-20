@@ -39,6 +39,15 @@ Quyết định của người dùng (13/10/2026):
   Claude điền bản nộp trong Chrome của người dùng: chữ "Có gì mới" 0.8.2 (vi, en) lấy từ hai tệp
   listing, lý do `runFullTrust` giữ từ lần trước; người dùng tự kéo tệp gói vào (tiện ích Chrome chỉ
   gửi được tệp dưới 10 MB). Ảnh giữ như bản nộp 4.
+- Ảnh chụp 0.12.1 (21/11/2026; người dùng: "thay đổi ảnh screenshot mới trong ms store"): 8 ảnh PNG
+  1366×768 của giao diện hiện tại (giao diện Bàn thí nghiệm của bộ ảnh 0.8.1 đã bỏ từ 15/11/2026),
+  thứ tự = tên tệp: 1 sinh thái 3D (Con mồi – vật ăn thịt), 2 SimLab 3D (menu của game), 3 giao thoa
+  sóng hai nguồn, 4 ADN → mARN → Protein 3D, 5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science
+  Studio, 8 trang mở đầu. Không có ảnh AI Teacher: không có câu trả lời thật thì ảnh chỉ là trang lúc
+  chưa kết nối AI (người dùng đã bỏ ảnh đó ngày 13/11/2026). Chụp bằng
+  `node scripts/store/screenshots.mjs` (dev server trên localhost:1420, mọi máy chủ AI bị chặn; máy
+  chụp dùng WebGL trên card AMD Radeon 780M). Claude tải 8 ảnh lên bản nộp 7 cho cả trang tiếng
+  Việt và tiếng Anh, thay 7 ảnh của bản nộp 4.
 - Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
   (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
   5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
@@ -61,7 +70,7 @@ Quyết định của người dùng (13/10/2026):
   select Publish now". Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp
   dưới 10 MB) rồi nộp. Còn lại cho người dùng: duyệt xong (thường vài giờ, có khi tới 3 ngày làm việc)
   thì bấm **Publish now** trên trang Overview. Ảnh chụp giữ 7 ảnh của bản nộp 4.
-- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **bản nháp xong, chờ người dùng kéo gói vào và nộp**
+- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **gửi duyệt ngày 21/11/2026**, tự phát hành khi duyệt xong
   (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store", rồi "publish bản cập nhật mới lên
   ms store và github giùm tôi"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn
   hình máy xách tay, PR #353). Bản nộp 6 đã duyệt xong, nên người dùng chọn phát hành nó trước rồi
@@ -71,9 +80,11 @@ Quyết định của người dùng (13/10/2026):
   Claude tạo bản nháp Submission 7 (Start update), điền chữ "Có gì mới" (mục "— bản 0.12.1" trong
   hai tệp listing, vi 1173 và en 1231 ký tự), gỡ gói 0.12.0.0 khỏi mục Packages và đổi tùy chọn phát
   hành thành "Publish this submission as soon as it passes certification" (người dùng muốn bản mới
-  tự lên Store). Còn lại cho người dùng: kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi
-  được tệp dưới 10 MB), bấm **Save**, rồi **Submit for certification**; duyệt xong thì Store tự
-  phát hành.
+  tự lên Store). Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp dưới
+  10 MB; Partner Center báo "Validated"). Gói mới làm mục **Submission options** thành "Incomplete":
+  ô lý do `runFullTrust` trống (người dùng: "hiện đang thiếu submission option trong ms store kìa").
+  Claude dán lý do ở bước 5, bấm Save, rồi **Submit for certification** (trang báo "Update in
+  certification").
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
