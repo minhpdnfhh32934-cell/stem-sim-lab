@@ -51,9 +51,10 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **gửi duyệt ngày 15/11/2026** (chi tiết ở mục bản
   nộp 5 phía trên). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh
   của bản nộp 4.
-- Bản nộp 6 (gói `SimLab_0.12.0.0_x64.msix`, gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0): **đã nộp,
-  đang duyệt** (người dùng nộp 20/11/2026; trang Overview ghi "Update in certification", Submission
-  6 "In certification"; bản trên Store vẫn là bản nộp 5). Gói lấy từ artifact **simlab-store** của lượt Release 44681373015 (dựng thử
+- Bản nộp 6 (gói `SimLab_0.12.0.0_x64.msix`, gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0): **đã duyệt
+  xong**, chờ người dùng bấm **Publish now** (người dùng nộp 20/11/2026; tối 20/11 trang Overview ghi
+  "Update ready to publish", "Your product has passed the certification process"; bản trên Store
+  vẫn là bản nộp 5). Gói lấy từ artifact **simlab-store** của lượt Release 44681373015 (dựng thử
   `publish=false`, main 0a662998; tệp .msix 110 MB vì có kèm `llama-server` cho Qwen; danh tính
   `FPTTECH.SimLab`, `Version="0.12.0.0"`). Claude dùng bản nháp Submission 6 có sẵn trong Partner
   Center (tạo 15/11/2026, chưa đổi gì): gỡ gói 0.8.2.0, điền chữ "Có gì mới" (mục "— bản 0.12.0"
@@ -61,7 +62,7 @@ Quyết định của người dùng (13/10/2026):
   select Publish now". Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp
   dưới 10 MB) rồi nộp. Còn lại cho người dùng: duyệt xong (thường vài giờ, có khi tới 3 ngày làm việc)
   thì bấm **Publish now** trên trang Overview. Ảnh chụp giữ 7 ảnh của bản nộp 4.
-- Bản nộp 6, làm lại với gói `SimLab_0.12.1.0_x64.msix`: **đang chuẩn bị** (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn hình máy xách tay, PR #353), nên hủy lượt duyệt của bản nộp 6, thay gói bằng 0.12.1.0 và nộp lại. Lõi lên 0.12.1 chỉ để Store nhận gói (không có thay đổi mã Rust); chữ "Có gì mới" thành mục "— bản 0.12.1" trong hai tệp listing.
+- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **đang chuẩn bị** (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn hình máy xách tay, PR #353). Bản nộp 6 đã duyệt xong, nên người dùng chọn phát hành nó trước rồi nộp 0.12.1.0 ở bản nộp 7, thay vì hủy lượt duyệt đã đạt. Lõi lên 0.12.1 chỉ để Store nhận gói (không có thay đổi mã Rust); chữ "Có gì mới" là mục "— bản 0.12.1" trong hai tệp listing.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
