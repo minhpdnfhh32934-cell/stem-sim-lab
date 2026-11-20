@@ -4,7 +4,7 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## 0.12.0 - Đã gộp, chưa phát hành
 
-_Đã gộp vào main tới #349 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành._
+_Đã gộp vào main tới #350 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành._
 
 Bản 0.12.0 thêm Qwen 3.5 9B chạy ngay trên máy em, chơi chung SimLab 3D với bạn trong cùng mạng LAN, công cụ mới cho phòng thí nghiệm (Sổ ghi, Quét tham số, Theo dõi một hạt) và nhiều sửa lỗi cho AI Teacher.
 
