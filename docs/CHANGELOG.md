@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## 0.12.0 - Đã gộp, chưa phát hành
+## [0.12.0] - 2026-11-20
 
-_Đã gộp vào main tới #350 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành._
+_Phát hành 20/11/2026 từ main @ 0a662998 (lượt Release 44700384834, người dùng chạy). Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0: bộ cài trong bản phát hành mang số 0.12.0, web-update.json ghi minNative 0.12.0, nên ứng dụng 0.8.2 cài từ GitHub được báo cần tải bộ cài mới. Bắt buộc cập nhật: minRequired 0.12.0 (người dùng chọn khi chạy lượt Release). Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số). Gói Microsoft Store (SimLab\_0.12.0.0\_x64.msix) nộp riêng: bản nộp 6 trong docs/STORE.md._
 
 Bản 0.12.0 thêm Qwen 3.5 9B chạy ngay trên máy em, chơi chung SimLab 3D với bạn trong cùng mạng LAN, công cụ mới cho phòng thí nghiệm (Sổ ghi, Quét tham số, Theo dõi một hạt) và nhiều sửa lỗi cho AI Teacher.
 
@@ -822,6 +822,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[0.12.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.12.0
 [0.11.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.11.0
 [0.10.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.10.0
 [0.9.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.9.1
