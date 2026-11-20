@@ -182,41 +182,47 @@
   "versions": [
     {
       "version": "0.12.0",
-      "status": "merged-not-released",
-      "statusNote": "Đã gộp vào main tới #350 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành.",
+      "status": "released",
+      "statusNote": "Phát hành 20/11/2026 từ main @ 0a662998 (lượt Release 44700384834, người dùng chạy). Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0: bộ cài trong bản phát hành mang số 0.12.0, web-update.json ghi minNative 0.12.0, nên ứng dụng 0.8.2 cài từ GitHub được báo cần tải bộ cài mới. Bắt buộc cập nhật: minRequired 0.12.0 (người dùng chọn khi chạy lượt Release). Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số). Gói Microsoft Store (SimLab_0.12.0.0_x64.msix) nộp riêng: bản nộp 6 trong docs/STORE.md.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-18T00:08:48Z",
         "firstCommit": "2026-11-18T08:12:05+07:00",
         "lastCommit": "2026-11-20T11:50:44+07:00",
-        "merged": "2026-11-20T03:51:05Z",
-        "built": null,
-        "released": null,
+        "merged": "2026-11-20T05:27:26Z",
+        "built": "2026-11-20T08:27:16Z",
+        "released": "2026-11-20T08:27:40Z",
         "tagged": null
       },
       "evidence": [
         "devStart: GitHub Release v0.11.0 published_at 2026-11-18T00:08:48Z (mục 0.11.0)",
         "firstCommit: e547b359 2026-11-18T08:12:05+07:00, commit đầu sau khi 0.11.0 phát hành (các commit dependabot của #280 và #308 tạo trước đó, gộp sau)",
         "lastCommit: 5db3602f 2026-11-20T11:50:44+07:00 (#350, lượt sửa cuối của #342)",
-        "merged: #348 (nâng số 0.12.0) gộp 2026-11-20T03:51:05Z (gh pr view 348); #349 gộp 2026-11-20T04:26:49Z; #350 gộp sau đó, giờ gộp ghi khi phát hành",
+        "merged: #348 (nâng số 0.12.0) gộp 2026-11-20T03:51:05Z (gh pr view 348); #349 gộp 2026-11-20T04:26:49Z; #350 gộp 0a662998 2026-11-20T05:27:26Z (gh pr view 350), commit mà bản phát hành dựng từ đó",
         "PR gộp sau 0.11.0: gh pr list --state merged --search 'merged:>=2026-11-18T00:09:00Z' (30 PR, #280–#347), rồi #348, #349 và #350",
-        "Thay đổi Rust: git diff --stat v0.11.0..main -- src-tauri (19 tệp: #280, #328, #341)"
+        "Thay đổi Rust: git diff --stat v0.11.0..main -- src-tauri (19 tệp: #280, #328, #341)",
+        "built: lượt Release 44700384834 (workflow_dispatch, main, 0a662998), job 'Build Windows installers' xong 2026-11-20T08:27:16Z",
+        "released: GitHub Release v0.12.0 'SimLab 0.12.0', published_at 2026-11-20T08:27:40Z, target 0a662998; tệp: SimLab_0.12.0_x64-setup.exe, SimLab_0.12.0_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt (đọc từ API công khai của GitHub)",
+        "web-update.json: webVersion 0.12.0, minNative 0.12.0, minRequired 0.12.0, edition main (đọc từ bản phát hành mới nhất)",
+        "Gói Microsoft Store: artifact simlab-store của lượt dựng thử 44681373015 (publish=false, cùng commit 0a662998)"
       ],
       "tests": [
         "Mỗi PR: CI 8/8 xanh trước khi gộp (tự gộp sau CI)",
         "AI Teacher với Gemma 1B và E2B thật trên máy bàn (RTX 4080): thử lại sau #343, #344, #345, #346, #347, #349 (app 0.12.0 mở bình thường); kết quả trong các bình luận của #342",
         "Qwen 3.5 9B trong app: máy bàn thử trên RTX 4080 (#328)",
-        "Phòng chơi LAN: thử trên một máy, 9/10 rồi 3/3 đạt (#339); chưa thử trên hai máy"
+        "Phòng chơi LAN: thử trên một máy, 9/10 rồi 3/3 đạt (#339); chưa thử trên hai máy",
+        "npm run test:slow: 2 đạt trước lượt Release (20/11/2026)",
+        "Lượt Release 44700384834: job 'Tests before packaging' đạt (2026-11-20T08:17:13Z); 5/5 job đạt"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
+        "tag": "v0.12.0",
+        "tagSha": "0a662998c6a7241d4473d6ce51f6a4d55f4991d8",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.12.0",
         "prs": [
           280, 308, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333,
           334, 335, 336, 337, 338, 340, 341, 343, 344, 345, 346, 347, 348, 349, 350
         ],
-        "commits": ["9009158f", "3c5553a3", "af42b36a", "5db3602f"],
+        "commits": ["9009158f", "3c5553a3", "af42b36a", "5db3602f", "0a662998"],
         "branches": [
           "dependabot/cargo/src-tauri/cargo-minor-and-patch-bb7ffa95c1",
           "dependabot/npm_and_yarn/npm-minor-and-patch-8df34201c0",
