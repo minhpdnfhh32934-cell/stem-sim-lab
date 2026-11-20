@@ -183,13 +183,13 @@
     {
       "version": "0.12.0",
       "status": "merged-not-released",
-      "statusNote": "Đã gộp vào main tới #347 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành.",
+      "statusNote": "Đã gộp vào main tới #349 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-18T00:08:48Z",
         "firstCommit": "2026-11-18T08:12:05+07:00",
-        "lastCommit": "2026-11-20T08:08:34+07:00",
-        "merged": "2026-11-20T01:41:30Z",
+        "lastCommit": "2026-11-20T10:23:07+07:00",
+        "merged": "2026-11-20T03:51:05Z",
         "built": null,
         "released": null,
         "tagged": null
@@ -197,14 +197,14 @@
       "evidence": [
         "devStart: GitHub Release v0.11.0 published_at 2026-11-18T00:08:48Z (mục 0.11.0)",
         "firstCommit: e547b359 2026-11-18T08:12:05+07:00, commit đầu sau khi 0.11.0 phát hành (các commit dependabot của #280 và #308 tạo trước đó, gộp sau)",
-        "lastCommit: d095ad88 2026-11-20T08:08:34+07:00 (#347), trước commit nâng số phiên bản",
-        "merged: #347 gộp 2026-11-20T01:41:30Z (gh pr list --state merged)",
-        "PR gộp sau 0.11.0: gh pr list --state merged --search 'merged:>=2026-11-18T00:09:00Z' (30 PR, #280–#347)",
+        "lastCommit: 23e48e2d 2026-11-20T10:23:07+07:00 (#349, lượt sửa cuối của #342)",
+        "merged: #348 (nâng số 0.12.0) gộp 2026-11-20T03:51:05Z (gh pr view 348); #349 gộp sau đó, giờ gộp ghi khi phát hành",
+        "PR gộp sau 0.11.0: gh pr list --state merged --search 'merged:>=2026-11-18T00:09:00Z' (30 PR, #280–#347), rồi #348 và #349",
         "Thay đổi Rust: git diff --stat v0.11.0..main -- src-tauri (19 tệp: #280, #328, #341)"
       ],
       "tests": [
         "Mỗi PR: CI 8/8 xanh trước khi gộp (tự gộp sau CI)",
-        "AI Teacher với Gemma 1B và E2B thật trên máy bàn (RTX 4080): thử lại sau #343, #344, #345, #346; kết quả trong các bình luận của #342",
+        "AI Teacher với Gemma 1B và E2B thật trên máy bàn (RTX 4080): thử lại sau #343, #344, #345, #346, #347; kết quả trong các bình luận của #342",
         "Qwen 3.5 9B trong app: máy bàn thử trên RTX 4080 (#328)",
         "Phòng chơi LAN: thử trên một máy, 9/10 rồi 3/3 đạt (#339); chưa thử trên hai máy"
       ],
@@ -214,9 +214,9 @@
         "releaseUrl": null,
         "prs": [
           280, 308, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333,
-          334, 335, 336, 337, 338, 340, 341, 343, 344, 345, 346, 347
+          334, 335, 336, 337, 338, 340, 341, 343, 344, 345, 346, 347, 348, 349
         ],
-        "commits": ["9009158f"],
+        "commits": ["9009158f", "3c5553a3", "23e48e2d"],
         "branches": [
           "dependabot/cargo/src-tauri/cargo-minor-and-patch-bb7ffa95c1",
           "dependabot/npm_and_yarn/npm-minor-and-patch-8df34201c0",
@@ -248,7 +248,8 @@
           "fix/342-model-quality-3",
           "fix/342-model-quality-4",
           "fix/342-model-quality-5",
-          "chore/0.12.0"
+          "chore/0.12.0",
+          "fix/342-model-quality-6"
         ]
       },
       "publicNotes": {
