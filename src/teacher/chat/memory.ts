@@ -310,10 +310,11 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
  * Words about the continuing itself ("chỗ bị dừng", "viết tiếp", "where I left off"), or a
  * sentence that only says it goes on: "Tôi xin tiếp tục:", "Chúng ta cần tiếp tục phần giải
  * thích về…", "Để tiếp tục, …", "Chuyển động ngang tiếp tục:" (Gemma 1B, machine B, #342).
- * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays.
+ * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays. A label
+ * that only says what comes next ("**Nội dung tiếp theo:**", E2B, retest of #346) is one too.
  */
 const RESUME_REMARK =
-  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[*_\s]*(?:nội dung|phần|ý) tiếp theo\s*:?[*_]*$|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
 /**
  * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
  * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
@@ -342,9 +343,10 @@ function withoutResumeRemark(rest: string): string {
   const sentence = /^\([^)\n]{0,30}\)|^[^.!?…:\n]*[.!?…:]+\)?/u.exec(after)?.[0];
   if (!sentence || /[\d=$\\]/u.test(sentence)) return rest;
   if (!RESUME_REMARK.test(sentence) && !(assent && GOES_ON.test(sentence))) return rest;
-  // What follows, without the dots that open it ("...Phản ứng").
+  // What follows, without the mark that closes a bold label and the dots that open it ("...Phản ứng").
   const remainder = after
     .slice(sentence.length)
+    .replace(/^[*_]+(?=\s|$)/u, '')
     .trimStart()
     .replace(/^(?:\.{2,}|…)\s*/u, '');
   return remainder ? remainder : rest;
@@ -476,29 +478,31 @@ function rewriteStart(previous: string, rest: string): number {
 /** A block this long, copied word for word from earlier in the answer, is a copy. */
 const MIN_COPY = 80;
 
+/** A line as compared for a copy: its key without the item number ("10." copies "3."). */
+const copyKey = (line: string) => lineKey(line).replace(/^\d+[.)]/u, '');
+
 /**
- * Gemma 1B sometimes starts the rest with a block copied word for word from the middle of the cut
- * text (a lesson's "Định nghĩa" part again, ~370 characters: machine B's retest of #344): those
- * lines go when they come in the same order there, over at least MIN_COPY characters. A rest that
- * is nothing but the copy stays whole.
+ * The model sometimes starts the rest with lines copied word for word from the cut text: a
+ * lesson's "Định nghĩa" part again (1B, ~370 characters: machine B's retest of #344), or items 3,
+ * 4, 6, 7 and 8 again as items 10–14 (E2B, ~885 characters: retest of #346). Those lines go when
+ * they come in the same order there (item numbers aside), over at least MIN_COPY characters;
+ * nothing is lost, even when the rest was nothing but the copy.
  */
 function withoutCopiedBlock(previous: string, rest: string): string {
-  const before = previous.split('\n').map(lineKey);
+  const before = previous.split('\n').map(copyKey);
   const lines = rest.trimStart().split('\n');
   let k = 0;
   let copied = 0;
   let at = -1;
   for (; k < lines.length; k += 1) {
-    const key = lineKey(lines[k] ?? '');
+    const key = copyKey(lines[k] ?? '');
     if (!key) continue;
     const found = before.indexOf(key, at + 1);
-    // The next copied line must follow the last one there (blank lines aside).
-    if (found < 0 || (at >= 0 && before.slice(at + 1, found).some(Boolean))) break;
+    if (found < 0) break;
     at = found;
     copied += key.length;
   }
-  const remainder = lines.slice(k).join('\n');
-  return copied >= MIN_COPY && remainder.trim() ? remainder : rest;
+  return copied >= MIN_COPY ? lines.slice(k).join('\n') : rest;
 }
 
 /**
@@ -514,6 +518,7 @@ export function joinContinuation(previous: string, cut: string): string {
   if (rewrite >= 0) return `${previous.slice(0, rewrite)}${remarkless.trimStart()}`;
   const rest = withoutRepeat(previous, withoutCopiedBlock(previous, remarkless));
   const next = rest.trimStart();
+  if (!next) return previous;
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;
   const insideNumber =

@@ -135,3 +135,30 @@ Lệnh đã chạy (kết quả thật):
   (18 s, quá giờ khi cả bộ chạy song song); chạy riêng: 9/9 đạt, cả khi bỏ thay đổi này.
 - `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
 - `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
+
+## Lượt 5: máy bàn thử lại #346 (20/11/2026)
+
+Bằng chứng ở `D:\Projects\simlab-work\issue-342-2026-11-19\retest-346\` trên máy bàn (main f5c43c1c,
+E2B câu e1, "Ngắn", 2 lần chạy × 3 lần bấm).
+
+Kết quả: trường hợp của #346 không xuất hiện lại; lần chạy 2 ĐẠT; KaTeX ĐẠT. Lần chạy 1 còn:
+
+- Mục 10–14 trùng nguyên văn mục 3, 4, 6, 7, 8 (khoảng 885 kí tự, bỏ qua mục 5): số mục khác nên
+  quy tắc chép từng chữ của #345 không bắt được, và các mục không liền nhau.
+- " **Nội dung tiếp theo:**\n\n...thì vật sẽ duy trì trạng thái đó." chen giữa câu.
+
+Đã sửa (`memory.ts`):
+
+- Khối chép lại so không kể số mục ở đầu dòng, các dòng chép chỉ cần cùng thứ tự (không cần liền
+  nhau); phần viết tiếp chỉ toàn là phần chép thì không thêm gì (không mất chữ nào).
+- "Nội dung tiếp theo:", "Phần tiếp theo:", "Ý tiếp theo:" (có hay không có "**") là câu dẫn; dấu
+  "**" đóng nhãn đi cùng.
+
+Không sửa: "9." bỏ trống, "Định luật này Định luật III Newton…" (mô hình bắt đầu lại câu, lặp 2 chữ):
+chất lượng mô hình.
+
+Lệnh đã chạy (kết quả thật):
+
+- `npx vitest run`: 510 tệp, 5 846 bài đạt, 3 bỏ qua có sẵn.
+- `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
+- `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
