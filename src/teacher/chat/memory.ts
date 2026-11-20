@@ -311,10 +311,11 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
  * sentence that only says it goes on: "Tôi xin tiếp tục:", "Chúng ta cần tiếp tục phần giải
  * thích về…", "Để tiếp tục, …", "Chuyển động ngang tiếp tục:" (Gemma 1B, machine B, #342).
  * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays. A label
- * that only says what comes next ("**Nội dung tiếp theo:**", E2B, retest of #346) is one too.
+ * that only says what comes next ("**Nội dung tiếp theo:**", E2B, retest of #346) is one too,
+ * and so is "Dựa trên thông tin đã cung cấp, chúng ta có thể mở rộng…" (1B, retest of #347).
  */
 const RESUME_REMARK =
-  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[*_\s]*(?:nội dung|phần|ý) tiếp theo\s*:?[*_]*$|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[*_\s]*(?:nội dung|phần|ý) tiếp theo\s*:?[*_]*$|^dựa (?:trên|vào) (?:các |những )?thông tin (?:đã|được) (?:cung cấp|đưa ra)|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
 /**
  * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
  * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
@@ -434,6 +435,19 @@ function sameStart(cut: string, line: string): boolean {
   );
 }
 
+/** A cut line this long, back word for word at the start of a line, marks a rewrite. */
+const MIN_CUT_AGAIN = 12;
+
+/**
+ * A heading written again under another number, perhaps with more words after it ("**Ví dụ 8:
+ * Lực do các vật thể lớn gây ra**" → "**Ví dụ 9: Lực do các vật thể lớn gây ra (Động lực
+ * học)**": Gemma 1B, machine B's retest of #347).
+ */
+function renumbered(key: string, line: string): boolean {
+  const plain = key.replace(/\d/gu, '');
+  return likeness(plain, line.replace(/\d/gu, '').slice(0, plain.length)) >= REWRITE_LIKENESS;
+}
+
 /**
  * Where the rest starts writing the cut text's last lines again, with its own typos corrected
  * ("Quá tính" → "Quán tính", "Ví ví dụ" → "Ví dụ": machine B's E2B, #342): the index in
@@ -465,10 +479,14 @@ function rewriteStart(previous: string, rest: string): number {
     const short = keys.join('').length < MIN_REWRITE;
     if (short && keys.length < 2) continue;
     const last = keys.length - 1;
+    // The cut line back word for word lets the lines above it come back renumbered.
+    const cut = keys[last] ?? '';
+    const cutAgain = cut.length >= MIN_CUT_AGAIN && (next[last] ?? '').startsWith(cut);
     const again = keys.every((key, k) => {
       const line = next[k] ?? '';
       if (k === last) return sameStart(key, line);
-      return short ? key === line : sameLine(key, line);
+      if (short) return key === line;
+      return sameLine(key, line) || (cutAgain && renumbered(key, line));
     });
     if (again) return starts[j] ?? -1;
   }
@@ -486,7 +504,8 @@ const copyKey = (line: string) => lineKey(line).replace(/^\d+[.)]/u, '');
  * lesson's "Định nghĩa" part again (1B, ~370 characters: machine B's retest of #344), or items 3,
  * 4, 6, 7 and 8 again as items 10–14 (E2B, ~885 characters: retest of #346). Those lines go when
  * they come in the same order there (item numbers aside), over at least MIN_COPY characters;
- * nothing is lost, even when the rest was nothing but the copy.
+ * nothing is lost, even when the rest was nothing but the copy. A line that long copied alone,
+ * anywhere in the rest, goes too (item 3 again as item 5 after a new sentence: E2B, retest of #347).
  */
 function withoutCopiedBlock(previous: string, rest: string): string {
   const before = previous.split('\n').map(copyKey);
@@ -502,8 +521,14 @@ function withoutCopiedBlock(previous: string, rest: string): string {
     at = found;
     copied += key.length;
   }
-  return copied >= MIN_COPY ? lines.slice(k).join('\n') : rest;
+  const start = copied >= MIN_COPY ? k : 0;
+  const long = new Set(before.filter((key) => key.length >= MIN_COPY));
+  const kept = lines.slice(start).filter((line) => !long.has(copyKey(line)));
+  return start === 0 && kept.length === lines.length ? rest : kept.join('\n');
 }
+
+/** A line that is all bold ("**Ví dụ 9: …**", "**Định luật II Newton (Tiếp tục):**"): a title. */
+const BOLD_TITLE = /^\*\*[^*\n]+\*\*[ \t]*(?:\n|$)/u;
 
 /**
  * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
@@ -511,6 +536,8 @@ function withoutCopiedBlock(previous: string, rest: string): string {
  * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
  * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
  * A rest that writes the last lines again replaces them (its version is the one that goes on).
+ * A rest that opens with a bold title on its own line starts a new paragraph (it was glued to the
+ * cut sentence: "…có thể xảy ra **Định luật II Newton (Tiếp tục):**", retest of #347).
  */
 export function joinContinuation(previous: string, cut: string): string {
   const remarkless = withoutResumeRemark(cut);
@@ -519,6 +546,7 @@ export function joinContinuation(previous: string, cut: string): string {
   const rest = withoutRepeat(previous, withoutCopiedBlock(previous, remarkless));
   const next = rest.trimStart();
   if (!next) return previous;
+  if (BOLD_TITLE.test(next)) return `${previous.trimEnd()}\n\n${next}`;
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
   if (/\s$/.test(previous)) return `${previous}${next}`;
   const insideNumber =

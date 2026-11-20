@@ -162,3 +162,35 @@ Lệnh đã chạy (kết quả thật):
 - `npx vitest run`: 510 tệp, 5 846 bài đạt, 3 bỏ qua có sẵn.
 - `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
 - `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
+
+## Lượt 6 (lượt cuối của vòng thử): máy bàn thử lại #347 (20/11/2026)
+
+Bằng chứng ở `D:\Projects\simlab-work\issue-342-2026-11-19\retest-347\` trên máy bàn (main 9009158f,
+E2B câu e1 hai lần, 1B câu b4 một lần, "Ngắn").
+
+Kết quả: "Nội dung tiếp theo:" không còn (0/8), E2B lần 2 ĐẠT, KaTeX ĐẠT. Còn:
+
+- E2B: phần viết tiếp mở bằng một câu mới rồi mới chép nguyên mục 3 thành mục 5 (234 kí tự): quy tắc
+  khối chép chỉ nhìn phần đầu.
+- 1B: câu dẫn "Dựa trên thông tin đã cung cấp, chúng ta có thể mở rộng thêm…".
+- 1B: "**Ví dụ 8: …**" + "Khi một vật nặng (" viết lại thành "**Ví dụ 9: … (Động lực học)**" + "Khi một
+  vật nặng (ví dụ: …": số khác nên không khớp.
+- 1B: tiêu đề in đậm "**Định luật II Newton (Tiếp tục):**" dính vào câu dở trên cùng một dòng.
+
+Đã sửa (`memory.ts`):
+
+- Một dòng dài từ 80 kí tự chép nguyên văn từ phần trước (không kể số mục) bị bỏ ở bất cứ đâu trong
+  phần viết tiếp.
+- "Dựa trên/vào thông tin đã/được cung cấp/đưa ra" là câu dẫn.
+- Dòng bị cắt (từ 12 kí tự) quay lại nguyên văn ở đầu một dòng thì các dòng phía trên nó được nhận
+  khi chỉ khác số ("Ví dụ 8" → "Ví dụ 9"); tiêu đề khác thì không.
+- Phần viết tiếp mở bằng một dòng toàn chữ đậm thì sang đoạn mới.
+
+Sau lượt này dừng vòng thử: các lỗi còn lại (mục bỏ trống, đánh số lại, lạc đề, bắt đầu lại câu,
+bản viết lại một mục có thêm phần cuối) là chất lượng mô hình, cần đổi lời nhắc và đo trước.
+
+Lệnh đã chạy (kết quả thật):
+
+- `npx vitest run`: 510 tệp, 5 850 bài đạt, 3 bỏ qua có sẵn.
+- `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
+- `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.

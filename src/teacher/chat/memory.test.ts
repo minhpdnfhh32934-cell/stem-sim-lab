@@ -312,7 +312,7 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
         '* Một chiếc xe hơi tăng tốc khi có lực cản (lực cản)',
         'Tôi xin lỗi vì sự chậm trễ. Chúng ta sẽ tiếp tục:\n\n**Các định luật Newton:**',
       ),
-    ).toBe('* Một chiếc xe hơi tăng tốc khi có lực cản (lực cản) **Các định luật Newton:**');
+    ).toBe('* Một chiếc xe hơi tăng tốc khi có lực cản (lực cản)\n\n**Các định luật Newton:**');
     expect(
       joinContinuation(
         'Đường → Axit axetat (CH',
@@ -345,7 +345,9 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
       'Lực càng lớn thì gia tốc càng lớn.',
     ],
   ])("Gemma 1B's lead-in %j goes (retest of #343)", (cut, kept) => {
-    expect(joinContinuation('Ví dụ trước đã xong.', cut)).toBe(`Ví dụ trước đã xong. ${kept}`);
+    // A bold title left after the lead-in starts a new paragraph (retest of #347).
+    const sep = kept.startsWith('**') ? '\n\n' : ' ';
+    expect(joinContinuation('Ví dụ trước đã xong.', cut)).toBe(`Ví dụ trước đã xong.${sep}${kept}`);
   });
 
   // Machine B's retest of #344 (20/11/2026), Gemma 1B: "phân tích" after "tiếp tục", after a praise.
@@ -397,11 +399,11 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     const previous = `**1. Định nghĩa**\n\n${definition}\n\n**2. Ví dụ**\n\n*   Sau 2 giây, quả bóng đạt vận tốc cuối cùng là 30 m/s.\n    *   v = 20 + (2 * 9.8) =`;
     const rest = ` ${definition}\n\n**3. Bài tập**\n\nMột vật được ném ngang từ độ cao 20 m.`;
     expect(joinContinuation(previous, rest)).toBe(
-      `${previous} **3. Bài tập**\n\nMột vật được ném ngang từ độ cao 20 m.`,
+      `${previous}\n\n**3. Bài tập**\n\nMột vật được ném ngang từ độ cao 20 m.`,
     );
     // A short line that happens to be there already stays.
     const short = '**2. Ví dụ**\n\nQuả bóng thứ hai rơi chậm hơn.';
-    expect(joinContinuation(previous, short)).toBe(`${previous} ${short}`);
+    expect(joinContinuation(previous, short)).toBe(`${previous}\n\n${short}`);
   });
 
   // Machine B's retest of #346 (20/11/2026), E2B: the item titles are its; the texts stand for its.
@@ -454,7 +456,51 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     // A next section that only looks like it ("Định luật I" → "II") is not written again.
     const law1 = 'Mở đầu.\n\n**Định luật I**\n*   **Ví dụ:**';
     const law2 = '**Định luật II**\n*   **Ví dụ:** Quả táo rơi xuống đất.';
-    expect(joinContinuation(law1, law2)).toBe(`${law1} ${law2}`);
+    expect(joinContinuation(law1, law2)).toBe(`${law1}\n\n${law2}`);
+  });
+
+  // Machine B's retest of #347 (20/11/2026); where its texts stopped ("…"), a sentence stands in.
+  it('Gemma 1B\'s "Dựa trên thông tin đã cung cấp, …" lead-in goes (retest of #347)', () => {
+    expect(
+      joinContinuation(
+        'Khi gió thổi mạnh, cây sẽ bị rơi xuống đất. Bạn',
+        ' Dựa trên thông tin đã cung cấp, chúng ta có thể mở rộng thêm về định luật II Newton để làm rõ hơn về cách các vật thể tương tác với nhau.  Các ví dụ trên đã chỉ ra một số trường hợp đơn giản.',
+      ),
+    ).toBe(
+      'Khi gió thổi mạnh, cây sẽ bị rơi xuống đất. Bạn Các ví dụ trên đã chỉ ra một số trường hợp đơn giản.',
+    );
+  });
+
+  it('1B starting the cut example again under the next number replaces it (retest of #347)', () => {
+    const before = '**Ví dụ 7: Đẩy xe**\n\nXe chuyển động khi có lực đẩy.\n\n';
+    const previous = `${before}**Ví dụ 8: Lực do các vật thể lớn gây ra**\n\nKhi một vật nặng (`;
+    const rest =
+      ' **Ví dụ 9: Lực do các vật thể lớn gây ra (Động lực học)**\n\nKhi một vật nặng (ví dụ: một chiếc xe tải) chuyển động, nó cần lực lớn để dừng lại.';
+    expect(joinContinuation(previous, rest)).toBe(`${before}${rest.trimStart()}`);
+    // Another example under the next number, with its own title, starts a new paragraph.
+    const other = '**Ví dụ 9: Lực ma sát**\n\nKhi một vật nặng trượt trên sàn, nó chậm dần.';
+    expect(joinContinuation(previous, other)).toBe(`${previous}\n\n${other}`);
+  });
+
+  it('a long item copied again after a new sentence goes (E2B, retest of #347)', () => {
+    const item3 =
+      '3. **Định luật II (Lực và Gia tốc - Đẩy xe):** Khi bạn dùng một lực nhất định để đẩy một chiếc xe hàng, xe nặng hơn tăng tốc chậm hơn.';
+    const previous = `${item3}\n4. **Định luật II (Lực tác dụng lên vật):** Khi bạn dùng tay ấn mạnh vào một hộp rỗng (khối lượng $m$) để làm nó di chuyển, bạn đang tạo`;
+    const rest = ` ...để làm nó di chuyển. Công thức này giúp chúng ta tính toán chính xác.\n${item3.replace('3.', '5.')}\n7. **Lực cản:** Không khí làm vật chậm lại.`;
+    expect(joinContinuation(previous, rest)).toBe(
+      `${previous} ...để làm nó di chuyển. Công thức này giúp chúng ta tính toán chính xác.\n7. **Lực cản:** Không khí làm vật chậm lại.`,
+    );
+  });
+
+  it('a bold title glued to the cut sentence starts a new paragraph (1B, retest of #347)', () => {
+    expect(
+      joinContinuation(
+        'Khi lực tăng, nhiều điều có thể xảy ra',
+        ' **Định luật II Newton (Tiếp tục):**\n\nGia tốc tăng theo lực.',
+      ),
+    ).toBe(
+      'Khi lực tăng, nhiều điều có thể xảy ra\n\n**Định luật II Newton (Tiếp tục):**\n\nGia tốc tăng theo lực.',
+    );
   });
 
   it('a next item that only looks like the last one is not a rewrite', () => {
