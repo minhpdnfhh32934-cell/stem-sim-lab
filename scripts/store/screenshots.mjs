@@ -1,13 +1,13 @@
 /**
- * Store screenshots (docs/STORE.md): 1366×768 PNGs of the bench, in the order of the file names.
+ * Store screenshots (docs/STORE.md): 1366×768 PNGs of the lab, in the order of the file names.
  *
  *   node scripts/store/screenshots.mjs            # → store/listing/screenshots/*.png
  *   node scripts/store/screenshots.mjs --only 3   # one shot (its number)
  *
  * Uses the Vite dev server on localhost:1420 (starts `npm run dev` when none answers, and stops it
- * at the end). No AI is called: every AI host is refused, so the AI Teacher shot shows the page as a
- * learner without a key sees it. Store shots should show a real answer: take that one from the
- * installed app with a real key (docs/STORE.md).
+ * at the end). No AI is called: every AI host is refused. There is no AI Teacher shot: without a
+ * real answer it would only show the page of a learner without a key (user decision 13/11/2026);
+ * take one from the installed app with a real key (docs/STORE.md).
  */
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
@@ -73,7 +73,10 @@ async function openLab(page) {
 async function openTopic(page, subject, topic, ready = page.locator('canvas').first()) {
   await openLab(page);
   await page.getByRole('radio', { name: subject }).click();
-  await page.getByRole('main').getByRole('button', { name: topic, exact: true }).click();
+  await page
+    .getByRole('complementary', { name: 'Thư viện chủ đề' })
+    .getByRole('button', { name: topic, exact: true })
+    .click();
   await ready.waitFor({ state: 'visible', timeout: 30_000 });
 }
 
@@ -93,13 +96,18 @@ const SHOTS = [
   ],
   [
     2,
-    '2-ai-teacher.png',
+    '2-simlab-3d.png',
     async (page) => {
-      await page.goto('/');
-      await page.locator('.launch-card--teacher').click();
-      await page.getByRole('region', { name: 'Dạy học bằng AI' }).waitFor();
-      await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
-      await settle(page, 1500);
+      await openLab(page);
+      await page
+        .getByRole('complementary', { name: 'Thư viện chủ đề' })
+        .getByRole('button', { name: /^SimLab 3D/ })
+        .click();
+      const game = page.frameLocator('iframe[title="Trò chơi SimLab 3D"]');
+      await game.getByRole('button', { name: 'Chơi', exact: true }).waitFor({ timeout: 60_000 });
+      // The live menu's opening has played: its panel is shown (liveMenu.ts drops live-wait).
+      await game.locator('.menu.live:not(.live-wait)').waitFor({ timeout: 60_000 });
+      await settle(page, 3000);
     },
   ],
   [
@@ -107,6 +115,11 @@ const SHOTS = [
     '3-vat-ly-giao-thoa.png',
     async (page) => {
       await openTopic(page, 'Vật lý', 'Giao thoa sóng hai nguồn');
+      // A first run while the page is still compiling records sparse samples (a straight
+      // stretch in the graph): warm up, reset, then run for the picture.
+      await run(page);
+      await settle(page, 3000);
+      await page.getByRole('button', { name: 'Đặt lại (R)' }).first().click();
       await run(page);
       await settle(page, 2500);
     },
@@ -127,7 +140,7 @@ const SHOTS = [
         page,
         'Hóa học',
         'Chuẩn độ acid – base',
-        page.getByRole('group', { name: 'Điều khiển buret' }),
+        page.getByRole('img', { name: 'Buret và cốc dung dịch (minh họa)' }),
       );
       // Just past the equivalence point (10 mL with the defaults): a learner gets there with the
       // volume slider.
@@ -136,8 +149,9 @@ const SHOTS = [
         const { setTitration } = await import(/* @vite-ignore */ store);
         setTitration({ vb: 10.4 });
       });
-      // The curve lives in the notebook.
-      await page.getByRole('tab', { name: /Đường cong chuẩn độ/ }).click();
+      // The curve lives in the bottom panel (a tab when the panel has several).
+      const curve = page.getByRole('tab', { name: /Đường cong chuẩn độ/ });
+      if (await curve.count()) await curve.click();
       await settle(page, 1500);
     },
   ],
@@ -156,7 +170,7 @@ const SHOTS = [
       await openLab(page);
       await page
         .getByRole('complementary', { name: 'Thư viện chủ đề' })
-        .getByRole('radio', { name: 'Có hướng dẫn' })
+        .getByRole('button', { name: /^Science Studio/ })
         .click();
       await settle(page, 2500);
     },

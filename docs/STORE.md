@@ -39,6 +39,15 @@ Quyết định của người dùng (13/10/2026):
   Claude điền bản nộp trong Chrome của người dùng: chữ "Có gì mới" 0.8.2 (vi, en) lấy từ hai tệp
   listing, lý do `runFullTrust` giữ từ lần trước; người dùng tự kéo tệp gói vào (tiện ích Chrome chỉ
   gửi được tệp dưới 10 MB). Ảnh giữ như bản nộp 4.
+- Ảnh chụp 0.12.1 (21/11/2026; người dùng: "thay đổi ảnh screenshot mới trong ms store"): 8 ảnh PNG
+  1366×768 của giao diện hiện tại (giao diện Bàn thí nghiệm của bộ ảnh 0.8.1 đã bỏ từ 15/11/2026),
+  thứ tự = tên tệp: 1 sinh thái 3D (Con mồi – vật ăn thịt), 2 SimLab 3D (menu của game), 3 giao thoa
+  sóng hai nguồn, 4 ADN → mARN → Protein 3D, 5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science
+  Studio, 8 trang mở đầu. Không có ảnh AI Teacher: không có câu trả lời thật thì ảnh chỉ là trang lúc
+  chưa kết nối AI (người dùng đã bỏ ảnh đó ngày 13/11/2026). Chụp bằng
+  `node scripts/store/screenshots.mjs` (dev server trên localhost:1420, mọi máy chủ AI bị chặn; máy
+  chụp dùng WebGL trên card AMD Radeon 780M). Claude tải 8 ảnh lên bản nộp 7 cho cả trang tiếng
+  Việt và tiếng Anh, thay 7 ảnh của bản nộp 4.
 - Ảnh chụp 0.8.1 (8 ảnh PNG 1366×768, giao diện Bàn thí nghiệm, thứ tự = tên tệp): 1 sinh thái 3D
   (Con mồi – vật ăn thịt), 2 AI Teacher, 3 giao thoa sóng hai nguồn, 4 ADN → mARN → Protein 3D,
   5 chuẩn độ acid – base, 6 nguyên phân 3D, 7 Science Studio, 8 trang mở đầu. Chụp bằng
