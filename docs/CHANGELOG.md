@@ -2,6 +2,20 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## 0.12.1 - Đã gộp, chưa phát hành
+
+_Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu ("Chuẩn bị bản 0.12.1"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu "Làm gói 0.12.1.0 và nộp lại lên Store", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1._
+
+Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiện đủ nút trên màn hình máy xách tay, và vài chỗ hiển thị trong SimLab gọn gàng hơn.
+
+### Fixed
+
+- SimLab 3D: trên màn hình máy xách tay, nút Cài đặt của menu không còn bị cắt ở mép dưới.
+- SimLab 3D: bấm chuột trong đoạn phim mở đầu không còn vô tình vào game.
+- SimLab 3D: thẻ Điều khiển trong Cài đặt có lại tên.
+- Lần đầu mở app: dòng ghi chú dưới các lớp không còn dính vào thẻ đang chọn.
+- Ô Tìm chủ đề không còn lấn xuống danh sách; trang Hôm nay học gì? không còn dải tối ở cuối trang.
+
 ## [0.12.0] - 2026-11-20
 
 _Phát hành 20/11/2026 từ main @ 0a662998 (lượt Release 44700384834, người dùng chạy). Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0: bộ cài trong bản phát hành mang số 0.12.0, web-update.json ghi minNative 0.12.0, nên ứng dụng 0.8.2 cài từ GitHub được báo cần tải bộ cài mới. Bắt buộc cập nhật: minRequired 0.12.0 (người dùng chọn khi chạy lượt Release). Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số). Gói Microsoft Store (SimLab\_0.12.0.0\_x64.msix) nộp riêng: bản nộp 6 trong docs/STORE.md._

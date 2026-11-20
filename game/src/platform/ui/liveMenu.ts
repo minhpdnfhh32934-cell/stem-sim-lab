@@ -63,6 +63,8 @@ export class LiveMenu {
   private entrances = 0;
   private timers: number[] = [];
   private disposed = false;
+  /** The name's and the buttons' heights followed, for liveMenu.css to keep both in the window. */
+  private readonly sized = new ResizeObserver(() => this.measure());
   /**
    * The rocket opening (Phú 2026-11-18): played in the scene before the menu shows, its notes
    * over it (`RocketOverlay`), its roar; the menu comes in as it ends.
@@ -115,6 +117,9 @@ export class LiveMenu {
     this.show(liveLook({ ...first, yaw: 0 }), false);
     document.body.classList.add('live-ui');
     this.root.classList.add('live', 'live-wait');
+    for (const part of this.root.querySelectorAll('.menu-brand, .menu-controls')) {
+      this.sized.observe(part);
+    }
     this.paintRanges();
     if (this.prologue) {
       await this.build();
@@ -309,6 +314,10 @@ export class LiveMenu {
     this.sound = null;
     for (const id of this.timers) window.clearTimeout(id);
     this.timers = [];
+    this.sized.disconnect();
+    const panel = this.root.querySelector<HTMLElement>('.menu-panel');
+    panel?.style.removeProperty('--brand-h');
+    panel?.style.removeProperty('--controls-h');
     this.wallpaper?.dispose();
     this.wallpaper = null;
     this.scene.remove();
@@ -392,6 +401,19 @@ export class LiveMenu {
         this.enter();
       });
     });
+  }
+
+  /** The name's and the buttons' laid-out heights (transforms aside) on the panel, for its CSS. */
+  private measure(): void {
+    const panel = this.root.querySelector<HTMLElement>('.menu-panel');
+    const parts = [
+      ['.menu-brand', '--brand-h'],
+      ['.menu-controls', '--controls-h'],
+    ] as const;
+    for (const [selector, name] of parts) {
+      const part = this.root.querySelector<HTMLElement>(selector);
+      if (panel && part) panel.style.setProperty(name, `${part.offsetHeight}px`);
+    }
   }
 
   private later(ms: number, then: () => void): void {

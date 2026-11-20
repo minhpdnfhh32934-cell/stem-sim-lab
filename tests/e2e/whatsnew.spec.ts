@@ -10,6 +10,7 @@ import { expect, test } from '@playwright/test';
 interface Entry {
   version: string;
   notesReady: boolean;
+  publicNotes: { added: unknown[]; improved: unknown[]; performance: unknown[]; fixed: unknown[] };
 }
 const json = (path: string): unknown =>
   JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -51,7 +52,17 @@ test('after an update the box shows once, then never again; the history is in Se
   await expect(dialog.getByRole('heading', { level: 3 })).toHaveText(
     expected.map((v) => `Phiên bản ${v}`),
   );
-  await expect(dialog.getByRole('heading', { name: 'Tính năng mới' }).first()).toBeVisible();
+  // The newest version's groups are open (older ones fold): the first group it has shows, in the
+  // box's order. A version of fixes only (0.12.1) has no "Tính năng mới".
+  const newest = versions.find((v) => v.version === expected[0])!.publicNotes;
+  const firstGroup = newest.added.length
+    ? 'Tính năng mới'
+    : newest.improved.length + newest.performance.length
+      ? 'Cải tiến'
+      : 'Sửa lỗi';
+  await expect(
+    dialog.getByRole('heading', { level: 4, name: firstGroup, exact: true }).first(),
+  ).toBeVisible();
   // The footer stays on screen at 1366×768 (the notes scroll inside the box).
   const close = dialog.getByRole('button', { name: 'Đóng' });
   await expect(close).toBeInViewport();

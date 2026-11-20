@@ -181,6 +181,94 @@
   ],
   "versions": [
     {
+      "version": "0.12.1",
+      "status": "merged-not-released",
+      "statusNote": "Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu (\"Chuẩn bị bản 0.12.1\"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu \"Làm gói 0.12.1.0 và nộp lại lên Store\", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-20T08:27:40Z",
+        "firstCommit": "2026-11-20T18:27:51+07:00",
+        "lastCommit": "2026-11-20T19:10:46+07:00",
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.12.0 published_at 2026-11-20T08:27:40Z (mục 0.12.0)",
+        "firstCommit: 2e32be6b 2026-11-20T18:27:51+07:00 (#352), commit đầu sau khi 0.12.0 phát hành (commit a5e9f5cc của #351 tạo lúc 15:07, trước khi phát hành, gộp sau)",
+        "lastCommit: bc31bcea 2026-11-20T19:10:46+07:00 (#353, sửa giao diện); commit nâng số 0.12.1 nằm trong cùng PR",
+        "merged: #353 (sửa giao diện và nâng số) chưa gộp khi viết mục này; giờ gộp ghi khi phát hành",
+        "PR gộp sau 0.12.0: #351 (tài liệu Store), #352 (0.12.0 đã phát hành); rồi #353",
+        "Không có thay đổi mã Rust: git diff --stat v0.12.0..main -- src-tauri chỉ có số phiên bản (tauri.conf.json, Cargo.toml, Cargo.lock: 0.12.0 → 0.12.1, cho gói Store 0.12.1.0)",
+        "Lỗi do người dùng báo (ảnh hộp chọn lớp và menu SimLab 3D, 20/11/2026); đo lại trong trình duyệt ở 1366×768 (khung game cao 711 px: nút cuối ở 683 px, trước là 735 px)"
+      ],
+      "tests": [
+        "#353: E2E learner.spec, project.spec, post198-game.spec 296/296 đạt; Vitest src/app/layout, src/app/learner, spelling, tauri-config 56/56 đạt; typecheck đạt; game: tsc, ESLint, Prettier đạt"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [351, 352, 353],
+        "commits": ["a5e9f5cc", "2e32be6b", "bc31bcea"],
+        "branches": ["docs/store-0.12.0", "docs/release-0.12.0", "fix/ui-polish-0.12"]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.12.1 sửa các lỗi giao diện sau bản 0.12.0: menu SimLab 3D hiện đủ nút trên màn hình máy xách tay, và vài chỗ hiển thị trong SimLab gọn gàng hơn.",
+          "en": "Version 0.12.1 fixes layout problems found after 0.12.0: the SimLab 3D menu shows all its buttons on a laptop screen, and a few spots in SimLab look tidier."
+        },
+        "added": [],
+        "improved": [],
+        "fixed": [
+          {
+            "vi": "SimLab 3D: trên màn hình máy xách tay, nút Cài đặt của menu không còn bị cắt ở mép dưới.",
+            "en": "SimLab 3D: on a laptop screen, the menu’s Settings button is no longer cut off at the bottom.",
+            "area": "ui"
+          },
+          {
+            "vi": "SimLab 3D: bấm chuột trong đoạn phim mở đầu không còn vô tình vào game.",
+            "en": "SimLab 3D: a click during the opening no longer starts the game by accident.",
+            "area": "ui"
+          },
+          {
+            "vi": "SimLab 3D: thẻ Điều khiển trong Cài đặt có lại tên.",
+            "en": "SimLab 3D: the Controls tab in Settings has its name again.",
+            "area": "ui"
+          },
+          {
+            "vi": "Lần đầu mở app: dòng ghi chú dưới các lớp không còn dính vào thẻ đang chọn.",
+            "en": "First run: the note under the grades no longer touches the chosen card.",
+            "area": "ui"
+          },
+          {
+            "vi": "Ô Tìm chủ đề không còn lấn xuống danh sách; trang Hôm nay học gì? không còn dải tối ở cuối trang.",
+            "en": "The topic search box no longer overlaps the list; the “What shall we learn today?” page no longer has a dark band at the bottom.",
+            "area": "ui"
+          }
+        ],
+        "security": [],
+        "performance": [],
+        "changed": [],
+        "deprecated": [],
+        "knownIssues": []
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Menu SimLab 3D hiện đủ nút trên màn hình máy xách tay.",
+          "en": "The SimLab 3D menu shows every button on a laptop screen."
+        },
+        {
+          "area": "ui",
+          "vi": "Sửa vài chỗ hiển thị: hộp chọn lớp, ô Tìm chủ đề, trang Hôm nay học gì?",
+          "en": "Layout fixes: the grade choice, the topic search box, the “What shall we learn today?” page."
+        }
+      ]
+    },
+    {
       "version": "0.12.0",
       "status": "released",
       "statusNote": "Phát hành 20/11/2026 từ main @ 0a662998 (lượt Release 44700384834, người dùng chạy). Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0: bộ cài trong bản phát hành mang số 0.12.0, web-update.json ghi minNative 0.12.0, nên ứng dụng 0.8.2 cài từ GitHub được báo cần tải bộ cài mới. Bắt buộc cập nhật: minRequired 0.12.0 (người dùng chọn khi chạy lượt Release). Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số). Gói Microsoft Store (SimLab_0.12.0.0_x64.msix) nộp riêng: bản nộp 6 trong docs/STORE.md.",

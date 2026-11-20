@@ -126,6 +126,8 @@ body.live-ui.live-night {
 /* Waiting for the opening to leave: the panel and the corners kept back for their entrance. */
 .menu.live.live-wait :is(.menu-panel, .menu-live-clock, .menu-live-hint) {
   opacity: 0;
+  /* Unseen is also untouchable: a click during the opening started a game from an unseen Play. */
+  visibility: hidden;
 }
 
 .menu.live .menu-sky,
@@ -147,6 +149,15 @@ body.live-ui.live-night {
   --brand-y: 27vh;
   --controls-x: clamp(28px, 8vw, 170px);
   --controls-y: 48vh;
+
+  /* A short window (a laptop at 125–150 %, or SimLab's own bar above the game) moves the buttons
+     up until the last one ends inside it, and the name up with them; their heights are measured
+     by LiveMenu (--controls-h, --brand-h). */
+  --controls-top: max(8px, min(var(--controls-y), calc(100vh - var(--controls-h, 0px) - 24px)));
+  --brand-top: max(
+    8px,
+    min(var(--brand-y), calc(var(--controls-top) - var(--brand-h, 0px) - 12px))
+  );
 }
 
 .menu.live.live-front .menu-panel {
@@ -174,7 +185,7 @@ body.live-ui.live-night {
 .menu.live .menu-brand {
   position: absolute;
   left: var(--brand-x);
-  top: var(--brand-y);
+  top: var(--brand-top);
   text-align: left;
   transform: skewX(-10deg);
   transform-origin: left bottom;
@@ -236,7 +247,7 @@ body.live-ui.live-night {
 .menu.live .menu-controls {
   position: absolute;
   left: var(--controls-x);
-  top: var(--controls-y);
+  top: var(--controls-top);
   width: min(440px, 36vw);
   min-width: 300px;
   gap: 14px;
@@ -824,6 +835,22 @@ body.live-ui.live-night {
   from {
     opacity: 0;
     transform: translateY(60px) rotate(-2deg) scale(0.94);
+  }
+}
+
+/* A short window (a laptop, SimLab's bar above the game): slimmer buttons first, so the name and
+   the buttons keep their places; only a shorter one still moves them up (--controls-top). */
+@media (max-height: 760px) {
+  .menu.live .menu-controls {
+    gap: 10px;
+  }
+
+  .menu.live .menu-controls .menu-button {
+    min-height: 52px;
+  }
+
+  .menu.live .menu-controls .menu-play {
+    min-height: 72px;
   }
 }
 

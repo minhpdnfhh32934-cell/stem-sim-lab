@@ -477,6 +477,10 @@
   display: grid;
   gap: var(--space-2);
 }
+/* The note under the grades keeps clear of the chosen card's focus ring (it touched it). */
+.onboarding__options + .home__note {
+  margin-top: var(--space-3);
+}
 .onboarding__options--row {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
