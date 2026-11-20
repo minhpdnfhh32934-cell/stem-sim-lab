@@ -2,6 +2,59 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## 0.12.0 - Đã gộp, chưa phát hành
+
+_Đã gộp vào main tới #347 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành._
+
+Bản 0.12.0 thêm Qwen 3.5 9B chạy ngay trên máy em, chơi chung SimLab 3D với bạn trong cùng mạng LAN, công cụ mới cho phòng thí nghiệm (Sổ ghi, Quét tham số, Theo dõi một hạt) và nhiều sửa lỗi cho AI Teacher.
+
+### Added
+
+- AI Teacher: Qwen 3.5 9B chạy ngay trong SimLab trên máy em, tải về khi em chọn; cần card đồ họa rời có từ 8 GB bộ nhớ.
+- SimLab 3D: chơi chung với bạn trong cùng mạng LAN, thấy nhau di chuyển, thấy tên và trò chuyện bằng chữ (không có giọng nói).
+- SimLab 3D: bản cập nhật mới của trò chơi.
+- Phòng thí nghiệm: tab "Sổ ghi" lưu mỗi lần chạy bài Vật lí cùng đáp số.
+- Chế độ Nâng cao: "Quét tham số" vẽ một đáp số theo một tham số.
+- Hộp khí: "Theo dõi một hạt" (hình minh họa).
+- Nguyên phân và giảm phân 3D: "Làm mờ phần còn lại" để nhìn rõ phần đang chọn.
+- Ctrl+/ mở danh sách phím tắt.
+- Cài đặt → Chuyển động: Theo hệ thống, Giảm hoặc Đầy đủ.
+- Xóa cuộc trò chuyện với AI Teacher có nút hoàn tác.
+
+### Improved
+
+- Trong phòng thí nghiệm, khung AI Teacher là một cột riêng, không còn che mô phỏng.
+- AI Teacher có giao diện đồng đều với phần còn lại của SimLab; câu trả lời hiện dần đúng định dạng trong lúc viết.
+- Cài đặt: trang "AI trong SimLab" gồm cả Gemma và Qwen.
+- Gemma: "Viết tiếp" nối liền mạch hơn, không mở lại bằng câu dẫn, không lặp hay chép lại phần đã viết.
+- Gemma: câu trả lời không còn đọc lại ghi chú của thư viện hay nói về ghi chú đó.
+- Gemma: thanh tải và nạp mô hình không còn nhảy lùi.
+- Trang mở đầu có màn mở đầu và nền chuyển động nhẹ.
+- Nút logo có tên rõ ràng và huy hiệu dễ đọc hơn, ở cả nền sáng và tối.
+
+### Fixed
+
+- AI Teacher: danh sách đánh số hiện đúng số; dấu chọn Deepthink hiện đúng; báo lỗi có nút mở đúng trang Cài đặt.
+- AI Teacher: câu hỏi đã dừng không còn được gửi lại; công thức trong chữ đậm hiện đúng; tiêu đề không còn dấu "#" thừa.
+- Nhãn "Số do AI tự đưa ra" đọc đúng phân số như ½, ¼ và (a)/(b).
+- Khung mô phỏng không còn kéo con trỏ ra khỏi ô đề bài.
+- Hộp khí vẫn chạy khi em chọn giảm chuyển động.
+
+### Security
+
+- Phòng chơi chung chỉ mở trong mạng nội bộ khi em tạo phòng, chỉ nhận kết nối từ SimLab và giới hạn số kết nối.
+
+### Changed
+
+- Bỏ vòng tròn chuyển màn khi bấm.
+- Cập nhật các thư viện dùng chung.
+
+### Known Issues
+
+- Với Gemma 1B và E2B, câu trả lời đôi khi lạc đề, thiếu công thức, đánh số lại hoặc bỏ dở một mục khi "Viết tiếp".
+- Chơi chung qua LAN mới được thử trên một máy. Lần đầu tạo phòng, Windows có thể hỏi về tường lửa: chọn mạng riêng tư.
+- Một số nội dung mới (Theo dõi một hạt, trò chơi) đang chờ giáo viên duyệt.
+
 ## [0.11.0] - 2026-11-18
 
 _Phát hành 18/11/2026 từ main @ e3a839dc (lượt Release 44203229726, người dùng chạy). Gói lớp 12 (#255): mọi bài lí thuyết của Vật lí 12 (21/21), Hóa học 12 (22/22) và Sinh học 12 (28/28) có chủ đề, qua 14 đợt (#293–#307); và hình 3D cho mọi bài làm được 3D (#302, chín đợt 6a–6i, PR #309–#316), cùng sửa bước npm audit (#317). Mỗi PR CI 8/8 xanh trước khi gộp. Chỉ phần web lên 0.11.0; lõi vẫn 0.8.2 (không có thay đổi Rust), nên web-update.json ghi minNative 0.8.2 và ứng dụng 0.8.2 cài từ GitHub nhận qua cập nhật trong app; bộ cài trong bản phát hành vẫn mang số 0.8.2. Bắt buộc cập nhật: minRequired 0.11.0 (người dùng chọn khi chạy lượt Release). Hộp “Có gì mới” đóng gói trong bản này được viết trước khi ghi chú nhắc tới hình 3D (thêm 18/11 sau khi phát hành)._
