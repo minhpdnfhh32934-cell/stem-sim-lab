@@ -404,6 +404,46 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation(previous, short)).toBe(`${previous} ${short}`);
   });
 
+  // Machine B's retest of #346 (20/11/2026), E2B: the item titles are its; the texts stand for its.
+  describe('items copied again under new numbers (retest of #346)', () => {
+    const item = (title: string) =>
+      `**${title}:** Vật giữ nguyên trạng thái chuyển động vì quán tính của nó.`;
+    const titles = [
+      'Khi bạn dừng xe đạp',
+      'Khi thả vật rơi tự do (trong môi trường không có sức cản)',
+      'Khi bạn đá quả bóng',
+      'Khi một chiếc thuyền neo đậu',
+      'Khi bạn dừng thang máy',
+      'Khi một chiếc xe đang chạy trên đường thẳng',
+    ];
+    const previous = `${titles.map((t, i) => `${i + 3}. ${item(t)}`).join('\n')}\n9.`;
+    // Items 3, 4, 6, 7, 8 again as 10–14 (item 5 left out).
+    const copy = [0, 1, 3, 4, 5].map((t, i) => `${i + 10}. ${item(titles[t] ?? '')}`).join('\n');
+
+    it('go, and the new item after them stays', () => {
+      const fresh = '15. **Khi bạn kéo một thùng hàng:** Thùng nặng cần lực lớn hơn.';
+      expect(joinContinuation(previous, `\n${copy}\n${fresh}`)).toBe(`${previous}\n${fresh}`);
+    });
+
+    it('a rest that is nothing but the copy adds nothing', () => {
+      expect(joinContinuation(previous, `\n${copy}`)).toBe(previous);
+    });
+
+    it('items that only share their titles stay', () => {
+      const own = `10. **Khi bạn dừng xe đạp:** Bánh xe ma sát với đường nên xe chậm lại.`;
+      expect(joinContinuation(previous, `\n${own}`)).toBe(`${previous}\n${own}`);
+    });
+  });
+
+  it('a "Nội dung tiếp theo:" label in the middle of a sentence goes (E2B, retest of #346)', () => {
+    expect(
+      joinContinuation(
+        'Nếu một vật đang đứng',
+        ' **Nội dung tiếp theo:**\n\n...thì vật sẽ duy trì trạng thái đó.',
+      ),
+    ).toBe('Nếu một vật đang đứng thì vật sẽ duy trì trạng thái đó.');
+  });
+
   it('E2B writing a heading and its bare label again replaces them (retest of #345)', () => {
     // The cut and the rest's opening are machine B's; the example after "Ví dụ 11:" stands for its own.
     const before = '1. **Định luật I Newton:** Vật giữ nguyên vận tốc khi hợp lực bằng 0.';
