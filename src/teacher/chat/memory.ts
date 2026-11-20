@@ -313,9 +313,10 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
  * "Ta tiếp tục thay số:" goes on with the solution, not with the writing: it stays. A label
  * that only says what comes next ("**Nội dung tiếp theo:**", E2B, retest of #346) is one too,
  * and so is "Dựa trên thông tin đã cung cấp, chúng ta có thể mở rộng…" (1B, retest of #347).
+ * "Tiếp tục" alone may be bold ("**Tiếp tục:**", 1B, retest of #349).
  */
 const RESUME_REMARK =
-  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[*_\s]*(?:nội dung|phần|ý) tiếp theo\s*:?[*_]*$|^dựa (?:trên|vào) (?:các |những )?thông tin (?:đã|được) (?:cung cấp|đưa ra)|^[\s(]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
+  /(?:viết tiếp|tiếp tục viết|chỗ bị dừng|bị dừng|dừng lại|phần còn lại|continu\w* (?:where|from)|left off|pick(?:ing)? up where|^[*_\s]*(?:nội dung|phần|ý) tiếp theo\s*:?[*_]*$|^dựa (?:trên|vào) (?:các |những )?thông tin (?:đã|được) (?:cung cấp|đưa ra)|^[\s(*_]*(?:(?:chúng ta|mình|ta) )?(?:sẽ |hãy )?(?:tiếp tục|continuing|continued)[\s.…:!)*_]*$|^(?:chúng ta|chúng tôi|mình|ta|tôi|em) (?:(?:sẽ|hãy|xin|cần|cùng) )*tiếp tục(?:[\s.…:!)]*$| (?:với )?(?:phần|bài|nội dung|câu trả lời|giải thích|trình bày|phân tích|mở rộng|tìm hiểu|thảo luận)(?![\p{L}\p{M}]))|^để tiếp tục,|^[\p{L}\p{M} ]{1,40} tiếp tục\s*:$|^(?:let's|let us|i'll|i will|we'll|we will) continue\b)/iu;
 /**
  * A word of praise, assent or apology before such a remark ("Tuyệt vời!", "Đúng vậy,", "Sure,",
  * "Tôi xin lỗi vì sự chậm trễ."): dropped only with the remark after it.
@@ -351,6 +352,20 @@ function withoutResumeRemark(rest: string): string {
     .trimStart()
     .replace(/^(?:\.{2,}|…)\s*/u, '');
   return remainder ? remainder : rest;
+}
+
+/** A line that only says the text goes on ("**Tiếp tục:**", "Continued:"). */
+const RESUME_LABEL = /^[ \t>*_#-]*(?:tiếp tục|continued|continuing)[ \t.…:!*_]*$/iu;
+
+/**
+ * Gemma 1B also writes such a line inside the rest, after its first paragraph (retest of #349):
+ * it goes wherever it is. A rest that is nothing but the label stays whole.
+ */
+function withoutResumeLabels(rest: string): string {
+  const lines = rest.split('\n');
+  const kept = lines.filter((line) => !RESUME_LABEL.test(line));
+  if (kept.length === lines.length || !kept.join('').trim()) return rest;
+  return kept.join('\n').replace(/\n{3,}/gu, '\n\n');
 }
 
 /** At least this much of the cut text, repeated at the start of the rest, is a repeat. */
@@ -521,10 +536,23 @@ function withoutCopiedBlock(previous: string, rest: string): string {
     at = found;
     copied += key.length;
   }
-  const start = copied >= MIN_COPY ? k : 0;
-  const long = new Set(before.filter((key) => key.length >= MIN_COPY));
-  const kept = lines.slice(start).filter((line) => !long.has(copyKey(line)));
-  return start === 0 && kept.length === lines.length ? rest : kept.join('\n');
+  return withoutLongCopies(previous, copied >= MIN_COPY ? lines.slice(k).join('\n') : rest);
+}
+
+/**
+ * A line of at least MIN_COPY characters copied word for word (item number aside) from
+ * `previous` goes wherever it is in `rest`; a rest that is nothing but such lines stays whole.
+ */
+function withoutLongCopies(previous: string, rest: string): string {
+  const long = new Set(
+    previous
+      .split('\n')
+      .map(copyKey)
+      .filter((key) => key.length >= MIN_COPY),
+  );
+  const lines = rest.split('\n');
+  const kept = lines.filter((line) => !long.has(copyKey(line)));
+  return kept.length === lines.length || !kept.join('').trim() ? rest : kept.join('\n');
 }
 
 /** A line that is all bold ("**Ví dụ 9: …**", "**Định luật II Newton (Tiếp tục):**"): a title. */
@@ -538,11 +566,15 @@ const BOLD_TITLE = /^\*\*[^*\n]+\*\*[ \t]*(?:\n|$)/u;
  * A rest that writes the last lines again replaces them (its version is the one that goes on).
  * A rest that opens with a bold title on its own line starts a new paragraph (it was glued to the
  * cut sentence: "…có thể xảy ra **Định luật II Newton (Tiếp tục):**", retest of #347).
+ * A rewrite loses its lines copied from the text before it too (E2B, retest of #349).
  */
 export function joinContinuation(previous: string, cut: string): string {
-  const remarkless = withoutResumeRemark(cut);
+  const remarkless = withoutResumeLabels(withoutResumeRemark(cut));
   const rewrite = rewriteStart(previous, remarkless);
-  if (rewrite >= 0) return `${previous.slice(0, rewrite)}${remarkless.trimStart()}`;
+  if (rewrite >= 0) {
+    const kept = previous.slice(0, rewrite);
+    return `${kept}${withoutLongCopies(kept, remarkless.trimStart())}`;
+  }
   const rest = withoutRepeat(previous, withoutCopiedBlock(previous, remarkless));
   const next = rest.trimStart();
   if (!next) return previous;

@@ -437,6 +437,47 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     });
   });
 
+  // Machine B's retest of #349 (20/11/2026): the two copied lines are verbatim, the rest stands in.
+  it('a rewrite of the cut line loses the long lines copied from before it (E2B)', () => {
+    const force =
+      '* **Giải thích:** Lối tác động của lực đạp ($F$) tạo ra sự thay đổi vận tốc (gia tốc) cho xe theo quy tắc $\\Sigma F = ma$.';
+    const mass =
+      '* **Giải thích:** Vì khối lượng của hộp rỗng nhỏ hơn (hoặc cùng khối lượng nhưng có thể xét đến ma sát khác nhau), nên với cùng một lực ($F$), vật nhẹ hơn sẽ có gia tốc lớn hơn theo $a = F/m$.';
+    const head = `* **Ví dụ 9:** Khi bạn đạp xe đạp.\n${force}\n* **Ví dụ 10:** Khi bạn đẩy hộp rỗng.\n${mass}\n`;
+    const previous = `${head}* **Ví dụ 15:** Khi bạn đạp xe xuống dốc, xe tăng tốc nhanh nếu không có lực cản`;
+    const rewrite =
+      '* **Ví dụ 15:** Khi bạn đạp xe xuống dốc, xe tăng tốc nhanh nếu không có lực cản của không khí.';
+    const fresh = '* **Ví dụ 16:** Khi bạn kéo một thùng nặng, thùng tăng tốc chậm.';
+    expect(joinContinuation(previous, `\n${rewrite}\n${force}\n${mass}\n${fresh}`)).toBe(
+      `${head}${rewrite}\n${fresh}`,
+    );
+  });
+
+  it("a line that only says 'Tiếp tục' goes anywhere in the rest (1B, retest of #349)", () => {
+    expect(
+      joinContinuation(
+        'Cái cây được chống đỡ nên không bị trôi.\n2',
+        ' **Lưu ý quan trọng:**  Việc hiểu rõ các nguyên tắc này là rất quan trọng trong nhiều ứng dụng thực tế.\n\n**Tiếp tục:**\n\nKhi chúng ta xét đến lực ma sát, vật chậm dần.',
+      ),
+    ).toBe(
+      'Cái cây được chống đỡ nên không bị trôi.\n2 **Lưu ý quan trọng:**  Việc hiểu rõ các nguyên tắc này là rất quan trọng trong nhiều ứng dụng thực tế.\n\nKhi chúng ta xét đến lực ma sát, vật chậm dần.',
+    );
+    // Bold at the very start, the same: "**Tiếp tục:**" then the next sentence.
+    expect(
+      joinContinuation(
+        '5. **Động cơ ô tô:**  Lực đẩy từ động cơ giúp xe tăng',
+        '\n\n**Tiếp tục:**\n\nĐịnh luật II Newton cho biết gia tốc tỉ lệ với lực.',
+      ),
+    ).toBe(
+      '5. **Động cơ ô tô:**  Lực đẩy từ động cơ giúp xe tăng Định luật II Newton cho biết gia tốc tỉ lệ với lực.',
+    );
+    // "tiếp tục" about the body in a line of its own stays.
+    const physics = 'Vật tiếp tục chuyển động thẳng đều.';
+    expect(joinContinuation('Khi hợp lực bằng 0,', `\n${physics}`)).toBe(
+      `Khi hợp lực bằng 0, ${physics}`,
+    );
+  });
+
   it('a "Nội dung tiếp theo:" label in the middle of a sentence goes (E2B, retest of #346)', () => {
     expect(
       joinContinuation(

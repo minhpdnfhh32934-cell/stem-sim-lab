@@ -194,3 +194,32 @@ Lệnh đã chạy (kết quả thật):
 - `npx vitest run`: 510 tệp, 5 850 bài đạt, 3 bỏ qua có sẵn.
 - `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
 - `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
+
+## Lượt 7: máy bàn thử lại #349 và bản 0.12.0 (20/11/2026)
+
+Bằng chứng ở `D:\Projects\simlab-work\issue-342-2026-11-19\retest-349\` trên máy bàn (main af42b36a,
+`npm run tauri dev`, chỉ model có sẵn).
+
+Kết quả: app 0.12.0 ĐẠT (mở bình thường, không bị khóa, hộp "Có gì mới" ghi 0.12.0), V1 ĐẠT
+(E2B câu 5 có đủ công thức, không "GHI CHÚ", không chữ số Bengal), KaTeX ĐẠT. Viết tiếp còn 2 lỗi do
+chính bản sửa của #349 bỏ sót:
+
+- E2B: khi phần viết tiếp viết lại dòng bị cắt, `joinContinuation` trả kết quả ngay, không qua quy
+  tắc "dòng dài chép y hệt", nên 2 dòng "Giải thích" (122 và 192 kí tự) vẫn hiện hai lần.
+- 1B: dòng riêng "**Tiếp tục:**" (ở giữa phần viết tiếp, hoặc ở đầu có dấu `**`) không bị bỏ.
+
+Đã sửa (`memory.ts`):
+
+- Nhánh viết lại cũng bỏ các dòng dài chép y hệt từ phần đứng trước nó (`withoutLongCopies`, dùng
+  chung với `withoutCopiedBlock`).
+- Dòng chỉ ghi "Tiếp tục:" (có hay không có `**`, `#`, `>`) bị bỏ ở bất cứ đâu trong phần viết tiếp
+  (`RESUME_LABEL`); câu đầu "**Tiếp tục:**" được coi là câu dẫn. Câu "Vật tiếp tục chuyển động…" giữ.
+
+Còn lại là chất lượng mô hình: "Ví dụ đời sống:" lặp nhiều lần, đánh số lại, bỏ dở câu, số mục bị
+bỏ dở ("2" dính vào nhãn), "Dựa trên thông tin đã cung cấp" chưa gặp lại nên chưa thấy chạy thật.
+
+Lệnh đã chạy (kết quả thật):
+
+- `npx vitest run`: 510 tệp, 5 852 bài đạt, 3 bỏ qua có sẵn.
+- `npx eslint .`, `npx tsc --noEmit -p .`, `npx prettier --check`: đạt.
+- `npx playwright test` teacher, post198-teacher, board (chromium): 47 đạt.
