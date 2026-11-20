@@ -183,14 +183,14 @@
     {
       "version": "0.12.1",
       "status": "merged-not-released",
-      "statusNote": "Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành: người dùng chạy lượt Release. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu (\"Chuẩn bị bản 0.12.1\"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu \"Làm gói 0.12.1.0 và nộp lại lên Store\", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1.",
+      "statusNote": "Gộp vào main cùng PR #353 (sửa giao diện và nâng số, 20/11/2026), chưa phát hành trên GitHub: lượt Release publish=true do người dùng chạy (Claude thử chạy hộ khi người dùng nhờ \"publish bản cập nhật mới lên ms store và github\" nhưng lệnh bị chặn, nên chỉ chạy lượt dựng thử publish=false 44773060452 để có gói Store). Gói Microsoft Store SimLab_0.12.1.0_x64.msix lấy từ lượt dựng thử đó: bản nộp 7 trong docs/STORE.md. Sửa lỗi giao diện người dùng báo sau khi cài 0.12.0. Số 0.12.1 do người dùng yêu cầu (\"Chuẩn bị bản 0.12.1\"). Phần web và phần lõi cùng lên 0.12.1. Không có thay đổi Rust sau v0.12.0: lõi được nâng số chỉ để có gói Microsoft Store 0.12.1.0 (Store chỉ nhận gói có số lớn hơn 0.12.0.0 của bản nộp 6; người dùng yêu cầu \"Làm gói 0.12.1.0 và nộp lại lên Store\", docs/STORE.md). Vì vậy web-update.json ghi minNative 0.12.1, nên ứng dụng 0.12.0 cài từ GitHub được báo cần tải bộ cài mới; bộ cài trong bản phát hành mang số 0.12.1.",
       "channel": "github",
       "dates": {
         "devStart": "2026-11-20T08:27:40Z",
         "firstCommit": "2026-11-20T18:27:51+07:00",
         "lastCommit": "2026-11-20T19:10:46+07:00",
-        "merged": null,
-        "built": null,
+        "merged": "2026-11-20T14:35:52Z",
+        "built": "2026-11-20T16:42:00Z",
         "released": null,
         "tagged": null
       },
@@ -198,10 +198,11 @@
         "devStart: GitHub Release v0.12.0 published_at 2026-11-20T08:27:40Z (mục 0.12.0)",
         "firstCommit: 2e32be6b 2026-11-20T18:27:51+07:00 (#352), commit đầu sau khi 0.12.0 phát hành (commit a5e9f5cc của #351 tạo lúc 15:07, trước khi phát hành, gộp sau)",
         "lastCommit: bc31bcea 2026-11-20T19:10:46+07:00 (#353, sửa giao diện); commit nâng số 0.12.1 nằm trong cùng PR",
-        "merged: #353 (sửa giao diện và nâng số) chưa gộp khi viết mục này; giờ gộp ghi khi phát hành",
+        "merged: #353 gộp 1ad03e90 2026-11-20T14:35:52Z (gh pr view 353); CI và Security checks của 1ad03e90 trên main đạt",
         "PR gộp sau 0.12.0: #351 (tài liệu Store), #352 (0.12.0 đã phát hành); rồi #353",
         "Không có thay đổi mã Rust: git diff --stat v0.12.0..main -- src-tauri chỉ có số phiên bản (tauri.conf.json, Cargo.toml, Cargo.lock: 0.12.0 → 0.12.1, cho gói Store 0.12.1.0)",
-        "Lỗi do người dùng báo (ảnh hộp chọn lớp và menu SimLab 3D, 20/11/2026); đo lại trong trình duyệt ở 1366×768 (khung game cao 711 px: nút cuối ở 683 px, trước là 735 px)"
+        "Lỗi do người dùng báo (ảnh hộp chọn lớp và menu SimLab 3D, 20/11/2026); đo lại trong trình duyệt ở 1366×768 (khung game cao 711 px: nút cuối ở 683 px, trước là 735 px)",
+        "built: lượt dựng thử Release 44773060452 (workflow_dispatch, publish=false, main, 1ad03e90), job 'Build Windows installers' xong 2026-11-20T16:42:00Z; artifact simlab-store: SimLab_0.12.1.0_x64.msix (115 614 861 byte, Identity FPTTECH.SimLab, Version=\"0.12.1.0\", x64; đọc AppxManifest.xml)"
       ],
       "tests": [
         "#353: E2E learner.spec, project.spec, post198-game.spec 296/296 đạt; Vitest src/app/layout, src/app/learner, spelling, tauri-config 56/56 đạt; typecheck đạt; game: tsc, ESLint, Prettier đạt"
