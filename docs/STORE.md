@@ -60,10 +60,9 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 5 (gói `SimLab_0.8.2.0_x64.msix`): **gửi duyệt ngày 15/11/2026** (chi tiết ở mục bản
   nộp 5 phía trên). Chữ "Có gì mới": mục "— bản 0.8.2" trong hai tệp listing. Ảnh chụp giữ 7 ảnh
   của bản nộp 4.
-- Bản nộp 6 (gói `SimLab_0.12.0.0_x64.msix`, gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0): **đã duyệt
-  xong**, chờ người dùng bấm **Publish now** (người dùng nộp 20/11/2026; tối 20/11 trang Overview ghi
-  "Update ready to publish", "Your product has passed the certification process"; bản trên Store
-  vẫn là bản nộp 5). Gói lấy từ artifact **simlab-store** của lượt Release 44681373015 (dựng thử
+- Bản nộp 6 (gói `SimLab_0.12.0.0_x64.msix`, gồm cả 0.9.0, 0.9.1, 0.10.0 và 0.11.0): **đã lên
+  Store** (người dùng nộp và bấm **Publish now** ngày 20/11/2026; tối 20/11 khi Claude mở trang Overview,
+  trang ghi "In Microsoft Store", "Congrats! Your product is now updated" và "Store presence (Submission 6)"). Gói lấy từ artifact **simlab-store** của lượt Release 44681373015 (dựng thử
   `publish=false`, main 0a662998; tệp .msix 110 MB vì có kèm `llama-server` cho Qwen; danh tính
   `FPTTECH.SimLab`, `Version="0.12.0.0"`). Claude dùng bản nháp Submission 6 có sẵn trong Partner
   Center (tạo 15/11/2026, chưa đổi gì): gỡ gói 0.8.2.0, điền chữ "Có gì mới" (mục "— bản 0.12.0"
@@ -71,7 +70,19 @@ Quyết định của người dùng (13/10/2026):
   select Publish now". Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp
   dưới 10 MB) rồi nộp. Còn lại cho người dùng: duyệt xong (thường vài giờ, có khi tới 3 ngày làm việc)
   thì bấm **Publish now** trên trang Overview. Ảnh chụp giữ 7 ảnh của bản nộp 4.
-- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **đang chuẩn bị** (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn hình máy xách tay, PR #353). Bản nộp 6 đã duyệt xong, nên người dùng chọn phát hành nó trước rồi nộp 0.12.1.0 ở bản nộp 7, thay vì hủy lượt duyệt đã đạt. Lõi lên 0.12.1 chỉ để Store nhận gói (không có thay đổi mã Rust); chữ "Có gì mới" là mục "— bản 0.12.1" trong hai tệp listing.
+- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **bản nháp xong, chờ người dùng kéo gói vào và nộp**
+  (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store", rồi "publish bản cập nhật mới lên
+  ms store và github giùm tôi"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn
+  hình máy xách tay, PR #353). Bản nộp 6 đã duyệt xong, nên người dùng chọn phát hành nó trước rồi
+  nộp 0.12.1.0 ở bản nộp 7, thay vì hủy lượt duyệt đã đạt. Lõi lên 0.12.1 chỉ để Store nhận gói
+  (không có thay đổi mã Rust). Gói lấy từ artifact **simlab-store** của lượt dựng thử Release
+  44773060452 (`publish=false`, main 1ad03e90; 115 MB; `FPTTECH.SimLab`, `Version="0.12.1.0"`).
+  Claude tạo bản nháp Submission 7 (Start update), điền chữ "Có gì mới" (mục "— bản 0.12.1" trong
+  hai tệp listing, vi 1173 và en 1231 ký tự), gỡ gói 0.12.0.0 khỏi mục Packages và đổi tùy chọn phát
+  hành thành "Publish this submission as soon as it passes certification" (người dùng muốn bản mới
+  tự lên Store). Còn lại cho người dùng: kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi
+  được tệp dưới 10 MB), bấm **Save**, rồi **Submit for certification**; duyệt xong thì Store tự
+  phát hành.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
