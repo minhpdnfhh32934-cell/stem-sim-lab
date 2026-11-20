@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-11-18",
+  "evidenceCheckedAt": "2026-11-20",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D. Bản 0.8.0 (không phát hành riêng) và 0.8.1 (chưa phát hành) bám sách Kết nối tri thức, thêm nhiều bài mới và thay toàn bộ giao diện bằng Bàn thí nghiệm.",
@@ -180,6 +180,259 @@
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
+    {
+      "version": "0.12.0",
+      "status": "merged-not-released",
+      "statusNote": "Đã gộp vào main tới #347 (20/11/2026), chưa phát hành: người dùng chạy lượt Release. Có thay đổi Rust (#280, #328, #341) nên phần web và phần lõi cùng lên 0.12.0; bản web ghi minNative 0.12.0, nên ứng dụng 0.8.2 được báo cần tải bộ cài mới. Số 0.12.0 do Claude chọn theo quy tắc của docs/RELEASE.md khi người dùng giao quyền tự quyết (thêm tính năng → tăng số giữa; lõi và web cùng một số); người dùng đổi được trước khi phát hành.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-11-18T00:08:48Z",
+        "firstCommit": "2026-11-18T08:12:05+07:00",
+        "lastCommit": "2026-11-20T08:08:34+07:00",
+        "merged": "2026-11-20T01:41:30Z",
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: GitHub Release v0.11.0 published_at 2026-11-18T00:08:48Z (mục 0.11.0)",
+        "firstCommit: e547b359 2026-11-18T08:12:05+07:00, commit đầu sau khi 0.11.0 phát hành (các commit dependabot của #280 và #308 tạo trước đó, gộp sau)",
+        "lastCommit: d095ad88 2026-11-20T08:08:34+07:00 (#347), trước commit nâng số phiên bản",
+        "merged: #347 gộp 2026-11-20T01:41:30Z (gh pr list --state merged)",
+        "PR gộp sau 0.11.0: gh pr list --state merged --search 'merged:>=2026-11-18T00:09:00Z' (30 PR, #280–#347)",
+        "Thay đổi Rust: git diff --stat v0.11.0..main -- src-tauri (19 tệp: #280, #328, #341)"
+      ],
+      "tests": [
+        "Mỗi PR: CI 8/8 xanh trước khi gộp (tự gộp sau CI)",
+        "AI Teacher với Gemma 1B và E2B thật trên máy bàn (RTX 4080): thử lại sau #343, #344, #345, #346; kết quả trong các bình luận của #342",
+        "Qwen 3.5 9B trong app: máy bàn thử trên RTX 4080 (#328)",
+        "Phòng chơi LAN: thử trên một máy, 9/10 rồi 3/3 đạt (#339); chưa thử trên hai máy"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [
+          280, 308, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333,
+          334, 335, 336, 337, 338, 340, 341, 343, 344, 345, 346, 347
+        ],
+        "commits": ["9009158f"],
+        "branches": [
+          "dependabot/cargo/src-tauri/cargo-minor-and-patch-bb7ffa95c1",
+          "dependabot/npm_and_yarn/npm-minor-and-patch-8df34201c0",
+          "docs/0.11.0-released",
+          "fix/282-jsdom-31",
+          "chore/remove-bench",
+          "feat/teacher-ui-unify",
+          "feat/195-shortcut-sheet",
+          "feat/195-motion",
+          "feat/195-dim-rest",
+          "feat/195-run-log",
+          "feat/195-sweep",
+          "fix/e2e-sweep",
+          "feat/195-follow-particle",
+          "feat/195-axe",
+          "feat/190-qwen-builtin",
+          "feat/app-effects",
+          "fix/dev-web-version",
+          "feat/settings-ai-in-simlab",
+          "fix/runner-test-budget",
+          "fix/teacher-sweep",
+          "fix/dock-chat-no-transition",
+          "fix/teacher-real-model-bugs",
+          "feat/game-2026-11-19",
+          "feat/339-rooms-server",
+          "feat/339-rooms-embed",
+          "fix/342-model-quality",
+          "fix/342-model-quality-2",
+          "fix/342-model-quality-3",
+          "fix/342-model-quality-4",
+          "fix/342-model-quality-5",
+          "chore/0.12.0"
+        ]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.12.0 thêm Qwen 3.5 9B chạy ngay trên máy em, chơi chung SimLab 3D với bạn trong cùng mạng LAN, công cụ mới cho phòng thí nghiệm (Sổ ghi, Quét tham số, Theo dõi một hạt) và nhiều sửa lỗi cho AI Teacher.",
+          "en": "Version 0.12.0 adds Qwen 3.5 9B running right on your computer, SimLab 3D played together with friends on the same local network, new lab tools (Run log, Parameter sweep, Follow one particle) and many AI Teacher fixes."
+        },
+        "added": [
+          {
+            "vi": "AI Teacher: Qwen 3.5 9B chạy ngay trong SimLab trên máy em, tải về khi em chọn; cần card đồ họa rời có từ 8 GB bộ nhớ.",
+            "en": "AI Teacher: Qwen 3.5 9B runs inside SimLab on your computer, downloaded when you choose it; it needs a discrete graphics card with 8 GB of memory or more.",
+            "area": "teacher"
+          },
+          {
+            "vi": "SimLab 3D: chơi chung với bạn trong cùng mạng LAN, thấy nhau di chuyển, thấy tên và trò chuyện bằng chữ (không có giọng nói).",
+            "en": "SimLab 3D: play together on the same local network, seeing each other move, names and text chat (no voice).",
+            "area": "ui"
+          },
+          {
+            "vi": "SimLab 3D: bản cập nhật mới của trò chơi.",
+            "en": "SimLab 3D: the new version of the game.",
+            "area": "ui"
+          },
+          {
+            "vi": "Phòng thí nghiệm: tab \"Sổ ghi\" lưu mỗi lần chạy bài Vật lí cùng đáp số.",
+            "en": "Lab: a \"Run log\" tab keeps each run of a Physics lesson with its result.",
+            "area": "ui"
+          },
+          {
+            "vi": "Chế độ Nâng cao: \"Quét tham số\" vẽ một đáp số theo một tham số.",
+            "en": "Advanced mode: \"Parameter sweep\" plots one result against one parameter.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hộp khí: \"Theo dõi một hạt\" (hình minh họa).",
+            "en": "Gas box: \"Follow one particle\" (an illustration).",
+            "area": "ui"
+          },
+          {
+            "vi": "Nguyên phân và giảm phân 3D: \"Làm mờ phần còn lại\" để nhìn rõ phần đang chọn.",
+            "en": "Mitosis and meiosis 3D: \"Dim the rest\" to see the selected part clearly.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Ctrl+/ mở danh sách phím tắt.",
+            "en": "Ctrl+/ opens the list of shortcuts.",
+            "area": "ui"
+          },
+          {
+            "vi": "Cài đặt → Chuyển động: Theo hệ thống, Giảm hoặc Đầy đủ.",
+            "en": "Settings → Motion: Follow the system, Reduced or Full.",
+            "area": "ui"
+          },
+          {
+            "vi": "Xóa cuộc trò chuyện với AI Teacher có nút hoàn tác.",
+            "en": "Clearing an AI Teacher conversation can be undone.",
+            "area": "teacher"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Trong phòng thí nghiệm, khung AI Teacher là một cột riêng, không còn che mô phỏng.",
+            "en": "In the lab, the AI Teacher panel is a column of its own and no longer covers the simulation.",
+            "area": "teacher"
+          },
+          {
+            "vi": "AI Teacher có giao diện đồng đều với phần còn lại của SimLab; câu trả lời hiện dần đúng định dạng trong lúc viết.",
+            "en": "AI Teacher looks like the rest of SimLab; answers are laid out properly while they are written.",
+            "area": "teacher"
+          },
+          {
+            "vi": "Cài đặt: trang \"AI trong SimLab\" gồm cả Gemma và Qwen.",
+            "en": "Settings: the \"AI in SimLab\" page holds both Gemma and Qwen.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Gemma: \"Viết tiếp\" nối liền mạch hơn, không mở lại bằng câu dẫn, không lặp hay chép lại phần đã viết.",
+            "en": "Gemma: \"Continue\" joins more smoothly, without lead-in sentences, repeats or copies of what was already written.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Gemma: câu trả lời không còn đọc lại ghi chú của thư viện hay nói về ghi chú đó.",
+            "en": "Gemma: answers no longer read back the library note or talk about it.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Gemma: thanh tải và nạp mô hình không còn nhảy lùi.",
+            "en": "Gemma: the download and loading bar no longer jumps back.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Trang mở đầu có màn mở đầu và nền chuyển động nhẹ.",
+            "en": "The launch page has an opening and a gently moving background.",
+            "area": "ui"
+          },
+          {
+            "vi": "Nút logo có tên rõ ràng và huy hiệu dễ đọc hơn, ở cả nền sáng và tối.",
+            "en": "The logo button has a clear name and badges are easier to read, in light and dark.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [
+          {
+            "vi": "AI Teacher: danh sách đánh số hiện đúng số; dấu chọn Deepthink hiện đúng; báo lỗi có nút mở đúng trang Cài đặt.",
+            "en": "AI Teacher: numbered lists show their numbers; the Deepthink tick shows correctly; errors have a button to the right Settings page.",
+            "area": "teacher"
+          },
+          {
+            "vi": "AI Teacher: câu hỏi đã dừng không còn được gửi lại; công thức trong chữ đậm hiện đúng; tiêu đề không còn dấu \"#\" thừa.",
+            "en": "AI Teacher: a stopped question is no longer sent again; formulas in bold text show correctly; headings lose their extra \"#\".",
+            "area": "teacher"
+          },
+          {
+            "vi": "Nhãn \"Số do AI tự đưa ra\" đọc đúng phân số như ½, ¼ và (a)/(b).",
+            "en": "The \"Numbers the AI gave itself\" label reads fractions such as ½, ¼ and (a)/(b) correctly.",
+            "area": "teacher"
+          },
+          {
+            "vi": "Khung mô phỏng không còn kéo con trỏ ra khỏi ô đề bài.",
+            "en": "The simulation no longer pulls the cursor out of the problem box.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hộp khí vẫn chạy khi em chọn giảm chuyển động.",
+            "en": "The gas box keeps running when you choose reduced motion.",
+            "area": "ui"
+          }
+        ],
+        "security": [
+          {
+            "vi": "Phòng chơi chung chỉ mở trong mạng nội bộ khi em tạo phòng, chỉ nhận kết nối từ SimLab và giới hạn số kết nối.",
+            "en": "A shared game room opens only on the local network while you host it, accepts only SimLab and limits the number of connections.",
+            "area": "security"
+          }
+        ],
+        "performance": [],
+        "changed": [
+          {
+            "vi": "Bỏ vòng tròn chuyển màn khi bấm.",
+            "en": "The circle shown when changing screens is gone.",
+            "area": "ui"
+          },
+          {
+            "vi": "Cập nhật các thư viện dùng chung.",
+            "en": "Shared libraries were updated."
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Với Gemma 1B và E2B, câu trả lời đôi khi lạc đề, thiếu công thức, đánh số lại hoặc bỏ dở một mục khi \"Viết tiếp\".",
+            "en": "With Gemma 1B and E2B, answers sometimes drift off topic, leave out formulas, number items again or leave an item unfinished on \"Continue\".",
+            "area": "gemma"
+          },
+          {
+            "vi": "Chơi chung qua LAN mới được thử trên một máy. Lần đầu tạo phòng, Windows có thể hỏi về tường lửa: chọn mạng riêng tư.",
+            "en": "LAN play has only been tried on one computer. The first time you host a room, Windows may ask about the firewall: choose private networks.",
+            "area": "ui"
+          },
+          {
+            "vi": "Một số nội dung mới (Theo dõi một hạt, trò chơi) đang chờ giáo viên duyệt.",
+            "en": "Some new content (Follow one particle, the game) is waiting for a teacher review."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "teacher",
+          "vi": "AI Teacher có thêm Qwen 3.5 9B chạy ngay trên máy em.",
+          "en": "AI Teacher can now use Qwen 3.5 9B right on your computer."
+        },
+        {
+          "area": "ui",
+          "vi": "Chơi chung SimLab 3D với bạn trong cùng mạng LAN.",
+          "en": "Play SimLab 3D together on the same local network."
+        },
+        {
+          "area": "ui",
+          "vi": "Sổ ghi các lần chạy, Quét tham số và Theo dõi một hạt.",
+          "en": "Run log, Parameter sweep and Follow one particle."
+        }
+      ]
+    },
     {
       "version": "0.11.0",
       "status": "released",
