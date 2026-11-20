@@ -42,16 +42,18 @@ on a whiteboard.
 
 physics, chemistry, biology, simulation, learning
 
-## What's new — 0.8.2
+## What's new — 0.12.0
 
-Version 0.8.2:
+Version 0.12.0 (includes 0.9.0, 0.9.1, 0.10.0 and 0.11.0):
 
-- Cover pictures on every chemistry and biology lesson card and on Harmonics and Fourier series, taken from the lesson's own simulation.
-- The Science Cards of Horizontal projectile, Free fall and Newton's laws show their own equations; the cross-check deviation is written the usual way.
-- AI Teacher: "Think" is now called "Deepthink"; the "An AI" chip is gone from the header (every answer still carries the "AI-assisted" label).
-- AI model sizes and molar masses use the language's decimal mark.
-- Metal crystals and NaCl shows its full 3D picture again; number boxes show the whole value (the Coulomb constant); no Vietnamese left in the English interface.
-- Updated two networking libraries with known vulnerabilities.
+- Every theory lesson of grades 10, 11 and 12 in the Kết nối tri thức textbooks for Physics, Chemistry and Biology, with values taken from the textbooks.
+- AI Teacher: Qwen 3.5 9B runs right on your computer, downloaded when you choose it (it needs a discrete graphics card with 8 GB of memory or more). In the lab, the AI Teacher panel is a column of its own and no longer covers the simulation.
+- SimLab 3D: play together on the same local network, seeing each other move, names and text chat. The first time you host a room, Windows may ask about the firewall: choose private networks.
+- Lab: Run log, Parameter sweep (Advanced mode) and Follow one particle in the gas box.
+- Oxidation numbers in salts such as CuSO₄, AgNO₃ and NH₄Cl.
+- Gemma: "Continue" joins more smoothly; the model download bar no longer jumps back.
+- The familiar window layout is back; Ctrl+/ lists the shortcuts; Settings → Motion lets you reduce motion.
+- Many AI Teacher fixes and updated shared libraries.
 
 ## System requirements (suggested)
 
