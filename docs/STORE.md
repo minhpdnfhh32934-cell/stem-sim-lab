@@ -70,7 +70,7 @@ Quyết định của người dùng (13/10/2026):
   select Publish now". Người dùng kéo tệp gói vào mục **Packages** (tiện ích Chrome chỉ gửi được tệp
   dưới 10 MB) rồi nộp. Còn lại cho người dùng: duyệt xong (thường vài giờ, có khi tới 3 ngày làm việc)
   thì bấm **Publish now** trên trang Overview. Ảnh chụp giữ 7 ảnh của bản nộp 4.
-- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **gửi duyệt ngày 21/11/2026**, tự phát hành khi duyệt xong
+- Bản nộp 7 (gói `SimLab_0.12.1.0_x64.msix`): **đã lên Store** (gửi duyệt và tự phát hành ngày 21/11/2026)
   (20/11/2026; người dùng: "Làm gói 0.12.1.0 và nộp lại lên Store", rồi "publish bản cập nhật mới lên
   ms store và github giùm tôi"). Gói 0.12.0.0 còn lỗi menu SimLab 3D (nút Cài đặt bị cắt trên màn
   hình máy xách tay, PR #353). Bản nộp 6 đã duyệt xong, nên người dùng chọn phát hành nó trước rồi
@@ -84,7 +84,8 @@ Quyết định của người dùng (13/10/2026):
   10 MB; Partner Center báo "Validated"). Gói mới làm mục **Submission options** thành "Incomplete":
   ô lý do `runFullTrust` trống (người dùng: "hiện đang thiếu submission option trong ms store kìa").
   Claude dán lý do ở bước 5, bấm Save, rồi **Submit for certification** (trang báo "Update in
-  certification").
+  certification"). Ngày 21/11/2026 người dùng báo "Store đã duyệt xong"; Claude mở trang Overview:
+  "In Microsoft Store", "Congrats! Your product is now updated" và "Store presence (Submission 7)".
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ### Chụp lại ảnh AI Teacher (ảnh 2) trước bản nộp 4
