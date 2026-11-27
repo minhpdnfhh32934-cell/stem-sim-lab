@@ -474,6 +474,31 @@ versions queried Wikipedia on every question without telling the learner; v4 of 
 turns it off for everyone. With Gemma, Wikipedia is asked only when the library has no note for the
 question (the on-device prompt takes one note).
 
+### The SimLab 3D guide (27/11/2026)
+
+AI Teacher knows the SimLab 3D game (`docs/GAME.md`) through a guide generated from the game's own
+content: `npm run game-guide` (`scripts/game/gen-game-guide.mjs`) reads `game/src/content/` (rooms,
+laboratories, topics, the 79 experiments with their settings, steps, parts and theory notes, the
+guided tasks, the cleanroom procedure, Mr. Quang, the emergency numbers), the default key bindings
+(`game/src/core/config.ts`) and the controls texts of the copy inside SimLab (no "hold to talk"),
+and writes `data/game_guide.json` (139 sections, vi + en, `reviewStatus: "pending"`, DATA_REVIEW
+`GAME-3`). The few lines on how SimLab embeds the game (where to open it, no voice, no Ultra, LAN
+rooms) follow `docs/GAME.md`. `tests/game-guide.test.ts` fails while the file is stale.
+
+- `src/teacher/chat/gameGuide.ts`: `isGameQuestion` (the game's name, "game" — not "game of…" or
+  "game theory" —, Mr. Quang, room names no textbook uses; a follow-up "Còn … thì sao?" after a
+  game question too, `continuesGame`), `searchGameGuide`: a section the question names ("Thầy
+  Quang", "Rơi tự do") first, then the library's own ranking (`rankDocuments`) over the guide
+  alone, with the words that only say "the game" left out. The guide is loaded on the first game
+  question (its own chunk) and never mixed into the science library's term weights.
+- A game question: the cloud prompt gets the guide's overview plus its three best sections, then
+  two science notes, and a rule ("names of rooms, keys and steps only from the guide; say you do
+  not know what it does not say"); an on-device prompt gets one guide section and the same rule.
+  Wikipedia is not asked. **Every other question builds the same prompt as before**: no question
+  of `teaching-eval.json`, `teaching-heldout.json`, `teaching-heldout-2.json` or
+  `retrieval-heldout.json` is a game question (`gameGuide.test.ts`), and the golden prompts are
+  unchanged, so the on-device benchmark results stand.
+
 ## Teaching quality (2026-10-14)
 
 Changes made after the analysis of the Gemma 1B evaluation (keyFacts 29 % → 23 %: noise plus
