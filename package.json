@@ -25,6 +25,7 @@
     "golden:llm": "vitest run --config vitest.llm.config.ts",
     "build:game": "node scripts/game/build.mjs",
     "game-guide": "node scripts/game/gen-game-guide.mjs",
+    "app-guide": "node scripts/data/gen-app-guide.mjs",
     "release-notes": "node scripts/release-notes/build.mjs"
   },
   "dependencies": {
