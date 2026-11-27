@@ -3,7 +3,7 @@ import evalSet from '../../../tests/teaching/teaching-eval.json';
 import heldout from '../../../tests/teaching/teaching-heldout.json';
 import heldout2 from '../../../tests/teaching/teaching-heldout-2.json';
 import retrieval from '../../../tests/teaching/retrieval-heldout.json';
-import { isGameQuestion, searchGameGuide } from './gameGuide';
+import { continuesGame, isGameQuestion, searchGameGuide } from './gameGuide';
 
 const { contextPrompt } = await import('./chatService');
 
@@ -16,6 +16,9 @@ const GAME = [
   'Khu ném xiên có thí nghiệm gì?',
   'How do I open SimLab 3D?',
   'Where is Mr. Quang in the game?',
+  'Em muốn tạo nhân vật của bạn trong SimLab 3D thì làm sao?',
+  'Phòng giáo viên có gì?',
+  'How do I join a LAN room in SimLab 3D?',
 ];
 
 const NOT_GAME = [
@@ -26,6 +29,12 @@ const NOT_GAME = [
   'Phòng thí nghiệm hóa học cần những dụng cụ nào?',
   'Tầm xa của vật ném xiên phụ thuộc vào gì?',
   'Em thấy quang phổ vạch khó hiểu quá.',
+  'What is the projectile range of a ball thrown at 30° with 20 m/s?',
+  'Trong trò chơi đu quay, em bé chịu lực hướng tâm bao nhiêu?',
+  'Cây phong lan sống bám trên thân cây khác là quan hệ gì?',
+  'Thầy ra đề kiểm tra kiến thức động học cho em nhé.',
+  'Khi phát hiện cháy thì phải gọi 114 đúng không?',
+  'Trong phòng thực hành hóa học cần lưu ý gì về an toàn?',
 ];
 
 describe('isGameQuestion', () => {
@@ -46,6 +55,18 @@ describe('isGameQuestion', () => {
     expect(questions.length).toBeGreaterThan(100);
     expect(questions.filter(isGameQuestion)).toEqual([]);
   });
+
+  it('goes on with a game question only for the game’s own things', () => {
+    const before = 'Trong game SimLab 3D có những phòng nào?';
+    expect(continuesGame('Còn phòng Hóa thì sao?', before)).toBe(true);
+    expect(continuesGame('Nhân vật nào cao nhất?', before)).toBe(true);
+    // Science after a game question: "của", "phóng", "thầy", "bảng tuần hoàn" name no game thing.
+    expect(continuesGame('Công thức của động năng là gì?', before)).toBe(false);
+    expect(continuesGame('Phóng xạ alpha là gì?', before)).toBe(false);
+    expect(continuesGame('Thầy giải thích giúp em định luật Ôm.', before)).toBe(false);
+    expect(continuesGame('Bảng tuần hoàn có bao nhiêu nhóm?', before)).toBe(false);
+    expect(continuesGame('Nhân vật nào cao nhất?', 'Lực ma sát là gì?')).toBe(false);
+  });
 });
 
 describe('searchGameGuide', () => {
@@ -54,8 +75,23 @@ describe('searchGameGuide', () => {
     ['Thầy Quang trong game giúp được gì?', 'vi', 'npc:teacher'],
     ['Trong game chơi nhiều người qua LAN thế nào?', 'vi', 'lan'],
     ['Trong game bấm phím nào để nhảy?', 'vi', 'controls'],
+    // "mình", "tuần hoàn": no character (Minh, Tuấn) is read into them.
+    ['Trong game mình bấm phím gì để nhảy?', 'vi', 'controls'],
+    ['Trong game, bảng tuần hoàn ở đâu?', 'vi', 'hub-boards'],
+    ['Trong game làm sao để chạy nhanh?', 'vi', 'controls'],
     ['Phòng chuẩn bị: vào phòng sạch gồm những bước nào?', 'vi', 'procedure:cleanroom-entry'],
     ['In the game, how do I run the pendulum experiment?', 'en', 'experiment:pendulum'],
+    ['Trong game có những nhân vật nào, tạo nhân vật thế nào?', 'vi', 'characters'],
+    [
+      'Thầy Quang chấm bài kiểm tra trong game thế nào, ngân hàng có bao nhiêu câu?',
+      'vi',
+      'test-papers',
+    ],
+    ['Laptop ở sảnh trong game có những cuốn sách nào?', 'vi', 'laptop-books'],
+    ['Bảng tuần hoàn và bảng tiến độ học tập ở sảnh SimLab 3D ở đâu?', 'vi', 'hub-boards'],
+    ['Trong game, bàn làm việc có mấy bước và sai số tính thế nào?', 'vi', 'how-experiments-work'],
+    ['Trong game, cháy mạch điện thì gọi 114 thế nào?', 'vi', 'emergency'],
+    ['Màn mở đầu tên lửa của SimLab 3D có gì?', 'vi', 'menu-and-saves'],
   ] as const)('answers "%s" with its section first', async (q, locale, id) => {
     const [best] = await searchGameGuide(q, locale, 1);
     expect(best?.id).toBe(`builtin:game:${id}`);
