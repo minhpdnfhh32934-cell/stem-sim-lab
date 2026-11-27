@@ -18,6 +18,7 @@ import { selectionContext, selectionText, type BoardSelection } from '@/teacher/
 import { pictureReaderNow } from './pictureReader';
 import { screenContext } from './context';
 import { bestSentences, fetchWebKnowledge, searchKnowledge, unambiguousNote } from './knowledge';
+import { continuesGame, isGameQuestion, searchGameGuide } from './gameGuide';
 import { missingNumericData, type MissingData } from './missingData';
 import { givenNumbers, unverifiedNumbers } from './provenance';
 import { toolBlock, toolFacts } from './tools';
@@ -246,6 +247,12 @@ const MISSING_DATA: Record<Locale, (quantity: string) => string> = {
  */
 const NOTE_CHARS: Record<Exclude<PromptSize, 'full'>, number> = { compact: 400, tight: 250 };
 
+/** A question about the SimLab 3D game: its rooms, keys and steps come from its guide only. */
+const GAME_RULE: Record<Locale, string> = {
+  vi: '\n\nCâu hỏi này nói về SimLab 3D, trò chơi phòng thí nghiệm có trong SimLab. Tên phòng, phím, nhân vật, thí nghiệm và các bước trong game chỉ lấy từ "Hướng dẫn SimLab 3D" dưới đây; điều hướng dẫn không ghi thì nói thật là mình chưa biết, không đoán. Kiến thức khoa học của thí nghiệm thì giảng như thường.',
+  en: '\n\nThis question is about SimLab 3D, the laboratory game inside SimLab. Rooms, keys, characters, experiments and steps in the game come only from the "SimLab 3D guide" below; say plainly that you do not know what it does not say, never guess. Explain the science of an experiment as usual.',
+};
+
 /**
  * How much context an on-device answer gets. `tight` = Gemma runs on an integrated card, where a
  * long prompt is one long GPU job that can make the driver time out (audit GPU-01).
@@ -333,11 +340,20 @@ export async function contextPrompt(
   // characters took 10–30 s on an iGPU). That one note is whole here (its best sentences are cut
   // from all of it below) and left out when two notes match alike. The cloud prompt keeps whole
   // notes with their source.
+  // A question about the SimLab 3D game reads the game's own guide first (gameGuide.ts): the cloud
+  // prompt gets its overview and best matches, then two science notes; an on-device prompt one
+  // guide section. Every other question builds the same prompt as before.
+  const game =
+    query !== '' &&
+    (isGameQuestion(query) || (!instruction && continuesGame(asked, lastOwnQuestion(history))));
+  const guide = game ? await searchGameGuide(query, locale, full ? 4 : 1) : [];
   const local = !query
     ? []
     : full
-      ? searchKnowledge(query, locale, 5)
-      : unambiguousNote(query, locale);
+      ? [...guide, ...searchKnowledge(query, locale, game ? 2 : 5)]
+      : game
+        ? guide
+        : unambiguousNote(query, locale);
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
   // runs silently. Web excerpts come last and are always labelled: checked library first (an
   // on-device prompt that already has its one library note does not ask Wikipedia at all, nor
@@ -345,7 +361,7 @@ export async function contextPrompt(
   // question about the circled board is not looked up there either: its words alone ("g ở đây?",
   // often the default question) name no topic, and the board's text never goes to Wikipedia.
   const web =
-    webLookup && asked && !selection && (full || (local.length === 0 && !missing))
+    webLookup && asked && !selection && !game && (full || (local.length === 0 && !missing))
       ? await fetchWebKnowledge(asked, locale, options.signal)
       : [];
   const notes = [...local, ...web]
@@ -392,6 +408,7 @@ export async function contextPrompt(
     missing ? `\n\n${MISSING_DATA[locale](missing.quantity)}` : '',
     block && full ? `\n\n${BOARD_ASK[locale]}\n${block}` : '',
     board ? BOARD_STYLE[locale](size === 'compact') : '',
+    game ? GAME_RULE[locale] : '',
     noteBlock,
   ].join('');
   return {
