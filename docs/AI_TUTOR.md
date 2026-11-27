@@ -501,7 +501,8 @@ lines on how SimLab embeds the game (where to open it, no voice, no Ultra, LAN r
 - Words are matched by `phrases()`: written with their accents and compared with them when the
   question has accents, so "bảng tuần hoàn" is not the character Tuấn, "chạy" (run) not "cháy"
   (fire), "thấy quang phổ" not "thầy Quang"; only a question typed without any accent is compared
-  with accents removed. Words a science question also uses are left out on purpose ("projectile
+  with accents removed; the older tone placement (mark on the a of "hoa", the y of "thuy") reads
+  as the app writes it ("hóa", "thủy"). Words a science question also uses are left out on purpose ("projectile
   range", "phong lan", "trong trò chơi", "ra đề kiểm tra", "gọi 114"; tests in `gameGuide.test.ts`).
 
 **The SimLab guide** (27/11/2026, written with Antigravity, reviewed on Máy A) does the same for the

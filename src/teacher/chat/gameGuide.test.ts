@@ -3,7 +3,7 @@ import evalSet from '../../../tests/teaching/teaching-eval.json';
 import heldout from '../../../tests/teaching/teaching-heldout.json';
 import heldout2 from '../../../tests/teaching/teaching-heldout-2.json';
 import retrieval from '../../../tests/teaching/retrieval-heldout.json';
-import { continuesGame, isGameQuestion, searchGameGuide } from './gameGuide';
+import { continuesGame, isGameQuestion, phrases, searchGameGuide } from './gameGuide';
 
 const { contextPrompt } = await import('./chatService');
 
@@ -54,6 +54,15 @@ describe('isGameQuestion', () => {
     ];
     expect(questions.length).toBeGreaterThan(100);
     expect(questions.filter(isGameQuestion)).toEqual([]);
+  });
+
+  it('reads the older tone placement as the app writes it, but not "quý"', () => {
+    const fire = phrases(['cứu hỏa']);
+    expect(fire('Trong game gọi cứu hoả thế nào?')).toBe(true);
+    expect(fire('Trong game gọi cứu hỏa thế nào?')).toBe(true);
+    expect(phrases(['thủy'])('Thuỷ ngân')).toBe(true);
+    expect(phrases(['quý'])('Kim loại quý')).toBe(true);
+    expect(phrases(['hoàn'])('bảng tuần hoàn')).toBe(true);
   });
 
   it('goes on with a game question only for the game’s own things', () => {

@@ -35,11 +35,19 @@ function words(text: string): string {
 
 /** Lower case, accents kept, words separated by single spaces ("Bảng tuần hoàn?" → "bảng tuần hoàn"). */
 function plain(text: string): string {
-  return text
-    .normalize('NFC')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .trim();
+  return (
+    text
+      .normalize('NFD')
+      // Older tone placement (the mark on the a of "hoa", on the y of "thuy") read as the app
+      // writes it ("hóa", "cứu hỏa", "thủy"):
+      // the mark moves onto o/u in an open oa/oe/uy syllable ("quý" keeps it: its u belongs to "qu").
+      .replace(/([oO])([aAeE])([̣̀́̃̉])(?![\p{L}\p{M}])/gu, '$1$3$2')
+      .replace(/(?<![qQ])([uU])([yY])([̣̀́̃̉])(?![\p{L}\p{M}])/gu, '$1$3$2')
+      .normalize('NFC')
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim()
+  );
 }
 
 /** The question has accents (or "đ"): its words are compared with their accents. */
@@ -267,7 +275,7 @@ const SECTION_HINTS: [(query: string) => boolean, string][] = [
       'save',
       'saves',
       'đồ họa',
-      'đồ hoạ',
+      'đồ họa',
     ]),
     'menu-and-saves',
   ],

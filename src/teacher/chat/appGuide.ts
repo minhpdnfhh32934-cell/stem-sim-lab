@@ -252,7 +252,6 @@ const APP_HINTS: [(query: string) => boolean, string][] = [
   [
     phrases([
       'hóa học',
-      'hoá học',
       'sinh học',
       'chemistry',
       'biology',
