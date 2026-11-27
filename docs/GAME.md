@@ -109,7 +109,10 @@ Người dùng báo giao diện lỗi sau khi cài 0.12.0. Ba chỗ sửa trong 
 Người dùng báo AI Teacher "chưa hiểu rõ về game". AI Teacher giờ đọc **"Hướng dẫn SimLab 3D"**
 (`data/game_guide.json`), tạo từ chính dữ liệu của game bằng `npm run game-guide`: từng phòng, thí
 nghiệm (thông số, các bước, bộ phận, ghi chú lý thuyết), nhiệm vụ hướng dẫn, chủ đề, phím điều khiển
-của bản nhúng, thầy Quang, quy trình vào phòng sạch, số gọi cứu hỏa, chơi LAN. **Khi nội dung game
+của bản nhúng, thầy Quang (giảng, ra đề, chấm bài), nhân vật và cách tạo nhân vật, laptop và sách ở
+sảnh, các bảng ở sảnh, cách làm thí nghiệm (bàn điều khiển, bàn làm việc, sai số, khớp đường thẳng),
+quy trình vào phòng sạch, cháy và số gọi cứu hỏa, menu và bản lưu, chơi LAN (bổ sung 27/11/2026 cùng
+Antigravity). Tên thẻ, dáng đứng, nút đều đọc từ chữ của game, không gõ lại. **Khi nội dung game
 đổi (`game/src/content/`, phím, chữ hướng dẫn), chạy lại `npm run game-guide`**: test
 `tests/game-guide.test.ts` báo lỗi khi tệp cũ. Chỉ câu hỏi về game mới dùng hướng dẫn này; chi tiết
 trong `docs/AI_TUTOR.md` ("The SimLab 3D guide"). Câu chữ chờ duyệt: DATA_REVIEW `GAME-3`.

@@ -481,23 +481,49 @@ content: `npm run game-guide` (`scripts/game/gen-game-guide.mjs`) reads `game/sr
 laboratories, topics, the 79 experiments with their settings, steps, parts and theory notes, the
 guided tasks, the cleanroom procedure, Mr. Quang, the emergency numbers), the default key bindings
 (`game/src/core/config.ts`) and the controls texts of the copy inside SimLab (no "hold to talk"),
-and writes `data/game_guide.json` (139 sections, vi + en, `reviewStatus: "pending"`, DATA_REVIEW
-`GAME-3`). The few lines on how SimLab embeds the game (where to open it, no voice, no Ultra, LAN
-rooms) follow `docs/GAME.md`. `tests/game-guide.test.ts` fails while the file is stale.
+and writes `data/game_guide.json` (145 sections, vi + en, `reviewStatus: "pending"`, DATA_REVIEW
+`GAME-3`). Besides rooms, experiments, topics and tasks it has sections on the characters and the
+character creator, Mr. Quang's tests and marking, the hub laptop's books, the hub boards, how
+experiments are run (control desk, workbench, uncertainty, line fits), emergencies, the menu and
+saves, and LAN rooms; names of tabs, poses and buttons are read from the game's own texts, never
+retyped. An experiment longer than 5200 characters drops its least useful lines first (so a
+whole section fits the cloud prompt's 6000-character excerpt with its source and status). The few
+lines on how SimLab embeds the game (where to open it, no voice, no Ultra, LAN rooms) follow
+`docs/GAME.md`. `tests/game-guide.test.ts` fails while the file is stale.
 
 - `src/teacher/chat/gameGuide.ts`: `isGameQuestion` (the game's name, "game" — not "game of…" or
-  "game theory" —, Mr. Quang, room names no textbook uses; a follow-up "Còn … thì sao?" after a
-  game question too, `continuesGame`), `searchGameGuide`: a section the question names ("Thầy
-  Quang", "Rơi tự do") first, then the library's own ranking (`rankDocuments`) over the guide
-  alone, with the words that only say "the game" left out. The guide is loaded on the first game
-  question (its own chunk) and never mixed into the science library's term weights.
-- A game question: the cloud prompt gets the guide's overview plus its three best sections, then
-  two science notes, and a rule ("names of rooms, keys and steps only from the guide; say you do
-  not know what it does not say"); an on-device prompt gets one guide section and the same rule.
-  Wikipedia is not asked. **Every other question builds the same prompt as before**: no question
-  of `teaching-eval.json`, `teaching-heldout.json`, `teaching-heldout-2.json` or
-  `retrieval-heldout.json` is a game question (`gameGuide.test.ts`), and the golden prompts are
-  unchanged, so the on-device benchmark results stand.
+  "game theory" —, Mr. Quang, places, people and things no textbook names; a follow-up after a
+  game question too, `continuesGame`: "Còn … thì sao?" or a short question naming a thing only the
+  game has), `searchGameGuide`: a section the question's words point to (`SECTION_HINTS`) or names
+  ("Thầy Quang", "Rơi tự do") first, then the library's own ranking (`rankDocuments`) over the
+  guide alone, with the words that only say "the game" left out. The guide is loaded on the first
+  game question (its own chunk) and never mixed into the science library's term weights.
+- Words are matched by `phrases()`: written with their accents and compared with them when the
+  question has accents, so "bảng tuần hoàn" is not the character Tuấn, "chạy" (run) not "cháy"
+  (fire), "thấy quang phổ" not "thầy Quang"; only a question typed without any accent is compared
+  with accents removed. Words a science question also uses are left out on purpose ("projectile
+  range", "phong lan", "trong trò chơi", "ra đề kiểm tra", "gọi 114"; tests in `gameGuide.test.ts`).
+
+**The SimLab guide** (27/11/2026, written with Antigravity, reviewed on Máy A) does the same for the
+app itself: `npm run app-guide` (`scripts/data/gen-app-guide.mjs`) writes `data/app_guide.json` (12
+sections: screens, problem reading, AI Teacher, the board, AI engines, Science Studio, the Science
+Card, Physics / Chemistry / Biology topics and tools, KNTT, files, shortcuts, settings, safety,
+updates; DATA_REVIEW `APPG-1`). Topic lists, shortcuts, Settings pages and KNTT counts come from the
+code; the descriptions follow `docs/USER_GUIDE.md` and `docs/AI_TUTOR.md` and must be corrected when
+the interface changes. `src/teacher/chat/appGuide.ts`: `isAppQuestion` (a feature only the app has,
+or "SimLab" / "ứng dụng này" with what one asks of an app — a bare "ứng dụng" is also "an
+application of" a law, and "phân tích đề", "suy nghĩ kĩ", "soạn bài" are asked of AI Teacher, so
+they never count), `continuesApp`, `searchAppGuide`; a game question is never an app question.
+`tests/app-guide.test.ts` fails while the file is stale.
+
+- A game (or app) question: the cloud prompt gets the guide's overview plus its three best
+  sections, then two science notes, and a rule ("names of rooms, keys and steps — or screens,
+  features and settings — only from the guide; say you do not know what it does not say"); an
+  on-device prompt gets one guide section and the same rule. Wikipedia is not asked. **Every other
+  question builds the same prompt as before**: no question of `teaching-eval.json`,
+  `teaching-heldout.json`, `teaching-heldout-2.json` or `retrieval-heldout.json` is a game or app
+  question (`gameGuide.test.ts`, `appGuide.test.ts`), and the golden prompts are unchanged, so the
+  on-device benchmark results stand.
 
 ## Teaching quality (2026-10-14)
 

@@ -100,7 +100,11 @@ release history and old work-logs keep the old name). The user accepted:
   again when the game changes (`tests/game-guide.test.ts`). Only a game question
   (`isGameQuestion` / `continuesGame`, `src/teacher/chat/gameGuide.ts`) reads it; every other
   prompt stays byte-identical, so no evaluation or held-out question may be a game question.
-  Wording: DATA_REVIEW `GAME-3`; design: `docs/AI_TUTOR.md` "The SimLab 3D guide".
+  Wording: DATA_REVIEW `GAME-3`; design: `docs/AI_TUTOR.md` "The SimLab 3D guide". The app has
+  its own guide the same way: `data/app_guide.json` (`npm run app-guide`,
+  `scripts/data/gen-app-guide.mjs`, `src/teacher/chat/appGuide.ts`, DATA_REVIEW `APPG-1`); its
+  hand-written descriptions must follow the interface when it changes. Words are matched with
+  their accents (`phrases()` in `gameGuide.ts`): never fold a question before matching names.
 - Gemma files live in OPFS (`src/ai/modelStore.ts`, Transformers.js `customCache`): Cache Storage
   refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
