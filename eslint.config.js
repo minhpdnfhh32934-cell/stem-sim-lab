@@ -17,6 +17,9 @@ export default tseslint.config(
       '.agent-logs',
       // The SimLab 3D game's own source, linted by its own config (game/eslint.config.js).
       'game',
+      // Claude Code's git worktrees: whole copies of the repository; linting 17 of them ran
+      // `eslint .` out of memory on Máy A (27/11/2026).
+      '.claude/worktrees',
     ],
   },
   {
