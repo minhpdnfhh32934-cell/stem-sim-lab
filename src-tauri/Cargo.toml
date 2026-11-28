@@ -25,7 +25,7 @@ thiserror = "2.0.21"
 # "stream" (#339): the room server passes another LAN server's event stream back as it comes.
 reqwest = { version = "0.13.3", default-features = false, features = ["json", "rustls", "stream"] }
 tauri-plugin-dialog = "2"
-rusqlite = { version = "0.41.1", features = ["bundled"] }
+rusqlite = { version = "0.43.0", features = ["bundled"] }
 base64 = "0.23.1"
 ed25519-dalek = "3.0.0"
 sha2 = "0.11.1"
