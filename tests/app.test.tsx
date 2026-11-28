@@ -71,9 +71,10 @@ describe('App shell (Phase 0)', () => {
     });
     expect(useNavigationStore.getState().screen).toBe('studio');
     render(<App />);
-    // The studio screen is a lazy module: its first import is slow when the whole suite runs.
+    // The studio screen is a lazy module: its first import is slow when the whole suite runs (over
+    // 5 s on Máy A, 27/11/2026); like the E2E specs (CLAUDE.md), the first open may take 20 s.
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Science Studio' }, { timeout: 5000 }),
+      await screen.findByRole('heading', { level: 1, name: 'Science Studio' }, { timeout: 20_000 }),
     ).toBeInTheDocument();
     const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
     expect(within(library).getByRole('button', { name: /^Science Studio/ })).toHaveAttribute(
@@ -91,7 +92,7 @@ describe('App shell (Phase 0)', () => {
     await user.click(screen.getByRole('button', { name: 'Về Virtual Lab' }));
     expect(useNavigationStore.getState().screen).toBe('lab');
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
-  });
+  }, 30_000);
 
   it('shows the three Science Card confidence levels', () => {
     render(<Inspector />);

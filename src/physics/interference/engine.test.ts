@@ -158,6 +158,8 @@ describe('DOPRI5 check: each wave from the wave equation along a ray', () => {
     expect(peak).toBeGreaterThan(A * Math.cos(Math.PI / 16) * 0.99);
   });
 
+  // Two DOPRI5 lattices of ~1760 nodes at rtol 1e-10: about 5 s alone, past the 15 s default
+  // when the whole suite runs in parallel (27/11/2026). Nothing checked is loosened, only waited for.
   it('beats: the lattice sum of 10 Hz and 11 Hz waves repeats every 1/|f₁ − f₂| = 1 s', () => {
     const dt = 1 / 400;
     const ts = Array.from({ length: Math.round(3.6 / dt) }, (_, i) => 0.6 + i * dt);
@@ -165,5 +167,5 @@ describe('DOPRI5 check: each wave from the wave equation along a ray', () => {
     const w2 = rayLattice({ a: 1, f: 11, v: 0.3 }, 40, [0.12], ts);
     const u = Float64Array.from(ts, (_, i) => (w1[i]?.[0] ?? NaN) + (w2[i]?.[0] ?? NaN));
     expect(measureBeatPeriod(u, dt)).toBeCloseTo(1, 2);
-  });
+  }, 60_000);
 });
