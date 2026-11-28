@@ -17,6 +17,11 @@ const APP = [
   'How do I install SimLab from the Microsoft Store?',
   'Phím tắt của SimLab là gì?',
   'Quét tham số nằm ở đâu?',
+  // Antigravity's review (28/11/2026): common questions about the app that were missed.
+  'SimLab có giọng đọc tiếng Việt không?',
+  'Cách tải SimLab?',
+  'SimLab chạy offline được không?',
+  'SimLab có những môn nào?',
 ];
 
 const NOT_APP = [
@@ -68,6 +73,21 @@ describe('searchAppGuide', () => {
   ] as const)('answers "%s" with its section first', async (q, locale, id) => {
     const [best] = await searchAppGuide(q, locale, 1);
     expect(best?.id).toBe(`builtin:app:${id}`);
+  });
+
+  it('reads 18 as the age rule only with its words ("18 tuổi", "dưới 18", "18+")', async () => {
+    for (const q of [
+      'Trong SimLab, bài 18 Vật lí 10 nằm ở chủ đề nào?',
+      'Trong SimLab, nguyên tố số 18 hoặc nhóm 18 là gì?',
+    ]) {
+      const [best] = await searchAppGuide(q, 'vi', 1);
+      expect(best?.id, q).not.toBe('builtin:app:app-safety-updates');
+    }
+    for (const q of ['Vì sao SimLab khóa AI dưới 18 tuổi?', 'Cổng 18+ của SimLab là gì?']) {
+      expect(isAppQuestion(q), q).toBe(true);
+      const [best] = await searchAppGuide(q, 'vi', 1);
+      expect(best?.id, q).toBe('builtin:app:app-safety-updates');
+    }
   });
 
   it('gives a cloud prompt the overview first', async () => {

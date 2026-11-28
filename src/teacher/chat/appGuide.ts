@@ -110,16 +110,28 @@ const APP_ASK = phrases([
   'groq',
   'gemini',
   'claude',
-  '18',
   'cập nhật',
   'update',
+  'giọng đọc',
+  'offline',
+  'ngoại tuyến',
+  'tải',
+  'cài',
+  'môn',
   'what',
   'how',
 ]);
 
+/**
+ * The age rule by its words ("18 tuổi", "dưới 18", "18+"): a bare 18 is also a lesson, an element
+ * or a group number ("bài 18", "nhóm 18"), which must not point to the safety section.
+ */
+const AGE_WORDS = phrases(['tuổi', 'dưới 18', 'đủ 18', 'trên 18', 'cổng 18', 'age gate']);
+const AGE = (query: string) => /(?<!\d)18\s*\+/u.test(query) || AGE_WORDS(query);
+
 export function isAppQuestion(query: string): boolean {
   if (isGameQuestion(query)) return false;
-  return APP_FEATURES(query) || (APP_NAME(query) && APP_ASK(query));
+  return APP_FEATURES(query) || (APP_NAME(query) && (APP_ASK(query) || AGE(query)));
 }
 
 /** "Còn Ollama thì sao?", "What about Groq?": goes on with the question before it. */
@@ -218,19 +230,21 @@ const APP_HINTS: [(query: string) => boolean, string][] = [
     'app-files-shortcuts-settings',
   ],
   [
-    phrases([
-      '18',
-      'tuổi',
-      'an toàn',
-      'báo cáo',
-      'microsoft store',
-      'smartscreen',
-      'smart app control',
-      'cập nhật',
-      'update',
-      'quyền riêng tư',
-      'dữ liệu',
-    ]),
+    (query) =>
+      AGE(query) ||
+      phrases([
+        'an toàn',
+        'báo cáo',
+        'microsoft store',
+        'smartscreen',
+        'smart app control',
+        'cập nhật',
+        'update',
+        'tải',
+        'cài',
+        'quyền riêng tư',
+        'dữ liệu',
+      ])(query),
     'app-safety-updates',
   ],
   [
