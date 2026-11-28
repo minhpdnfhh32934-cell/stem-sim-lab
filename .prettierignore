@@ -23,3 +23,8 @@ tests/teaching/teaching-heldout-2.json
 public/game
 # The game's source: its own Prettier config and check (game/package.json, docs/GAME.md).
 game
+# Claude Code's git worktrees: whole copies of the repository (with node_modules, target), ignored
+# by git through .git/info/exclude, which Prettier does not read.
+.claude/worktrees
+# The desktop app's preview list (.claude/launch.json), written by the app in its own format.
+.claude/launch.json
