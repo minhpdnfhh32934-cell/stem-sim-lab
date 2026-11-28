@@ -891,7 +891,19 @@ export interface ScoredDocument {
 
 /** All notes and imported files that pass MIN_SCORE and MIN_COVERAGE, best first. */
 export function rankKnowledge(query: string, locale: Locale): ScoredDocument[] {
-  const all = [...builtinKnowledge(locale), ...useChatStore.getState().documents];
+  return rankDocuments(
+    query,
+    [...builtinKnowledge(locale), ...useChatStore.getState().documents],
+    locale,
+  );
+}
+
+/** `rankKnowledge` over another set of documents (the SimLab 3D guide, `gameGuide.ts`). */
+export function rankDocuments(
+  query: string,
+  all: readonly KnowledgeDocument[],
+  locale: Locale,
+): ScoredDocument[] {
   const mode = modeOf(query);
   const q = termsOf(query, mode);
   if (q.single.size === 0 && q.pairs.size === 0) return [];
